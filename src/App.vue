@@ -51,7 +51,7 @@ section {
     flex-direction: row;
 
     #graph{
-      width: 400px;
+      width: 50vw; 
       background-color: #DDD;
     }
 

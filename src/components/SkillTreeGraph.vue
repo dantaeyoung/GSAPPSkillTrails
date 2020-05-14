@@ -2,23 +2,37 @@
   <div class="hello">
     <h1>{{ msg }}</h1>
     <h2> SKIL TREE GRAPH</h2>
-    {{ graphdata }}
+
+    <div v-for="childchan in childChannels" :key="childchan.id">
+      {{ childchan.title }}
+      <div class="leaves">
+        <Leaf
+            v-for='gchildchan in childchan.contents' 
+            :key="gchildchan.id" 
+            :leafdata="gchildchan"/>
+        </div>
+      </div>
   </div>
 </template>
 
 <script>
+/* eslint-disable */
 
 const Arena = require("are.na");
 
-const arena = new Arena();
-
+import Leaf from '@/components/Leaf.vue'
 
 export default {
   name: 'SkillTreeGraph',
   data() {
     return {
+      parentChannel: "gst-albums",
+      childChannels: [],
       graphdata: { "yo": "what?" },
     };
+  },
+  components: {
+    Leaf,
   },
   props: {
     msg: String
@@ -28,16 +42,31 @@ export default {
   },
   methods: {
     loadData() {
-
+    
+      const arena = new Arena();
+      var self = this;
       arena
-        .channel("arena-influences")
-        .get()
+        .channel(self.parentChannel).get()
         .then(chan => {
-          chan.contents.map(item => {
-            console.log(item.title);
+          window.chan = chan;
+          self.childChannels = chan.contents;
+
+          console.log(chan.contents);
+
+          chan.contents.map(childchan => { 
+            console.log(childchan.id)
+
+            arena.channel(childchan.id).get().then(gchildchan => {
+              self.childChannels.find(c => c.id === childchan.id).contents = gchildchan.contents;
+            })
+            .catch(err => console.log(err));
+
           });
+
         })
         .catch(err => console.log(err));
+
+
 
     }
   }
