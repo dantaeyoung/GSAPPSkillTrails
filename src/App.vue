@@ -9,7 +9,7 @@
         <SkillTreeGraph />
       </section>
       <section id="content">
-        <router-view/>
+        <router-view name="content"/>
       </section>
     </section>
 
@@ -19,8 +19,8 @@
 
 
 <script>
-import SkillTreeGraph from '@/components/SkillTreeGraph.vue'
 import TopHeader from '@/components/TopHeader.vue'
+import SkillTreeGraph from '@/components/SkillTreeGraph.vue'
 
 export default {
   components: { TopHeader, SkillTreeGraph },

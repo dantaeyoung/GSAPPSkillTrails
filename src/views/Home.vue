@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    VIEWING VIEWING
+    HOME
 
   </div>
 </template>
@@ -9,7 +9,7 @@
 // @ is an alias to /src
 
 export default {
-  name: 'View',
+  name: 'Home',
   components: {
   }
 }
