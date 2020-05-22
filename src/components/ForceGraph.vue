@@ -3,12 +3,13 @@
     <h1>{{ msg }}</h1>
 
     <div id="arc">
-      <svg xmlns="http://www.w3.org/2000/svg" :width="width+'px'" :height="height+'px'">
-        <!--      <line v-for="link in graphstate.links" :x1="coords[link.source.index].x" :y1="coords[link.source.index].y" :x2="coords[link.target.index].x" :y2="coords[link.target.index].y" stroke="black" stroke-width="2"/> -->
-        <g v-for="(node) in nodes" :transform="'translate(' + node.x + ',' + node.y + ')'" v-bind:key="node.id">
+      <svg xmlns="http://www.w3.org/2000/svg" :width="width+'px'" :height="height+'px'" @mousemove="drag($event)" @mouseup="drop()" >
+        <line v-for="link in links" :x1="coords[link.source.index].x" :y1="coords[link.source.index].y" :x2="coords[link.target.index].x" :y2="coords[link.target.index].y" stroke="black" stroke-width="2" v-bind:key="link.source.index" />  
+        <circle v-for="(node, i) in nodes" :cx="coords[i].x" :cy="coords[i].y" :r="20" stroke="white" stroke-width="1" @mousedown="currentMove = {x: $event.screenX, y: $event.screenY, node: node}" v-bind:key="node.id"/>
+        <!--<g v-for="(node) in nodes" :transform="'translate(' + node.x + ',' + node.y + ')'" v-bind:key="node.id" @mousedown="currentMove = {x: $event.screenX, y: $event.screenY, node: node}" >
           <circle r="40" fill="white" stroke="black" stroke-width="1" />
           <text dx="-20">{{ node.id }}</text>
-        </g>
+        </g> -->
       </svg>
     </div>
     <button v-on:click="removeCircle()">remove circle</button>
@@ -31,20 +32,20 @@ export default {
       parentChannel: "gst-albums",
       childChannels: [],
       nodes: [
-      	{"id": "Myriel", "group": 1, "x": 120, "y": 80},
-      	{"id": "Napoleon", "group": 1},
-        {"id": "Labarre", "group": 2},
-        {"id": "Valjean", "group": 2}
+      	{"id": "Myriel", index: 0, x: null, y: null },
+      	{"id": "Napoleon", index: 1, x: null, y: null },
+        {"id": "Labarre",index: 2, x: null, y: null },
+        {"id": "Valjean", index: 3, x: null, y: null },
       ],
       links: [
-        {"source": "Napoleon", "target": "Myriel", "value": 1},
-        {"source": "Valjean", "target": "Labarre", "value": 1},
-        {"source": "Napoleon", "target": "Valjean", "value": 2},
+        {"source": 0, "target": 1},
+        {"source": 2, "target": 0},
+        {"source": 1, "target": 2},
       ],
       width: 500,
       height: 500,
-      graphstate: { links: null, nodes: null },
-      coords: null
+      padding: 20,
+      simulation: null,
     };
   },
   components: {
@@ -54,8 +55,9 @@ export default {
   props: {
     msg: String
   },
-  mounted() {
-    this.loadData();
+  created() {
+    console.log("yo");
+    //this.loadData();
     this.createSimulation();
   },
   updated() {
@@ -65,14 +67,33 @@ export default {
   watch: {
     //  nodes: function() { this.updateGraph(); },
   },
+  computed: {
+    bounds() {
+      return {
+        minX: Math.min(...this.nodes.map(n => n.x)),
+        maxX: Math.max(...this.nodes.map(n => n.x)),
+        minY: Math.min(...this.nodes.map(n => n.y)),
+        maxY: Math.max(...this.nodes.map(n => n.y))
+      }
+    },
+
+    coords() {
+      return this.nodes.map(node => {
+        return {
+          x: this.padding + (node.x - this.bounds.minX) * (this.width - 2*this.padding) / (this.bounds.maxX - this.bounds.minX),
+          y: this.padding + (node.y - this.bounds.minY) * (this.height - 2*this.padding) / (this.bounds.maxY - this.bounds.minY)
+        }
+      })
+    }
+
+  },
   methods: {
 
     createSimulation() {
       this.simulation = d3.forceSimulation(this.nodes)
-        .force('charge', d3.forceManyBody().strength(d => -100))
+        .force('charge', d3.forceManyBody())
         .force('link', d3.forceLink(this.links))
-        .force('x', d3.forceX())
-        .force('y', d3.forceY()) 
+        .force("center", d3.forceCenter(this.width / 2, this.height / 2));
     },
 
     removeCircle() {
@@ -81,50 +102,24 @@ export default {
       console.log(this.nodes);
     },
 
-    generateGraph() {
-      const w = 500;
-      const h = 500;
-
-      const svg = d3
-        .select("#arc")
-        .append("svg")
-        .attr("width", w)
-        .attr("height", h);
 
 
-      var simulation = d3.forceSimulation()
-        .force("link", d3.forceLink().id(function(d) { return d.id; }))
-        .force("charge", d3.forceManyBody())
-        .force("center", d3.forceCenter(w / 2, h / 2));
 
+     drag(e) {
+      if (this.currentMove) {
+        this.currentMove.node.fx = this.currentMove.node.x - (this.currentMove.x - e.screenX) * (this.bounds.maxX - this.bounds.minX) / (this.width - 2 * this.padding)
+        this.currentMove.node.fy = this.currentMove.node.y -(this.currentMove.y - e.screenY) * (this.bounds.maxY - this.bounds.minY) / (this.height - 2 * this.padding)
+        this.currentMove.x = e.screenX
+        this.currentMove.y = e.screenY
+      }
     },
-
-
-    updateGraph() {
-
-      var circleGs = d3.select("#arc svg").selectAll(".circle").data(this.nodes);
-
-      console.log("updategraph");
-
-      var enterG = circleGs.enter()
-        .append("g").attr("class", "circle");
-
-      enterG.merge(circleGs)
-        .attr("transform", function(d){return "translate(80,80)"});
-
-      enterG
-        .append("circle")
-        .style("stroke", "gray")
-        .style("fill", "white")
-        .attr("r", 40)
-
-      enterG.append("text")
-        .attr("dx", function(d){return -20})
-        .text(function(d){return d.id})
-
-      circleGs.exit().remove();
-
-  },
+    drop(){
+      delete this.currentMove.node.fx
+      delete this.currentMove.node.fy    
+      this.currentMove = null
+      this.simulation.alpha(1)
+      this.simulation.restart()
+    },
 
 
 
@@ -135,7 +130,6 @@ export default {
 
 
       //            self.nodes.push({"id": self.parentChannel });////
-            self.nodes.push({"id": "heyy" });////
 
 
       arena
@@ -148,8 +142,6 @@ export default {
           //                        self.links.push(thisedge);
           chan.contents.map(childchan => { 
 
-            self.nodes.push({"id": childchan.slug});////
-            self.links.push({"source": childchan.slug, "target": "heyy", "value": 1 });////
             //            self.links.push({"source": self.parentChannel, "target": childchan.slug, "value": 1 });////
             //            var thisedge = {"source": "Napoleon", "target": "Myriel", "value": 1 }
             //            console.log("woo", thisedge);////
