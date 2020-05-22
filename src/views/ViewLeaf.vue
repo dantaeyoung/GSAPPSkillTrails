@@ -1,6 +1,6 @@
 <template>
   <div id="ViewLeaf">
-    <h4>Viewing: {{ ViewTitle }}</h4>
+    <h4>Viewing: {{ ViewTitle }} at {{ViewURL}}</h4>
     <iframe :src="ViewURL" /> 
   </div>
 </template>
