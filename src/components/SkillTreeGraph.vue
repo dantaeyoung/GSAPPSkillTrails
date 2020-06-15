@@ -3,15 +3,25 @@
     <h1>{{ msg }}</h1>
     <h2> SKIL TREE GRAPH</h2>
 
-    <div v-for="childchan in childChannels" :key="childchan.id">
-      {{ childchan.title }}
-      <div class="leaves">
-        <Leaf
-            v-for='gchildchan in childchan.contents' 
-            :key="gchildchan.id" 
-            :leafdata="gchildchan"/>
+    <panZoom>
+
+    <div class="graph">
+
+      <div v-for="childchan in childChannels" :key="childchan.id">
+        {{ childchan.title }}
+        <div class="leaves">
+          <Leaf
+              v-for='gchildchan in childchan.contents' 
+              :key="gchildchan.id" 
+              :leafdata="gchildchan"/>
         </div>
       </div>
+
+
+    </div>
+
+    </panZoom>
+
   </div>
 </template>
 

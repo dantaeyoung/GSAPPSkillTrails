@@ -46,6 +46,7 @@ export default {
       height: 500,
       padding: 20,
       simulation: null,
+      currentMove: null,
     };
   },
   components: {

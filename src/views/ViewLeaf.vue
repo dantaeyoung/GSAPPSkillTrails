@@ -1,4 +1,5 @@
 <template>
+
   <div id="ViewLeaf">
     <h4>Viewing: {{ ViewTitle }} at {{ViewURL}}</h4>
     <iframe :src="ViewURL" /> 
@@ -7,8 +8,11 @@
 
 <script>
 
+
 export default {
   name: 'ViewLeaf',
+  components: {
+  },
   created() {
     console.log(this.$route.params);
   },
@@ -22,8 +26,6 @@ export default {
       catch {  return ""   }
     },
   },
-  components: {
-  }
 }
 </script>
 
