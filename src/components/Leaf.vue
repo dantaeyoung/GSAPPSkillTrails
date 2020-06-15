@@ -5,7 +5,7 @@
     <g @click="onClickViewLeaf">
       <circle cx="50%" cy="50%" r="49%" stroke="black" stroke-width="1" fill="none" />
       <foreignObject x="0%" y="0%" width="100%" height="100%">
-        <div class="circle">
+        <div class="circle colorfilter">
           <img :src="ThumbUrl" />
           <div class="text">{{ leafdata.title }}</div>
         </div>
@@ -72,4 +72,19 @@ img {
   width: 100%;
   overflow-wrap: break-word;
 }
+
+
+
+.colorfilter{
+  position: relative;
+}
+
+.colorfilter:after{
+  position: absolute; content: ''; 
+  display: block; top: 0; left: 0; height: 100%; width: 100%;
+    background: #5367ce;
+    mix-blend-mode: screen
+}
+
+
 </style>
