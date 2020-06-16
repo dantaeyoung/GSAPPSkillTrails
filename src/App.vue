@@ -51,12 +51,14 @@ section {
     flex-direction: row;
 
     #graph{
-      width: 50vw; 
       background-color: #DDD;
+      flex-grow: 1;
+      overflow: hidden;
     }
 
     #content {
-      flex-grow: 1;
+      width: 50vw; 
+      max-width: 500px;
     }
   }
 }

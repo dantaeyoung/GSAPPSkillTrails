@@ -5,7 +5,7 @@
 
     <panZoom>
 
-    <div class="graph">
+    <div class="maingraph">
 
       <div v-for="childchan in childChannels" :key="childchan.id">
         {{ childchan.title }}
@@ -96,5 +96,9 @@ li {
 }
 a {
   color: #42b983;
+}
+
+.maingraph {
+  position: relative;
 }
 </style>
