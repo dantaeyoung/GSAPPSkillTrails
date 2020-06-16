@@ -1,27 +1,29 @@
 <template>
   <div class="hello">
-    <h1>{{ msg }}</h1>
-    <h2> SKIL TREE GRAPH</h2>
-
     <panZoom>
-
-    <div class="maingraph">
-
-      <div v-for="childchan in childChannels" :key="childchan.id">
-        {{ childchan.title }}
-        <div class="leaves">
-          <Leaf
-              v-for='gchildchan in childchan.contents' 
-              :key="gchildchan.id" 
-              :leafdata="gchildchan"/>
+      <div class="maingraph">
+        <div
+          class="channels"
+          v-for="childchan in childChannels"
+          :key="'channel-' + childchan.id"
+        >
+          <div class="leaves">
+            <Leaf
+              v-for="gchildchan in childchan.contents"
+              :key="'ch-' + childchan.id + '-leaf-' + gchildchan.id"
+              :leafdata="gchildchan"
+            />
+          </div>
         </div>
+
+        <Trail
+          class="trails"
+          v-for="childchan in childChannels"
+          :key="'trail-' + childchan.id"
+          :traildata="childchan"
+        ></Trail>
       </div>
-
-
-    </div>
-
     </panZoom>
-
   </div>
 </template>
 
@@ -30,18 +32,20 @@
 
 const Arena = require("are.na");
 
-import Leaf from '@/components/Leaf.vue'
+import Leaf from "@/components/Leaf.vue";
+import Trail from "@/components/Trail.vue";
 
 export default {
-  name: 'SkillTreeGraph',
+  name: "SkillTreeGraph",
   data() {
     return {
       parentChannel: "gst-albums",
-      childChannels: [],
+      childChannels: []
     };
   },
   components: {
     Leaf,
+    Trail
   },
   props: {
     msg: String
@@ -51,35 +55,34 @@ export default {
   },
   methods: {
     loadData() {
-    
       const arena = new Arena();
       var self = this;
       arena
-        .channel(self.parentChannel).get()
+        .channel(self.parentChannel)
+        .get()
         .then(chan => {
           window.chan = chan;
           self.childChannels = chan.contents;
 
           console.log(chan.contents);
 
-          chan.contents.map(childchan => { 
-            console.log(childchan.id)
+          chan.contents.map(childchan => {
+            console.log(childchan.id);
 
-            arena.channel(childchan.id).get().then(gchildchan => {
-              self.childChannels.find(c => c.id === childchan.id).contents = gchildchan.contents;
-            })
-            .catch(err => console.log(err));
-
+            arena
+              .channel(childchan.id)
+              .get()
+              .then(gchildchan => {
+                self.childChannels.find(c => c.id === childchan.id).contents =
+                  gchildchan.contents;
+              })
+              .catch(err => console.log(err));
           });
-
         })
         .catch(err => console.log(err));
-
-
-
     }
   }
-}
+};
 </script>
 
 <style scoped lang="scss">

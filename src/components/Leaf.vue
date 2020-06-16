@@ -4,11 +4,10 @@
     viewBox = "0 0 100 100"
     :style="positionStyle" >
     <g @click="onClickViewLeaf">
-      <circle cx="50%" cy="50%" r="49%" stroke="black" stroke-width="1" fill="none" />
-      <clipPath :id="'polygonMask-' + leafdata.id">
+      <clipPath class="polygonMask" :id="'polygonMask-' + leafdata.id">
         <polygon :points="polygonPoints"></polygon>
       </clipPath>
-      
+      <polygon :points="polygonPoints" class="polygonBorder" :id="'polygonBorder-' + leafdata.id"></polygon>
       <foreignObject x="0%" y="0%" width="100%" height="100%" :clip-path="'url(#polygonMask-' + leafdata.id + ')'">
         <div class="circle colorfilter">
           <img :src="ThumbUrl" />
@@ -132,6 +131,14 @@ img {
   display: block; top: 0; left: 0; height: 100%; width: 100%;
     background: #A3A7ce;
     mix-blend-mode: multiply;
+}
+
+.polygonBorder {
+  stroke: black;
+  stroke-width: 4;
+  stroke-linejoin: round;
+}
+.polygonMask {
 }
 
 

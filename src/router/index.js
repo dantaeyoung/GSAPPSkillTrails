@@ -6,6 +6,7 @@ import Home from '../views/Home.vue'
 import ViewLeaf from '../views/ViewLeaf.vue'
 import SkillTreeGraph from '@/components/SkillTreeGraph.vue'
 import ForceGraph from '@/components/ForceGraph.vue'
+import ListView from '@/components/ListView.vue'
 
 Vue.use(VueRouter)
 
@@ -17,6 +18,13 @@ Vue.use(VueRouter)
   {
     path: '/graph',
     name: 'Graph',
+  },
+  {
+    path: '/list',
+    name: 'ListView',
+    components: {
+      content: ListView,
+    }
   },
   {
     path: '/forcegraph',
