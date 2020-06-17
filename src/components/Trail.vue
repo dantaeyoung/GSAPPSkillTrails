@@ -1,14 +1,14 @@
 <template>
   <g>
     hello
-    <path class="svgtrail" :d="svgTrailPath" :key="'trailXx-' + traildata.id" />
+    <path class="svgtrail" :d="svgTrailPath" :key="traildata.id" />
   </g>
 </template>
 
 <script>
 /* eslint-disable */
 
-import seedrandom from "seedrandom";
+import { CurveInterpolator } from 'curve-interpolator';
 
 export default {
   name: "Trail",
@@ -21,26 +21,40 @@ export default {
   props: ["traildata"],
   created() {},
   computed: {
+    waypoints() {
+      return this.$store.state.waypoints;
+    },
     svgTrailPath() {
-      return "M150 0 L75 200 L225 200 Z";
       var self = this;
-      //         <path d="M150 0 L75 200 L225 200 Z" />
-      //         <path d="M150 0 L75 200 L225 200 Z" />
+
+      try {
+        var wpcoords = self.traildata.fields.Waypoints.map(wpid => {
+          return [
+            self.waypoints[wpid].fields.coordinateX,
+            self.waypoints[wpid].fields.coordinateY
+          ];
+        });
+      } catch {
+        return "";
+      }
+
+      const interp = new CurveInterpolator(wpcoords, { tension: 0.2 });
+      const numpts = Object.keys(this.waypoints).length * 10;
+      const pts = interp.getPoints(numpts);
+
+      console.log(pts);
+
       var pathstring = "M";
-      let pathdata = self.traildata.contents.map(d => {
-        let loc = self.getWaypointLocation(d.id);
-        return loc.x + " " + loc.y + " ";
-      });
-      pathstring += pathdata.join(" L");
+      pathstring += pts 
+        .map(item => {
+          return item[0] + " " + item[1];
+        })
+        .join(" L");
+
       return pathstring;
     }
   },
   methods: {
-    getWaypointLocation(seed) {
-      console.log(seed);
-      let myrng = new seedrandom(seed);
-      return { x: myrng() * 800, y: myrng() * 800 };
-    }
   }
 };
 </script>

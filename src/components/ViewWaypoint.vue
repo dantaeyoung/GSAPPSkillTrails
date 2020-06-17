@@ -1,7 +1,7 @@
 <template>
 
   <div id="ViewWaypoint">
-    <h4>Viewing: {{ ViewTitle }} at {{ViewURL}}</h4>
+    <!--  <h4>Viewing: {{ waypointdata.fields.Name }} at {{ waypointdata.fields.URL }}</h4> -->
     <!--<iframe :src="ViewURL" />  -->
   </div>
 </template>
@@ -17,13 +17,8 @@ export default {
     console.log(this.$route.params);
   },
   computed: {
-    ViewTitle() {
-      try {  return this.$route.params.leafdata.title; }
-      catch { return ""  }
-    },
-    ViewURL() {
-      try {     return this.$route.params.leafdata.source.url;   }
-      catch {  return ""   }
+    waypointdata() {
+      return this.$route.params.waypointdata;
     },
   },
 }

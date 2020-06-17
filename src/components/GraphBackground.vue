@@ -1,5 +1,5 @@
 <template>
-  <div class="graphbackground">
+  <div class="graphbackground" :style="widthheightstyle">
   </div>
 </template>
 
@@ -16,6 +16,12 @@ export default {
   created() {
   },
   computed: {
+    sidelength() {
+      return this.$store.state.sidelength;
+    },
+    widthheightstyle() {
+      return `width: ${this.sidelength}px; height: ${this.sidelength}px;`;
+    }
   },
   methods: {
   }
@@ -33,8 +39,8 @@ $dimpx: 1500px;
   left: 0px;
   width: $dimpx;
   height: $dimpx;
-  margin-left: calc(#{$dimpx} / -2);
-  margin-top: calc(#{$dimpx} / -2);
+  /*margin-left: calc(#{$dimpx} / -2);*/
+  /*margin-top: calc(#{$dimpx} / -2);*/
   border: 5px solid red;
 
   background: rgb(238,174,202);

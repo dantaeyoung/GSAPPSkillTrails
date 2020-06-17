@@ -4,7 +4,6 @@ const tableview = "Grid%20view";
 const waypointApiUrl = `https://api.airtable.com/v0/${tableID}/Waypoint?api_key=${apikey}&view=${tableview}`;
 const trailsApiUrl = `https://api.airtable.com/v0/${tableID}/Trails?api_key=${apikey}&view=${tableview}`;
 
-
 console.log(waypointApiUrl, trailsApiUrl);
 
 import Vue from "vue";
@@ -12,19 +11,16 @@ import Vuex from "vuex";
 
 Vue.use(Vuex);
 
-
-function coordinateTransform(val) {
- return val * 500;
-}
-
 export default new Vuex.Store({
   state: {
     count: 0,
+    sidelength: 2000,
     waypoints: {},
     trails: [],
-    hasLoaded: false,
+    hasLoaded: false
   },
-  getters: {},
+  getters: {
+  },
   mutations: {
     increment(state) {
       state.count++;
@@ -33,21 +29,27 @@ export default new Vuex.Store({
       state.hasLoaded = true;
     },
     setWaypoints(state, waypoints) {
-      state.waypoints = waypoints.reduce(function(obj,item){
 
+      var self = this;
+      function coordinateTransform(val) {
+        // coordinates are from -1.0 to 1.0
+        // or 2000 x 2000px 
+        return (val * self.state.sidelength / 2) + (self.state.sidelength / 2);
+      }
+
+      state.waypoints = waypoints.reduce(function(obj, item) {
         item.fields.coordinateX = coordinateTransform(item.fields.coordinateX);
         item.fields.coordinateY = coordinateTransform(item.fields.coordinateY);
-        obj[item.id] = item; 
+        obj[item.id] = item;
         return obj;
       }, {});
-
     },
     setTrails(state, trails) {
-      state.trails= trails.reduce(function(obj,item){
-        obj[item.id] = item; 
+      state.trails = trails.reduce(function(obj, item) {
+        obj[item.id] = item;
         return obj;
       }, {});
-    },
+    }
   },
   actions: {
     fetch(context) {
@@ -73,7 +75,6 @@ export default new Vuex.Store({
       var xhr2 = new XMLHttpRequest();
       xhr2.open("GET", trailsApiUrl);
       xhr2.onload = function() {
-
         let trails = JSON.parse(xhr2.responseText).records;
         context.commit("setTrails", trails);
         if (++successcount >= num_of_requests) {

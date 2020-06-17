@@ -12,15 +12,13 @@
           :key="id"
           :waypointdata="waypoint"
         />
-        <!--
         <svg id="trails">
           <Trail
-            v-for="(childchan, index) in childChannels"
-            v-bind:index="index"
-            v-bind:key="childchan.id"
-            :traildata="childchan"
+            v-for="(trail, id) in trails"
+            :key="id"
+            :traildata="trail"
           />
-        </svg> -->
+        </svg>
 
         <GraphBackground />
       </div>
@@ -70,7 +68,10 @@ export default {
       console.log(elem);
       this.panzoom = Panzoom(elem, {
         maxScale: 2,
-        minScale: 0.5
+        minScale: 0.1,
+        startX: -1000,
+        startY: -1000,
+        startScale: 1
       });
       elem.parentElement.addEventListener("wheel", this.panzoom.zoomWithWheel);
     }
@@ -107,6 +108,11 @@ a {
 #graphwindow {
   height: 100%;
   width: 100%;
+}
+
+#graphcontents {
+  width: 2000px;
+  height: 2000px;
 }
 
 svg#trails {

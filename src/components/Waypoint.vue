@@ -11,7 +11,7 @@
       <foreignObject x="0%" y="0%" width="100%" height="100%" :clip-path="'url(#polygonMask-' + waypointdata.id + ')'">
         <div class="circle colorfilter">
           <img :src="ThumbUrl" />
-          <div class="text">{{ waypointdata.title }}</div>
+          <div class="text">{{ waypointdata.fields.Name }}</div>
         </div>
       </foreignObject>
     </g>
@@ -74,7 +74,7 @@ export default {
         .join(" ");
     },
     positionStyle() {
-      return `position: absolute; top: ${ this.waypointdata.fields.coordinateX }px; left: ${ this.waypointdata.fields.coordinateY }px;`;
+      return `position: absolute; top: ${ this.waypointdata.fields.coordinateY }px; left: ${ this.waypointdata.fields.coordinateX }px;`;
     }
   },
   methods: {
@@ -83,8 +83,9 @@ export default {
       return Array.from({length: 8}, () => mapToRange(myrng(), 0.5, 1));
     },
     onClickViewWaypoint() {
-      console.log("going to", this.waypointdata.id);
-      this.$router.push({ name: "ViewWaypoint", params: { waypointdata: this.waypointdata, id: this.waypointdata.id } });
+      var self = this;
+      console.log("going to", self.waypointdata.id);
+      self.$router.push({ name: "ViewWaypoint", params: { waypointdata: self.waypointdata, id: self.waypointdata.id } });
     }
   }
 }
@@ -95,8 +96,8 @@ export default {
 .waypoint {
   width: 100px; 
   height: 100px;
-  margin-left: 50px;
-  margin-top: 50px;
+  margin-left: -50px;
+  margin-top: -50px;
 }
 
 img {
