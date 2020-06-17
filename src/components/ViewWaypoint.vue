@@ -1,6 +1,6 @@
 <template>
 
-  <div id="ViewLeaf">
+  <div id="ViewWaypoint">
     <h4>Viewing: {{ ViewTitle }} at {{ViewURL}}</h4>
     <!--<iframe :src="ViewURL" />  -->
   </div>
@@ -10,7 +10,7 @@
 
 
 export default {
-  name: 'ViewLeaf',
+  name: 'ViewWaypoint',
   components: {
   },
   created() {
@@ -31,7 +31,7 @@ export default {
 
 <style scoped lang="scss">
 
-#ViewLeaf {
+#ViewWaypoint {
   display: flex;
   flex-direction: column;
   height: 100%;

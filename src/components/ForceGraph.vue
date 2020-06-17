@@ -22,7 +22,6 @@
 const Arena = require("are.na");
 
 import Network from "vue-network-d3";
-import Leaf from '@/components/Leaf.vue'
 import * as d3 from "d3";
 
 export default {
@@ -51,7 +50,6 @@ export default {
   },
   components: {
     Network,
-    Leaf,
   },
   props: {
     msg: String

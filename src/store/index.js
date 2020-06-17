@@ -4,6 +4,7 @@ const tableview = "Grid%20view";
 const waypointApiUrl = `https://api.airtable.com/v0/${tableID}/Waypoint?api_key=${apikey}&view=${tableview}`;
 const trailsApiUrl = `https://api.airtable.com/v0/${tableID}/Trails?api_key=${apikey}&view=${tableview}`;
 
+
 console.log(waypointApiUrl, trailsApiUrl);
 
 import Vue from "vue";
@@ -11,10 +12,15 @@ import Vuex from "vuex";
 
 Vue.use(Vuex);
 
+
+function coordinateTransform(val) {
+ return val * 500;
+}
+
 export default new Vuex.Store({
   state: {
     count: 0,
-    waypoints: [],
+    waypoints: {},
     trails: [],
     hasLoaded: false,
   },
@@ -25,13 +31,22 @@ export default new Vuex.Store({
     },
     setLoaded(state) {
       state.hasLoaded = true;
-      console.log("YOO");
     },
     setWaypoints(state, waypoints) {
-      state.waypoints  = waypoints;
+      state.waypoints = waypoints.reduce(function(obj,item){
+
+        item.fields.coordinateX = coordinateTransform(item.fields.coordinateX);
+        item.fields.coordinateY = coordinateTransform(item.fields.coordinateY);
+        obj[item.id] = item; 
+        return obj;
+      }, {});
+
     },
     setTrails(state, trails) {
-      state.trails  = trails;
+      state.trails= trails.reduce(function(obj,item){
+        obj[item.id] = item; 
+        return obj;
+      }, {});
     },
   },
   actions: {
@@ -58,7 +73,8 @@ export default new Vuex.Store({
       var xhr2 = new XMLHttpRequest();
       xhr2.open("GET", trailsApiUrl);
       xhr2.onload = function() {
-        let trails = JSON.parse(xhr1.responseText).records;
+
+        let trails = JSON.parse(xhr2.responseText).records;
         context.commit("setTrails", trails);
         if (++successcount >= num_of_requests) {
           context.commit("setLoaded");

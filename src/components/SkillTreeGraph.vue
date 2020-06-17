@@ -7,26 +7,20 @@
     </div>
     <div id="graphwindow">
       <div id="graphcontents">
-        <div
-          class="channels"
-          v-for="childchan in childChannels"
-          :key="'channel-' + childchan.id"
-        >
-          <Leaf
-            v-for="gchildchan in childchan.contents"
-            :key="'ch-' + childchan.id + '-leaf-' + gchildchan.id"
-            :leafdata="gchildchan"
-          />
-        </div>
-
-          <svg id="trails">
-        <Trail
+        <Waypoint
+          v-for="(waypoint, id) in waypoints"
+          :key="id"
+          :waypointdata="waypoint"
+        />
+        <!--
+        <svg id="trails">
+          <Trail
             v-for="(childchan, index) in childChannels"
             v-bind:index="index"
             v-bind:key="childchan.id"
             :traildata="childchan"
           />
-        </svg>
+        </svg> -->
 
         <GraphBackground />
       </div>
@@ -41,7 +35,7 @@ const Arena = require("are.na");
 
 import Panzoom from "@panzoom/panzoom";
 
-import Leaf from "@/components/Leaf.vue";
+import Waypoint from "@/components/Waypoint.vue";
 import Trail from "@/components/Trail.vue";
 import GraphBackground from "@/components/GraphBackground.vue";
 
@@ -49,24 +43,26 @@ export default {
   name: "SkillTreeGraph",
   data() {
     return {
-      parentChannel: "gst-albums",
-      childChannels: [],
       panzoom: null
     };
   },
   components: {
-    Leaf,
+    Waypoint,
     Trail,
     GraphBackground
   },
-  props: {
-    msg: String
-  },
+  props: {},
   mounted() {
     this.initPanZoom();
   },
-  created() {
-    console.log(this.loadData());
+  created() {},
+  computed: {
+    waypoints() {
+      return this.$store.state.waypoints;
+    },
+    trails() {
+      return this.$store.state.trails;
+    }
   },
   methods: {
     initPanZoom() {
@@ -77,33 +73,6 @@ export default {
         minScale: 0.5
       });
       elem.parentElement.addEventListener("wheel", this.panzoom.zoomWithWheel);
-    },
-    loadData() {
-      const arena = new Arena();
-      var self = this;
-      arena
-        .channel(self.parentChannel)
-        .get()
-        .then(chan => {
-          window.chan = chan;
-          self.childChannels = chan.contents;
-
-          console.log(chan.contents);
-
-          chan.contents.map(childchan => {
-            console.log(childchan.id);
-
-            arena
-              .channel(childchan.id)
-              .get()
-              .then(gchildchan => {
-                self.childChannels.find(c => c.id === childchan.id).contents =
-                  gchildchan.contents;
-              })
-              .catch(err => console.log(err));
-          });
-        })
-        .catch(err => console.log(err));
     }
   }
 };

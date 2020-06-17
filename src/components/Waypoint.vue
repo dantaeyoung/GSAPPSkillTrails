@@ -1,17 +1,17 @@
 <template>
-  <svg class="leaf"
+  <svg class="waypoint"
     xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality;"
     viewBox = "0 0 100 100"
     :style="positionStyle" >
-    <g @click="onClickViewLeaf">
-      <clipPath class="polygonMask" :id="'polygonMask-' + leafdata.id">
+    <g @click="onClickViewWaypoint">
+      <clipPath class="polygonMask" :id="'polygonMask-' + waypointdata.id">
         <polygon :points="polygonPoints"></polygon>
       </clipPath>
-      <polygon :points="polygonPoints" class="polygonBorder" :id="'polygonBorder-' + leafdata.id"></polygon>
-      <foreignObject x="0%" y="0%" width="100%" height="100%" :clip-path="'url(#polygonMask-' + leafdata.id + ')'">
+      <polygon :points="polygonPoints" class="polygonBorder" :id="'polygonBorder-' + waypointdata.id"></polygon>
+      <foreignObject x="0%" y="0%" width="100%" height="100%" :clip-path="'url(#polygonMask-' + waypointdata.id + ')'">
         <div class="circle colorfilter">
           <img :src="ThumbUrl" />
-          <div class="text">{{ leafdata.title }}</div>
+          <div class="text">{{ waypointdata.title }}</div>
         </div>
       </foreignObject>
     </g>
@@ -45,7 +45,7 @@ import seedrandom from 'seedrandom'
 import TopHeader from '@/components/TopHeader.vue'
 
 export default {
-  name: 'Leaf',
+  name: 'Waypoint',
   data() {
     return {
       polygonvalues: [],
@@ -53,13 +53,13 @@ export default {
       location: null,
     };
   },
-  props: ['leafdata'],
+  props: ['waypointdata'],
   created() {
     this.polygonvalues = this.randomPointValues();
   },
   computed: {
     ThumbUrl() {
-      try { return this.leafdata.image.thumb.url; }
+      try { return this.waypointdata.image.thumb.url; }
       catch { return "" }
     },
     polygonPoints() {
@@ -74,18 +74,17 @@ export default {
         .join(" ");
     },
     positionStyle() {
-      var myrng = new seedrandom(this.leafdata.id);
-      return `position: absolute; top: ${myrng() * 800}px; left: ${myrng() * 800}px;`;
+      return `position: absolute; top: ${ this.waypointdata.fields.coordinateX }px; left: ${ this.waypointdata.fields.coordinateY }px;`;
     }
   },
   methods: {
     randomPointValues() {
-      var myrng = new seedrandom(this.leafdata.id);
+      var myrng = new seedrandom(this.waypointdata.id);
       return Array.from({length: 8}, () => mapToRange(myrng(), 0.5, 1));
     },
-    onClickViewLeaf() {
-      console.log("going to", this.leafdata.id);
-      this.$router.push({ name: "ViewLeaf", params: { leafdata: this.leafdata, id: this.leafdata.id } });
+    onClickViewWaypoint() {
+      console.log("going to", this.waypointdata.id);
+      this.$router.push({ name: "ViewWaypoint", params: { waypointdata: this.waypointdata, id: this.waypointdata.id } });
     }
   }
 }
@@ -93,7 +92,7 @@ export default {
 
 <style scoped lang="scss">
 
-.leaf {
+.waypoint {
   width: 100px; 
   height: 100px;
   margin-left: 50px;

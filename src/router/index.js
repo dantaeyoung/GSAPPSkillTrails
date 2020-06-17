@@ -6,7 +6,7 @@ import VueRouter from "vue-router";
 
 import About from "@/components/About.vue";
 import Home from "@/components/Home.vue";
-import ViewLeaf from "@/components/ViewLeaf.vue";
+import ViewWaypoint from "@/components/ViewWaypoint.vue";
 import SkillTreeGraph from "@/components/SkillTreeGraph.vue";
 import ForceGraph from "@/components/ForceGraph.vue";
 import ListView from "@/components/ListView.vue";
@@ -44,10 +44,10 @@ const routes = [
     }
   },
   {
-    path: "/ViewLeaf/:id",
-    name: "ViewLeaf",
+    path: "/ViewWaypoint/:id",
+    name: "ViewWaypoint",
     components: {
-      content: ViewLeaf
+      content: ViewWaypoint
     }
   }
 ];
