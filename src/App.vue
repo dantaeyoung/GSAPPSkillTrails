@@ -24,6 +24,9 @@ import SkillTreeGraph from '@/components/SkillTreeGraph.vue'
 
 export default {
   components: { TopHeader, SkillTreeGraph },
+            created() {
+                this.$store.dispatch('fetch');
+            },
 };
 </script> 
 

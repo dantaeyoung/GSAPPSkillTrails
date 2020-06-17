@@ -1,59 +1,61 @@
 /* eslint-disable */
 
-import Vue from 'vue'
-import VueRouter from 'vue-router'
-import About from '@/components/About.vue'
-import Home from '@/components/Home.vue'
-import ViewLeaf from '@/components/ViewLeaf.vue'
-import SkillTreeGraph from '@/components/SkillTreeGraph.vue'
-import ForceGraph from '@/components/ForceGraph.vue'
-import ListView from '@/components/ListView.vue'
+import Vue from "vue";
+import VueRouter from "vue-router";
 
-Vue.use(VueRouter)
 
-  const routes = [
+import About from "@/components/About.vue";
+import Home from "@/components/Home.vue";
+import ViewLeaf from "@/components/ViewLeaf.vue";
+import SkillTreeGraph from "@/components/SkillTreeGraph.vue";
+import ForceGraph from "@/components/ForceGraph.vue";
+import ListView from "@/components/ListView.vue";
+
+Vue.use(VueRouter);
+
+const routes = [
   {
-    path: '/',
-    redirect: '/graph',
+    path: "/",
+    redirect: "/graph"
   },
   {
-    path: '/graph',
-    name: 'Graph',
+    path: "/graph",
+    name: "Graph"
   },
   {
-    path: '/list',
-    name: 'ListView',
+    path: "/list",
+    name: "ListView",
     components: {
-      content: ListView,
+      content: ListView
     }
   },
   {
-    path: '/forcegraph',
-    name: 'ForceGraph',
+    path: "/forcegraph",
+    name: "ForceGraph",
     components: {
-      content: ForceGraph,
+      content: ForceGraph
     }
   },
   {
-    path: '/about',
-    name: 'About',
+    path: "/about",
+    name: "About",
     components: {
-      content: About,
+      content: About
     }
   },
   {
-    path: '/ViewLeaf/:id',
-    name: 'ViewLeaf',
+    path: "/ViewLeaf/:id",
+    name: "ViewLeaf",
     components: {
-      content: ViewLeaf,
+      content: ViewLeaf
     }
   }
-]
+];
 
 const router = new VueRouter({
-  mode: 'history',
+  mode: "history",
   base: process.env.BASE_URL,
   routes
-})
+});
 
-export default router
+export default router;
