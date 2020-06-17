@@ -30,17 +30,12 @@ export default {
 
 <style scoped lang="scss">
 
-$dimpx: 1500px;
 
 .graphbackground {
   position: absolute;
   z-index: -100;
   top: 0px;
   left: 0px;
-  width: $dimpx;
-  height: $dimpx;
-  /*margin-left: calc(#{$dimpx} / -2);*/
-  /*margin-top: calc(#{$dimpx} / -2);*/
   border: 5px solid red;
 
   background: rgb(238,174,202);
