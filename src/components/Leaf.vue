@@ -75,7 +75,7 @@ export default {
     },
     positionStyle() {
       var myrng = new seedrandom(this.leafdata.id);
-      return `position: absolute; top: ${myrng() * 1000}px; left: ${myrng() * 800}px;`;
+      return `position: absolute; top: ${myrng() * 800}px; left: ${myrng() * 800}px;`;
     }
   },
   methods: {
@@ -96,6 +96,8 @@ export default {
 .leaf {
   width: 100px; 
   height: 100px;
+  margin-left: 50px;
+  margin-top: 50px;
 }
 
 img {

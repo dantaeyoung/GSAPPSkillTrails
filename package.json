@@ -8,6 +8,7 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@panzoom/panzoom": "^4.1.0",
     "are.na": "^0.1.4",
     "core-js": "^3.6.4",
     "d3": "^5.16.0",

@@ -2,8 +2,9 @@
 
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
-import ViewLeaf from '../views/ViewLeaf.vue'
+import About from '@/components/About.vue'
+import Home from '@/components/Home.vue'
+import ViewLeaf from '@/components/ViewLeaf.vue'
 import SkillTreeGraph from '@/components/SkillTreeGraph.vue'
 import ForceGraph from '@/components/ForceGraph.vue'
 import ListView from '@/components/ListView.vue'
@@ -37,7 +38,7 @@ Vue.use(VueRouter)
     path: '/about',
     name: 'About',
     components: {
-      content: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
+      content: About,
     }
   },
   {

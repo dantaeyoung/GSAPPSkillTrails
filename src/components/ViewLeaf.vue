@@ -2,7 +2,7 @@
 
   <div id="ViewLeaf">
     <h4>Viewing: {{ ViewTitle }} at {{ViewURL}}</h4>
-    <iframe :src="ViewURL" /> 
+    <!--<iframe :src="ViewURL" />  -->
   </div>
 </template>
 
