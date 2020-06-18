@@ -64,7 +64,7 @@ export default new Vuex.Store({
       var xhr1 = new XMLHttpRequest();
       xhr1.open("GET", waypointApiUrl);
       xhr1.onload = function() {
-        let waypoints = JSON.parse(xhr1.responseText).records;
+        let waypoints = JSON.parse(xhr1.responseText).records.filter(w => w.fields['Name']);
         context.commit("setWaypoints", waypoints);
         if (++successcount >= num_of_requests) {
           context.commit("setLoaded");
@@ -75,7 +75,7 @@ export default new Vuex.Store({
       var xhr2 = new XMLHttpRequest();
       xhr2.open("GET", trailsApiUrl);
       xhr2.onload = function() {
-        let trails = JSON.parse(xhr2.responseText).records;
+        let trails = JSON.parse(xhr2.responseText).records.filter(t => t.fields['Name']);
         context.commit("setTrails", trails);
         if (++successcount >= num_of_requests) {
           context.commit("setLoaded");

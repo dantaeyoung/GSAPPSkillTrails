@@ -39,7 +39,7 @@ export default {
       }
 
       const interp = new CurveInterpolator(wpcoords, { tension: 0.2 });
-      const numpts = Object.keys(this.waypoints).length * 10;
+      const numpts = Object.keys(this.waypoints).length * 8;
       const pts = interp.getPoints(numpts);
 
       console.log(pts);

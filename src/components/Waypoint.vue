@@ -98,6 +98,7 @@ export default {
   height: 100px;
   margin-left: -50px;
   margin-top: -50px;
+  cursor: pointer;
 }
 
 img {

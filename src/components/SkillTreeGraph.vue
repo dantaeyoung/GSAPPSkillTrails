@@ -4,6 +4,7 @@
       <button @click="panzoom.zoomOut()">-</button>
       <button @click="panzoom.zoomIn()">+</button>
       <button @click="panzoom.reset()">reset</button>
+      {{ posX }} / {{ posY }} // {{ scale }}
     </div>
     <div id="graphwindow">
       <div id="graphcontents">
@@ -13,11 +14,7 @@
           :waypointdata="waypoint"
         />
         <svg id="trails">
-          <Trail
-            v-for="(trail, id) in trails"
-            :key="id"
-            :traildata="trail"
-          />
+          <Trail v-for="(trail, id) in trails" :key="id" :traildata="trail" />
         </svg>
 
         <GraphBackground />
@@ -41,7 +38,7 @@ export default {
   name: "SkillTreeGraph",
   data() {
     return {
-      panzoom: null
+      panzoom: null,
     };
   },
   components: {
@@ -64,19 +61,50 @@ export default {
   },
   methods: {
     initPanZoom() {
+      var self = this;
+
+      const elemw = document.getElementById("graphwindow");
       const elem = document.getElementById("graphcontents");
+      elem.parentElement.addEventListener("wheel", function(e) {
+        e.preventDefault();
+        if (e.ctrlKey) {
+          self.panzoom.zoomWithWheel(e, { step: 0.15 });
+        } else {
+          self.panzoom.pan(
+            -e.deltaX / self.panzoom.getScale(),
+            -e.deltaY / self.panzoom.getScale(),
+            { relative: true }
+          );
+        }
+      });
+
       console.log(elem);
-      this.panzoom = Panzoom(elem, {
+      self.panzoom = Panzoom(elem, {
         maxScale: 2,
         minScale: 0.1,
         startX: -1000,
         startY: -1000,
         startScale: 1
       });
-      elem.parentElement.addEventListener("wheel", this.panzoom.zoomWithWheel);
     }
   }
 };
+
+/*
+window.addEventListener('wheel', (e) => {
+  e.preventDefault();
+
+  if (e.ctrlKey) {
+    scale -= e.deltaY * 0.01;
+  } else {
+    posX -= e.deltaX * 2;
+    posY -= e.deltaY * 2;
+  }
+
+  render();
+});
+
+ */
 </script>
 
 <style scoped lang="scss">

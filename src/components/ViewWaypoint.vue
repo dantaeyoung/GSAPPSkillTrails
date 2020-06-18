@@ -1,8 +1,10 @@
 <template>
 
   <div id="ViewWaypoint">
-    <!--  <h4>Viewing: {{ waypointdata.fields.Name }} at {{ waypointdata.fields.URL }}</h4> -->
+    <div v-if="waypointdata && waypointdata.fields">
+      <h4>Viewing: {{ waypointdata.fields.Name }} at {{ waypointdata.fields.URL }}</h4>
     <!--<iframe :src="ViewURL" />  -->
+    </div>
   </div>
 </template>
 
@@ -17,6 +19,13 @@ export default {
     console.log(this.$route.params);
   },
   computed: {
+    waypointfields() {
+      try {
+        return this.waypointdata.fields;
+      } catch {
+        return {};
+      }
+    },
     waypointdata() {
       return this.$route.params.waypointdata;
     },
