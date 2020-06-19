@@ -2,23 +2,22 @@
   <div
     class="draggablewaypoint"
     @click="onClick"
-    @mouseout="mouseOut"
     :style="positionStyle"
     :class="{ isDraggable: waypointsDraggable, isBeingDragged: isBeingDragged }"
   >
-    {{shiftDown}}
-        <WaypointIcon
-          :key="id"
-          :waypointdata="waypointdata"
-          :zoomscale="zoomscale"
-          :id="id"
-          class="panzoom-exclude" />
+    {{ shiftDown }}
+    <WaypointIcon
+      :key="id"
+      :waypointdata="waypointdata"
+      :zoomscale="zoomscale"
+      :id="id"
+      class="panzoom-exclude"
+    />
   </div>
 </template>
 
 <script>
 /* eslint-disable */
-
 
 import WaypointIcon from "@/components/WaypointIcon.vue";
 
@@ -37,13 +36,13 @@ export default {
     };
   },
   components: {
-    WaypointIcon,
+    WaypointIcon
   },
   props: ["waypointdata", "zoomscale", "id"],
   mounted() {
     var self = this;
-    this.initShiftDetect();
-    this.$parent.$on('endDragging', function() {
+    //    this.initShiftDetect();
+    this.$parent.$on("endDragging", function() {
       self.endDragging();
     });
   },
@@ -60,10 +59,10 @@ export default {
       left: ${this.currentPosition.x}px;`;
     },
     currentPosition() {
-      return { 
+      return {
         x: this.waypointdata.fields.coordinateX + this.dragCoords.x,
-        y: this.waypointdata.fields.coordinateY + this.dragCoords.y,
-      }
+        y: this.waypointdata.fields.coordinateY + this.dragCoords.y
+      };
     }
   },
   methods: {
@@ -80,10 +79,11 @@ export default {
     },
     onClick(event) {
       if (this.waypointsDraggable) {
-        if(this.isBeingDragged == false) {
+        if (this.isBeingDragged == false) {
           this.startDragging(event);
         } else {
           this.endDragging();
+          this.$parent.$emit("endDragging");
         }
       }
     },
@@ -107,21 +107,21 @@ export default {
         };
       }
     },
-    mouseOut(e) {
-      if (this.isBeingDragged) {
-      }
-    },
     endDragging(e) {
-      this.$parent.$emit('endDragging');
-      this.parentListenerElement.removeEventListener('mousemove', self.mouseMove);
-      this.$store.commit('setWaypointCoordinates', {
-        waypointid: this.waypointdata.id,
-        x: this.currentPosition.x,
-        y: this.currentPosition.y
-      });
-      this.isBeingDragged = false;
-      this.dragCoords = { x: 0, y: 0 };
-    },
+      if (this.isBeingDragged) {
+        this.parentListenerElement.removeEventListener(
+          "mousemove",
+          self.mouseMove
+        );
+        this.$store.commit("setWaypointCoordinates", {
+          waypointid: this.waypointdata.id,
+          x: this.currentPosition.x,
+          y: this.currentPosition.y
+        });
+        this.isBeingDragged = false;
+        this.dragCoords = { x: 0, y: 0 };
+      }
+    }
   }
 };
 </script>
@@ -141,7 +141,6 @@ export default {
   }
 }
 
-
 .isDraggable.isBeingDragged .polygonBorder {
   animation: blink-stroke 0.25s step-end infinite alternate;
 }
@@ -150,5 +149,4 @@ export default {
   stroke-width: 10;
   stroke-dasharray: 4;
 }
-
 </style>
