@@ -136,11 +136,18 @@ img {
     mix-blend-mode: multiply;
 }
 
+
 .polygonBorder {
   stroke: black;
   stroke-width: 4;
   stroke-linejoin: round;
+
+
+
+
 }
+
+
 .polygonMask {
 }
 

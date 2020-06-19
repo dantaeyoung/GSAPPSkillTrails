@@ -4,7 +4,7 @@
       <button @click="panzoom.zoomOut()">-</button>
       <button @click="panzoom.zoomIn()">+</button>
       <button @click="panzoom.reset()">reset</button>
-      <button @click="toggleDraggable()">draggable: {{ isDraggable }}</button>
+      <DevInterface />
     </div>
     <div id="graphwindow">
       <div id="graphcontents">
@@ -37,25 +37,23 @@ const Arena = require("are.na");
 
 import Panzoom from "@panzoom/panzoom";
 
-import PlainDraggable from "plain-draggable";
-
 import Waypoint from "@/components/Waypoint.vue";
 import Trail from "@/components/Trail.vue";
 import GraphBackground from "@/components/GraphBackground.vue";
+import DevInterface from "@/components/DevInterface.vue";
 
 export default {
   name: "SkillTreeGraph",
   data() {
     return {
       panzoom: null,
-      isDraggable: false,
-      draggablelist: null
     };
   },
   components: {
     Waypoint,
     Trail,
-    GraphBackground
+    GraphBackground,
+    DevInterface,
   },
   props: {},
   mounted() {
@@ -98,28 +96,6 @@ export default {
         startScale: 1
       });
     },
-    toggleDraggable() {
-      var self = this;
-
-      self.isDraggable = !self.isDraggable;
-      if (self.isDraggable) {
-        if (self.draggablelist == null) {
-          self.draggablelist = Array.from(
-            document.getElementsByClassName("dragcandidate")
-          ).map(elem => {
-            return new PlainDraggable(document.getElementById(elem.id));
-          });
-        } else {
-          self.draggablelist.forEach(function(dl) {
-            dl.setOptions({ disabled: false });
-          });
-        }
-      } else {
-        self.draggablelist.forEach(function(dl) {
-          dl.setOptions({ disabled: true });
-        });
-      }
-    }
   }
 };
 
