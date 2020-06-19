@@ -6,7 +6,6 @@
     xml:space="preserve"
     style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality;"
     viewBox="0 0 100 100"
-    :style="positionStyle"
     @click="onClick"
   >
     <g>
@@ -59,28 +58,21 @@ function mapToRange(val, min, max) {
 import seedrandom from "seedrandom";
 
 export default {
-  name: "Waypoint",
+  name: "WaypointIcon",
   data() {
     return {
       polygonvalues: [],
       radius: 50,
       location: null,
-      isBeingDragged: false,
-      startCoords: { x: 0, y: 0 },
-      dragCoords: { x: 0, y: 0 },
-      parentListenerElement: null,
     };
   },
-  props: ["waypointdata", "zoomscale"],
+  props: ["waypointdata", "zoomscale", "isBeingDragged"],
   created() {
     this.polygonvalues = this.randomPointValues();
   },
   computed: {
     waypointsDraggable() {
       return this.$store.state.waypointsDraggable;
-    },
-    sidelength() {
-      return this.$store.state.sidelength;
     },
     ThumbUrl() {
       try {
@@ -105,17 +97,6 @@ export default {
         })
         .join(" ");
     },
-    positionStyle() {
-      return `position: absolute; 
-      top: ${this.currentPosition.y}px; 
-      left: ${this.currentPosition.x}px;`;
-    },
-    currentPosition() {
-      return { 
-        x: this.waypointdata.fields.coordinateX + this.dragCoords.x,
-        y: this.waypointdata.fields.coordinateY + this.dragCoords.y,
-      }
-    }
   },
   methods: {
     randomPointValues() {
@@ -123,15 +104,9 @@ export default {
       return Array.from({ length: 8 }, () => mapToRange(myrng(), 0.5, 1));
     },
     onClick(event) {
-      if (!this.waypointsDraggable) {
-        this.onClickViewWaypoint();
-      } else {
-        if(this.isBeingDragged == false) {
-          this.startDragging(event);
-        } else {
-          this.endDragging();
+        if(this.waypointsDraggable == false) {
+          this.onClickViewWaypoint();
         }
-      }
     },
     onClickViewWaypoint() {
       var self = this;
@@ -141,35 +116,6 @@ export default {
         params: { waypointdata: self.waypointdata, id: self.waypointdata.id }
       });
     },
-    startDragging(event) {
-      var self = this;
-      this.parentListenerElement = event.currentTarget.parentElement;
-      this.parentListenerElement.addEventListener("mousemove", self.mouseMove);
-      this.isBeingDragged = true;
-      this.startCoords = { x: event.pageX, y: event.pageY };
-    },
-    mouseMove(event) {
-      if (!this.isBeingDragged) {
-        return;
-      }
-      event.stopPropagation();
-      if (this.isBeingDragged) {
-        this.dragCoords = {
-          x: (event.pageX - this.startCoords.x) / this.zoomscale,
-          y: (event.pageY - this.startCoords.y) / this.zoomscale
-        };
-      }
-    },
-    endDragging(e) {
-      this.parentListenerElement.removeEventListener('mousemove', self.mouseMove);
-      this.$store.commit('setWaypointCoordinates', {
-        waypointid: this.waypointdata.id,
-        x: this.currentPosition.x,
-        y: this.currentPosition.y
-      });
-      this.isBeingDragged = false;
-      this.dragCoords = { x: 0, y: 0 };
-    },
   }
 };
 </script>
@@ -178,8 +124,6 @@ export default {
 .waypoint {
   width: 100px;
   height: 100px;
-  margin-left: -50px;
-  margin-top: -50px;
   cursor: pointer;
 }
 

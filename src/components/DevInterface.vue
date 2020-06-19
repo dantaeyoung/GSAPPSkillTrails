@@ -8,7 +8,7 @@
       </button>
     </div>
     <div class="showcoordinates" v-if="showCoordinates">
-      <button @click="tableclip()">copy table</button>
+      <button @click="tableclip()">copy table{{copytablestatus}}</button>
       <table style="width:100%" id="coordinatestable">
         <tr v-for="wp in urlsortedWaypoints" :key="wp.id">
           <th>{{ wp.fields.URL }}</th>
@@ -45,7 +45,8 @@ export default {
     return {
       isDraggable: false,
       draggablelist: null,
-      showCoordinates: false
+      showCoordinates: false,
+      copytablestatus: "",
     };
   },
   components: {},
@@ -78,8 +79,11 @@ export default {
       return +val.toFixed(3);
     },
     tableclip() {
+      var self = this;
       this.$forceUpdate();
       copy(document.getElementById("coordinatestable").innerText);
+      this.copytablestatus = " : copied!";
+      setTimeout(function() { self.copytablestatus = ""; }, 1000);
     },
     lookupTransform(id) {
       let thistransform = document.getElementById("waypoint-" + id).style

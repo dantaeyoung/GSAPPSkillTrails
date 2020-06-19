@@ -4,7 +4,7 @@
     <div v-if="waypointdata && waypointdata.fields">
       <h4>{{ waypointdata.fields.Name }}</h4>
       {{ waypointdata.fields.URL }}<br />
-     <iframe :src="waypointdata.fields.URL" /> 
+      <!--     <iframe :src="waypointdata.fields.URL" />  -->
       <VideoEmbed :url="waypointdata.fields.URL" />
     </div>
   </div>

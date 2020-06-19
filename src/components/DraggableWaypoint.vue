@@ -2,14 +2,16 @@
   <div
     class="draggablewaypoint"
     @click="onClick"
+    @mouseout="mouseOut"
+      :style="positionStyle"
   >
-        <Waypoint
+        <WaypointIcon
           :key="id"
           :waypointdata="waypointdata"
           :zoomscale="zoomscale"
           :id="id"
+          :isBeingDragged="isBeingDragged"
           class="panzoom-exclude" />
-    YO
   </div>
 </template>
 
@@ -17,7 +19,7 @@
 /* eslint-disable */
 
 
-import Waypoint from "@/components/Waypoint.vue";
+import WaypointIcon from "@/components/WaypointIcon.vue";
 
 export default {
   name: "DraggableWaypoint",
@@ -31,7 +33,7 @@ export default {
     };
   },
   components: {
-    Waypoint,
+    WaypointIcon,
   },
   props: ["waypointdata", "zoomscale", "id"],
   computed: {
@@ -55,23 +57,13 @@ export default {
   },
   methods: {
     onClick(event) {
-      if (!this.waypointsDraggable) {
-        //    this.onClickViewWaypoint();
-      } else {
+      if (this.waypointsDraggable) {
         if(this.isBeingDragged == false) {
           this.startDragging(event);
         } else {
           this.endDragging();
         }
       }
-    },
-    onClickViewWaypoint() {
-      var self = this;
-      console.log("going to", self.waypointdata.id);
-      self.$router.push({
-        name: "ViewWaypoint",
-        params: { waypointdata: self.waypointdata, id: self.waypointdata.id }
-      });
     },
     startDragging(event) {
       var self = this;
@@ -92,6 +84,10 @@ export default {
         };
       }
     },
+    mouseOut(e) {
+      if (this.isBeingDragged) {
+      }
+    },
     endDragging(e) {
       this.parentListenerElement.removeEventListener('mousemove', self.mouseMove);
       this.$store.commit('setWaypointCoordinates', {
@@ -108,7 +104,10 @@ export default {
 
 <style scoped lang="scss">
 .draggablewaypoint {
-  width: 0px;
-  height: 0px;
+  width: 100px;
+  height: 100px;
+  margin-left: -50px;
+  margin-top: -50px;
+  cursor: pointer;
 }
 </style>

@@ -71,12 +71,9 @@ export default new Vuex.Store({
       }, {});
     },
     setWaypointCoordinates(state, payload) {
-      console.log(state);
-      console.log(payload);
-      console.log(payload.waypointid);
       var thiswp = state.waypoints[payload.waypointid];
-      thiswp.fields.coordinateX = payload.x;
-      thiswp.fields.coordinateY = payload.y;
+      thiswp.fields.coordinateX = Math.max(0, Math.min(state.sidelength, payload.x));
+      thiswp.fields.coordinateY = Math.max(0, Math.min(state.sidelength, payload.y));
     }
   },
   actions: {

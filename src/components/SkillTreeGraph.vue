@@ -40,7 +40,6 @@ const Arena = require("are.na");
 import Panzoom from "@panzoom/panzoom";
 
 import DraggableWaypoint from "@/components/DraggableWaypoint.vue";
-import Waypoint from "@/components/Waypoint.vue";
 import Trail from "@/components/Trail.vue";
 import GraphBackground from "@/components/GraphBackground.vue";
 import DevInterface from "@/components/DevInterface.vue";
@@ -55,7 +54,6 @@ export default {
   },
   components: {
     DraggableWaypoint,
-    Waypoint,
     Trail,
     GraphBackground,
     DevInterface,

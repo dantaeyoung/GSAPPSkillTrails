@@ -42,7 +42,6 @@ export default {
       const numpts = Object.keys(this.waypoints).length * 8;
       const pts = interp.getPoints(numpts);
 
-      console.log(pts);
 
       var pathstring = "M";
       pathstring += pts 
