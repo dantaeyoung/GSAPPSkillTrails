@@ -80,7 +80,6 @@ export default {
   },
   methods: {
     onClick(e) {
-      console.log(e.target ,e.currentTarget) 
 
       if (e.target === e.currentTarget) {
         // this presumes that graphbackground isn't clickable. if we want it to be then we can handle that later.

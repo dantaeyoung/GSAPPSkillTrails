@@ -131,7 +131,6 @@ export default {
   methods: {
 
     mouseEnter() {
-      console.log("mouseenter");
       var self = this;
       this.imBeingHovered = true;
       this.$store.commit("addHoveringWaypoint", {
@@ -147,7 +146,7 @@ export default {
     },
     randomPointValues() {
       var myrng = new seedrandom(this.waypointdata.id);
-      return Array.from({ length: 8 }, () => mapToRange(myrng(), 0.5, 1));
+      return Array.from({ length: 8 }, () => mapToRange(myrng(), 0.5, 0.95));
     },
     onClick(event) {
       if (this.waypointsDraggable == false) {
