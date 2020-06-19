@@ -11,6 +11,7 @@
     "@panzoom/panzoom": "^4.1.0",
     "anim-event": "^1.0.16",
     "are.na": "^0.1.4",
+    "copy-to-clipboard": "^3.3.1",
     "core-js": "^3.6.4",
     "cssprefix": "^2.0.16",
     "curve-interpolator": "^2.0.8",

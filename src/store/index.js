@@ -11,16 +11,29 @@ import Vuex from "vuex";
 
 Vue.use(Vuex);
 
+function coordinateTransform(val, sidelength) {
+  if (isNaN(val)) {
+    return 0;
+  }
+  // coordinates are from -1.0 to 1.0, remap to 0 to 2000
+  // or 2000 x 2000px
+  return (val * sidelength) / 2 + sidelength / 2;
+}
+
+/*function coordinateDetransform(pxval, sidelength) {
+  return (pxval * 2) / sidelength - 1;
+}*/
+
 export default new Vuex.Store({
   state: {
     count: 0,
     sidelength: 2000,
     waypoints: {},
     trails: [],
-    hasLoaded: false
+    hasLoaded: false,
+    waypointsDraggable: false,
   },
-  getters: {
-  },
+  getters: {},
   mutations: {
     increment(state) {
       state.count++;
@@ -28,18 +41,25 @@ export default new Vuex.Store({
     setLoaded(state) {
       state.hasLoaded = true;
     },
-    setWaypoints(state, waypoints) {
-
-      var self = this;
-      function coordinateTransform(val) {
-        // coordinates are from -1.0 to 1.0
-        // or 2000 x 2000px 
-        return (val * self.state.sidelength / 2) + (self.state.sidelength / 2);
+    setWaypointsDraggable(state, val) {
+      if(val == true) {
+        state.waypointsDraggable = true;
+      } else {
+        state.waypointsDraggable = false;
       }
+    },
+    setWaypoints(state, waypoints) {
+      var self = this;
 
       state.waypoints = waypoints.reduce(function(obj, item) {
-        item.fields.coordinateX = coordinateTransform(item.fields.coordinateX);
-        item.fields.coordinateY = coordinateTransform(item.fields.coordinateY);
+        item.fields.coordinateX = coordinateTransform(
+          item.fields.coordinateX,
+          self.state.sidelength
+        );
+        item.fields.coordinateY = coordinateTransform(
+          item.fields.coordinateY,
+          self.state.sidelength
+        );
         obj[item.id] = item;
         return obj;
       }, {});
@@ -49,6 +69,14 @@ export default new Vuex.Store({
         obj[item.id] = item;
         return obj;
       }, {});
+    },
+    setWaypointCoordinates(state, payload) {
+      console.log(state);
+      console.log(payload);
+      console.log(payload.waypointid);
+      var thiswp = state.waypoints[payload.waypointid];
+      thiswp.fields.coordinateX = payload.x;
+      thiswp.fields.coordinateY = payload.y;
     }
   },
   actions: {
@@ -64,7 +92,9 @@ export default new Vuex.Store({
       var xhr1 = new XMLHttpRequest();
       xhr1.open("GET", waypointApiUrl);
       xhr1.onload = function() {
-        let waypoints = JSON.parse(xhr1.responseText).records.filter(w => w.fields['Name']);
+        let waypoints = JSON.parse(xhr1.responseText).records.filter(
+          w => w.fields["Name"]
+        );
         context.commit("setWaypoints", waypoints);
         if (++successcount >= num_of_requests) {
           context.commit("setLoaded");
@@ -75,7 +105,9 @@ export default new Vuex.Store({
       var xhr2 = new XMLHttpRequest();
       xhr2.open("GET", trailsApiUrl);
       xhr2.onload = function() {
-        let trails = JSON.parse(xhr2.responseText).records.filter(t => t.fields['Name']);
+        let trails = JSON.parse(xhr2.responseText).records.filter(
+          t => t.fields["Name"]
+        );
         context.commit("setTrails", trails);
         if (++successcount >= num_of_requests) {
           context.commit("setLoaded");

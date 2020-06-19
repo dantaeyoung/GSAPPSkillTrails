@@ -4,16 +4,18 @@
       <button @click="panzoom.zoomOut()">-</button>
       <button @click="panzoom.zoomIn()">+</button>
       <button @click="panzoom.reset()">reset</button>
+      {{ zoomScale }}
       <DevInterface />
     </div>
     <div id="graphwindow">
       <div id="graphcontents">
-        <Waypoint
+        <DraggableWaypoint
           v-for="(waypoint, id) in waypoints"
           :key="id"
           :waypointdata="waypoint"
+          :zoomscale="zoomScale"
           :id="'waypoint-' + id"
-          class="dragcandidate panzoom-exclude"
+          class="panzoom-exclude"
         />
         <svg id="trails">
           <Trail
@@ -37,6 +39,7 @@ const Arena = require("are.na");
 
 import Panzoom from "@panzoom/panzoom";
 
+import DraggableWaypoint from "@/components/DraggableWaypoint.vue";
 import Waypoint from "@/components/Waypoint.vue";
 import Trail from "@/components/Trail.vue";
 import GraphBackground from "@/components/GraphBackground.vue";
@@ -47,9 +50,11 @@ export default {
   data() {
     return {
       panzoom: null,
+      zoomScale: 1,
     };
   },
   components: {
+    DraggableWaypoint,
     Waypoint,
     Trail,
     GraphBackground,
@@ -74,6 +79,15 @@ export default {
 
       const elemw = document.getElementById("graphwindow");
       const elem = document.getElementById("graphcontents");
+
+      self.panzoom = Panzoom(elem, {
+        maxScale: 2,
+        minScale: 0.1,
+        startX: -1000,
+        startY: -1000,
+        startScale: 1
+      });
+
       elem.parentElement.addEventListener("wheel", function(e) {
         e.preventDefault();
         if (e.ctrlKey) {
@@ -87,14 +101,11 @@ export default {
         }
       });
 
-      console.log(elem);
-      self.panzoom = Panzoom(elem, {
-        maxScale: 2,
-        minScale: 0.1,
-        startX: -1000,
-        startY: -1000,
-        startScale: 1
+      elem.addEventListener("panzoomzoom", function(event) {
+        self.zoomScale = self.panzoom.getScale()
       });
+
+      console.log(elem);
     },
   }
 };

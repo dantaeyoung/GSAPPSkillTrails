@@ -1,29 +1,43 @@
 <template>
   <div>
-    <div id="DevInterface">
+    <div id="DevInterface" draggable="true"  ondragstart="drag(event)">
       <div>DevInterface</div>
-      <button @click="toggleDraggable">draggable: {{ isDraggable }}</button>
+      <button @click="toggleDraggable2">draggable: {{ waypointsDraggable }}</button>
       <button @click="showCoordinates = !showCoordinates">
         toggle coordinate dialog
       </button>
     </div>
-    <div v-if="showCoordinates">
-      <div v-for="wp in urlsortedWaypoints" :key="wp.id">
-        {{ wp.fields.URL}}
-        {{ wp.fields.coordinateX }}
-        {{ wp.fields.coordinateY }}
-        {{ lookupTransform(wp.id) }}
-      </div>
+    <div class="showcoordinates" v-if="showCoordinates">
+      <button @click="tableclip()">copy table</button>
+      <table style="width:100%" id="coordinatestable">
+        <tr v-for="wp in urlsortedWaypoints" :key="wp.id">
+          <th>{{ wp.fields.URL }}</th>
+          <th>
+            {{
+              coordinateDetransform(
+                wp.fields.coordinateX + lookupTransform(wp.id).x
+              )
+            }}
+          </th>
+          <th>
+            {{
+              coordinateDetransform(
+                wp.fields.coordinateY + lookupTransform(wp.id).y
+              )
+            }}
+          </th>
+        </tr>
+      </table>
     </div>
   </div>
 </template>
 
 <script>
 /* eslint-disable */
- /* PUT ALL THE HACKY STUFF IN EHRE */
-
+/* PUT ALL THE HACKY STUFF IN EHRE */
 
 import PlainDraggable from "plain-draggable";
+import copy from "copy-to-clipboard";
 
 export default {
   name: "DevInterface",
@@ -42,28 +56,45 @@ export default {
     waypoints() {
       return this.$store.state.waypoints;
     },
+    waypointsDraggable() {
+      return this.$store.state.waypointsDraggable;
+    },
+    sidelength() {
+      return this.$store.state.sidelength;
+    },
     urlsortedWaypoints() {
       return Object.values(this.waypoints).sort((a, b) => {
-        a.fields.URL.localeCompare(b.fields.URL)
+        return ("" + a.fields.URL).localeCompare(b.fields.URL);
       });
     }
   },
+
   methods: {
+    drag(e) {
+      console.log(e);
+    },
+    coordinateDetransform(pxval) {
+      let val = (pxval * 2) / this.sidelength - 1;
+      return +val.toFixed(3);
+    },
+    tableclip() {
+      this.$forceUpdate();
+      copy(document.getElementById("coordinatestable").innerText);
+    },
     lookupTransform(id) {
-
-      // this occasionally gets a bug because transform doesn't exist before draggable is triggedred. handle that. TODO
-      let thistransform = document.getElementById("waypoint-" + id).style.transform;
-      console.log(thistransform);
-      return thistransform;
+      let thistransform = document.getElementById("waypoint-" + id).style
+        .transform;
+      thistransform = thistransform ? thistransform : "";
       let r = new RegExp(/translate\(([-\d\.]+)px,\s*([-\d\.]+)/);
-
-      
       let ttm = thistransform.match(r);
-      if(ttm !== null && ttm.length >= 3) {
-        return { x: ttm[1], y: ttm[2] };
+      if (ttm !== null && ttm.length >= 3) {
+        return { x: parseFloat(ttm[1]), y: parseFloat(ttm[2]) };
       } else {
-        return null;
+        return { x: 0, y: 0 };
       }
+    },
+    toggleDraggable2() {
+      this.$store.commit('setWaypointsDraggable', !this.waypointsDraggable)
     },
     toggleDraggable() {
       var self = this;
@@ -74,11 +105,14 @@ export default {
           self.draggablelist = Array.from(
             document.getElementsByClassName("dragcandidate") //waypoints
           ).map(elem => {
-            return new PlainDraggable(document.getElementById(elem.id));
+            var self = this;
+            var pd = new PlainDraggable(document.getElementById(elem.id));
+            pd.onDragEnd = function(pos) {
+              self.$forceUpdate();
+              //              this.$store.commit("setWaypointCoordinates", { waypointid: ( waypointid, x, y) {
+            };
+            return pd;
           });
-
-          window.dl = self.draggablelist;
-          console.log(self.draggablelist);
         } else {
           self.draggablelist.forEach(function(dl) {
             dl.disabled = false;
@@ -96,6 +130,10 @@ export default {
 </script>
 
 <style lang="scss">
+
+button {
+  background-color: #8fffff;
+}
 #DevInterface {
   border: 2px solid pink;
   display: flex;
@@ -113,5 +151,12 @@ export default {
   stroke-width: 10;
   stroke-dasharray: 4;
   animation: blink-stroke 0.5s step-end infinite alternate;
+}
+
+.showcoordinates {
+  max-width: 400px;
+  font-size: 0.6em;
+  text-align: left;
+  background-color: #ffffffc7;
 }
 </style>
