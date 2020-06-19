@@ -1,10 +1,13 @@
 <template>
   <g
-    @mouseover="mouseOver()"
+    @mouseenter="mouseEnter()"
     @mouseleave="mouseLeave()"
-    :class="{ isHovering: hover }"
+    class="gtrail"
+    :class="{ amBeingHovered: amBeingHovered, myWaypointHovered: myWaypointHovered, myWaypointBeingViewed: myWaypointBeingViewed }"
   >
     <path class="svgtrail" :d="svgTrailPath" :key="traildata.id" />
+    {{ currentlyViewingWaypoint }}
+     
   </g>
 </template>
 
@@ -19,7 +22,7 @@ export default {
     return {
       radius: 50,
       location: null,
-      hover: false
+      amBeingHovered: false
     };
   },
   props: ["traildata"],
@@ -27,6 +30,24 @@ export default {
   computed: {
     waypoints() {
       return this.$store.state.waypoints;
+    },
+    hoveringWaypoints() {
+      return this.$store.state.hoveringWaypoints;
+    },
+    currentlyViewingWaypoint() {
+      return this.$store.state.currentlyViewingWaypoint;
+    },
+    myWaypointHovered() {
+      var self = this;
+      return (
+        self.hoveringWaypoints.filter(function(t) {
+          return self.traildata.fields.Waypoints.indexOf(t) > -1;
+        }).length > 0
+      );
+    },
+    myWaypointBeingViewed() {
+      var self = this;
+      return self.traildata.fields.Waypoints.includes(self.currentlyViewingWaypoint)
     },
     svgTrailPath() {
       var self = this;
@@ -57,14 +78,14 @@ export default {
     }
   },
   methods: {
-    mouseOver() {
-      this.hover = true;
+    mouseEnter() {
+      this.amBeingHovered = true;
       this.$store.commit("addHoveringTrails", {
         ids: [ this.traildata.id ]
       });
     },
     mouseLeave() {
-      this.hover = false;
+      this.amBeingHovered = false;
       this.$store.commit("removeHoveringTrails", {
         ids: [ this.traildata.id ]
       });
@@ -74,6 +95,10 @@ export default {
 </script>
 
 <style scoped lang="scss">
+
+.gtrail {
+  pointer-events: auto;
+}
 .svgtrail {
   fill: none;
   stroke: black;
@@ -81,7 +106,15 @@ export default {
   stroke-linejoin: round;
   cursor: pointer;
 
-  .isHovering & {
+  .amBeingHovered & {
+    stroke-width: 20;
+  }
+
+  .myWaypointHovered & {
+    stroke-width: 20;
+  }
+
+  .myWaypointBeingViewed & {
     stroke-width: 20;
   }
 }

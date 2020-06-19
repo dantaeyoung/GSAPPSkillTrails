@@ -131,6 +131,7 @@ export default {
   height: 100px;
   margin-left: -50px;
   margin-top: -50px;
+  pointer-events: none;
 }
 
 @keyframes blink-stroke {

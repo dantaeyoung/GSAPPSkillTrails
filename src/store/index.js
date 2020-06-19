@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 const tableID = "app1nwPhnOPNvChPK";
 const apikey = "keyoQpvlH7D3w9kIB"; //normally this should NEVER be exposed. However, this api key is to an account that has read-only access to publicly viewable airtables.
 const tableview = "Grid%20view";
@@ -33,7 +35,8 @@ export default new Vuex.Store({
     hasLoaded: false,
     waypointsDraggable: false,
     hoveringTrails: [],
-    currentlyViewingWaypoint: null,
+    hoveringWaypoints: [],
+    currentlyViewingWaypoint: null
   },
   getters: {},
   mutations: {
@@ -45,6 +48,15 @@ export default new Vuex.Store({
     },
     currentlyViewingWaypoint(state, payload) {
       state.currentlyViewingWaypoint = payload.id;
+    },
+    addHoveringWaypoint(state, payload) {
+      if (!state.hoveringWaypoints.includes(payload.id)) {
+        state.hoveringWaypoints.push(payload.id);
+      }
+    },
+    removeHoveringWaypoint(state, payload) {
+      state.hoveringWaypoints = [];
+      //    state.hoveringWaypoints = state.hoveringWaypoints.filter(v => v !== payload.id); // set to this if we want to support multiple waypoints
     },
     addHoveringTrails(state, payload) {
       payload.ids.forEach(function(id) {

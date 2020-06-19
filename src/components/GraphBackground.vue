@@ -40,6 +40,8 @@ export default {
 
   background: rgb(238,174,202);
   background: radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 42%, rgba(206,148,233,0) 63%); 
+
+  pointer-events: none;
 }
 
 </style>

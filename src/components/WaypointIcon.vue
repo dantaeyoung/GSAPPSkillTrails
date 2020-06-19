@@ -1,19 +1,20 @@
 <template>
   <svg
     class="waypoint"
-    :class="{ itsTrailHovered: itsTrailHovered, isBeingViewed: isBeingViewed }"
+    :class="{ myTrailHovered: myTrailHovered, imBeingViewed: imBeingViewed }"
     xmlns="http://www.w3.org/2000/svg"
     xmlns:xlink="http://www.w3.org/1999/xlink"
     xml:space="preserve"
     style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality;"
     viewBox="0 0 100 100"
   >
-    <g class="shape" @click="onClick"
-    @mouseover="mouseOver()"
-    @mouseleave="mouseLeave()"
-    :class="{ isHovering: isHovering }"
-  > 
-      <clipPath class="polygonMask" :id="'polygonMask-' + waypointdata.id">
+    <g
+      class="shape"
+      @click="onClick"
+      :class="{ imBeingHovered: imBeingHovered }"
+    >
+      <clipPath class="polygonMask" :id="'polygonMask-' + waypointdata.id"
+      >
         <polygon :points="polygonPoints"></polygon>
       </clipPath>
       <polygon
@@ -22,6 +23,8 @@
         :id="'polygonBorder-' + waypointdata.id"
       ></polygon>
       <foreignObject
+      @mouseover="mouseEnter()"
+      @mouseleave="mouseLeave()"
         x="0%"
         y="0%"
         width="100%"
@@ -30,7 +33,9 @@
       >
         <div class="circle colorfilter">
           <img :src="ThumbUrl" />
-          <div class="text">{{ waypointdata.fields.Name }}</div>
+          <div class="text">
+            {{ waypointdata.fields.Name }}</div>
+          <br/>
         </div>
       </foreignObject>
     </g>
@@ -68,7 +73,7 @@ export default {
       polygonvalues: [],
       radius: 50,
       location: null,
-      isHovering: false
+      imBeingHovered: false
     };
   },
   props: ["waypointdata", "zoomscale"],
@@ -79,16 +84,19 @@ export default {
     hoveringTrails() {
       return this.$store.state.hoveringTrails;
     },
+    hoveringWaypoints() {
+      return this.$store.state.hoveringWaypoints;
+    },
     currentlyViewingWaypoint() {
       return this.$store.state.currentlyViewingWaypoint;
     },
     waypointsDraggable() {
       return this.$store.state.waypointsDraggable;
     },
-    isBeingViewed() {
+    imBeingViewed() {
       return this.currentlyViewingWaypoint === this.waypointdata.id;
     },
-    itsTrailHovered() {
+    myTrailHovered() {
       var self = this;
       return (
         self.hoveringTrails.filter(function(t) {
@@ -121,17 +129,21 @@ export default {
     }
   },
   methods: {
-    mouseOver() {
-      this.isHovering = true;
-      /*      this.$store.commit("addHoveringTrails", {
-        ids: [ this.traildata.id ]
-      }); */
+
+    mouseEnter() {
+      console.log("mouseenter");
+      var self = this;
+      this.imBeingHovered = true;
+      this.$store.commit("addHoveringWaypoint", {
+        id: self.waypointdata.id
+      });
     },
     mouseLeave() {
-      this.isHovering = false;
-      /*      this.$store.commit("removeHoveringTrails", {
-        ids: [ this.traildata.id ]
-      });*/
+      var self = this;
+      this.imBeingHovered = false;
+      this.$store.commit("removeHoveringWaypoint", {
+        id: self.waypointdata.id
+      });
     },
     randomPointValues() {
       var myrng = new seedrandom(this.waypointdata.id);
@@ -147,20 +159,27 @@ export default {
       this.$store.commit("currentlyViewingWaypoint", {
         id: self.waypointdata.id
       });
-      self.$router.push({
-        name: "ViewWaypoint",
-        params:{ id: self.waypointdata.id }
-      }).catch(err => {});
+      self.$router
+        .push({
+          name: "ViewWaypoint",
+          params: { id: self.waypointdata.id }
+        })
+        .catch(err => {});
     }
   }
 };
 </script>
 
 <style scoped lang="scss">
-.waypoint {
+svg.waypoint {
   width: 100px;
   height: 100px;
 }
+
+foreignObject {
+  pointer-events: auto;
+} 
+
 
 img {
   opacity: 0.5;
@@ -211,13 +230,19 @@ g.shape {
   stroke-linejoin: round;
   fill: none;
 
-  .itsTrailHovered & {
+  .myTrailHovered & {
     stroke-width: 10;
   }
 
-  .isBeingViewed & {
+  .imBeingViewed & {
     stroke: red;
   }
+
+  .imBeingHovered & {
+    stroke-width: 8;
+  }
+
+
 }
 
 .polygonMask {

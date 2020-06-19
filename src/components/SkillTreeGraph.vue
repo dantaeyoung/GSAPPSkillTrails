@@ -9,7 +9,7 @@
     </div>
     <MouseDialog mouseeventid="graphframe" />
     <div id="graphwindow">
-      <div id="graphcontents">
+      <div id="graphcontents" @click="onClick">
         <DraggableWaypoint
           v-for="(waypoint, id) in waypoints"
           :key="id"
@@ -40,18 +40,19 @@ const Arena = require("are.na");
 
 import Panzoom from "@panzoom/panzoom";
 
-import DraggableWaypoint from "@/components/DraggableWaypoint.vue";
 import MouseDialog from "@/components/MouseDialog.vue";
+import DevInterface from "@/components/DevInterface.vue";
+
+import DraggableWaypoint from "@/components/DraggableWaypoint.vue";
 import Trail from "@/components/Trail.vue";
 import GraphBackground from "@/components/GraphBackground.vue";
-import DevInterface from "@/components/DevInterface.vue";
 
 export default {
   name: "SkillTreeGraph",
   data() {
     return {
       panzoom: null,
-      zoomScale: 1,
+      zoomScale: 1
     };
   },
   components: {
@@ -67,6 +68,9 @@ export default {
   },
   created() {},
   computed: {
+    currentlyViewingWaypoint() {
+      return this.$store.state.currentlyViewingWaypoint;
+    },
     waypoints() {
       return this.$store.state.waypoints;
     },
@@ -75,14 +79,25 @@ export default {
     }
   },
   methods: {
+    onClick(e) {
+      console.log(e.target ,e.currentTarget) 
+
+      if (e.target === e.currentTarget) {
+        // this presumes that graphbackground isn't clickable. if we want it to be then we can handle that later.
+        this.unclickWaypoints();
+      }
+    },
+    unclickWaypoints() {
+      if (this.currentlyViewingWaypoint) {
+        this.$router.push("Graph").catch(err => {});
+        this.$store.commit("currentlyViewingWaypoint", { id: null });
+      }
+    },
     initPanZoom() {
       var self = this;
 
       const elemw = document.getElementById("graphwindow");
       const elem = document.getElementById("graphcontents");
-
-      console.log(elemw.width);
-      console.log(elemw.scrollHeight);
 
       self.panzoom = Panzoom(elem, {
         maxScale: 2,
@@ -106,14 +121,11 @@ export default {
       });
 
       elem.addEventListener("panzoomzoom", function(event) {
-        self.zoomScale = self.panzoom.getScale()
+        self.zoomScale = self.panzoom.getScale();
       });
-
-      console.log(elem);
-    },
+    }
   }
 };
-
 </script>
 
 <style scoped lang="scss">
@@ -155,7 +167,10 @@ a {
 svg#trails {
   height: 2000px;
   width: 2000px;
+  pointer-events: none
 }
+
+svg#trails
 
 .WPWP {
   background-color: red;
