@@ -1,15 +1,18 @@
 <template>
   <svg
     class="waypoint"
-    :class="{ itsTrailHovered : itsTrailHovered, isBeingViewed: isBeingViewed }"
+    :class="{ itsTrailHovered: itsTrailHovered, isBeingViewed: isBeingViewed }"
     xmlns="http://www.w3.org/2000/svg"
     xmlns:xlink="http://www.w3.org/1999/xlink"
     xml:space="preserve"
     style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality;"
     viewBox="0 0 100 100"
-    @click="onClick"
   >
-    <g>
+    <g class="shape" @click="onClick"
+    @mouseover="mouseOver()"
+    @mouseleave="mouseLeave()"
+    :class="{ isHovering: isHovering }"
+  > 
       <clipPath class="polygonMask" :id="'polygonMask-' + waypointdata.id">
         <polygon :points="polygonPoints"></polygon>
       </clipPath>
@@ -65,6 +68,7 @@ export default {
       polygonvalues: [],
       radius: 50,
       location: null,
+      isHovering: false
     };
   },
   props: ["waypointdata", "zoomscale"],
@@ -86,9 +90,11 @@ export default {
     },
     itsTrailHovered() {
       var self = this;
-      return self.hoveringTrails.filter(function(t) {
-        return self.waypointdata.fields.Trails.indexOf(t) > -1;
-      }).length > 0;
+      return (
+        self.hoveringTrails.filter(function(t) {
+          return self.waypointdata.fields.Trails.indexOf(t) > -1;
+        }).length > 0
+      );
     },
     ThumbUrl() {
       try {
@@ -112,27 +118,40 @@ export default {
           return point.x + "," + point.y;
         })
         .join(" ");
-    },
+    }
   },
   methods: {
+    mouseOver() {
+      this.isHovering = true;
+      /*      this.$store.commit("addHoveringTrails", {
+        ids: [ this.traildata.id ]
+      }); */
+    },
+    mouseLeave() {
+      this.isHovering = false;
+      /*      this.$store.commit("removeHoveringTrails", {
+        ids: [ this.traildata.id ]
+      });*/
+    },
     randomPointValues() {
       var myrng = new seedrandom(this.waypointdata.id);
       return Array.from({ length: 8 }, () => mapToRange(myrng(), 0.5, 1));
     },
     onClick(event) {
-        if(this.waypointsDraggable == false) {
-          this.onClickViewWaypoint();
-        }
+      if (this.waypointsDraggable == false) {
+        this.onClickViewWaypoint();
+      }
     },
     onClickViewWaypoint() {
       var self = this;
-      console.log("going to", self.waypointdata.id);
+      this.$store.commit("currentlyViewingWaypoint", {
+        id: self.waypointdata.id
+      });
       self.$router.push({
         name: "ViewWaypoint",
-        params: { waypointdata: self.waypointdata, id: self.waypointdata.id }
-      });
-      this.$store.commit("currentlyViewingWaypoint", { id: self.waypointdata.id });
-    },
+        params:{ id: self.waypointdata.id }
+      }).catch(err => {});
+    }
   }
 };
 </script>
@@ -141,7 +160,6 @@ export default {
 .waypoint {
   width: 100px;
   height: 100px;
-  cursor: pointer;
 }
 
 img {
@@ -182,12 +200,16 @@ img {
   mix-blend-mode: multiply;
 }
 
+g.shape {
+  cursor: pointer;
+}
+
 .polygonBorder {
+  border: 1px solid blue;
   stroke: black;
   stroke-width: 4;
   stroke-linejoin: round;
   fill: none;
-
 
   .itsTrailHovered & {
     stroke-width: 10;

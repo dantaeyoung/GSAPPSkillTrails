@@ -4,6 +4,7 @@
     <div v-if="waypointdata && waypointdata.fields">
       <h4>{{ waypointdata.fields.Name }}</h4>
       {{ waypointdata.fields.URL }}<br />
+      {{thisid}}
       <!--     <iframe :src="waypointdata.fields.URL" />  -->
       <VideoEmbed :url="waypointdata.fields.URL" />
     </div>
@@ -23,15 +24,11 @@ export default {
     console.log(this.$route.params);
   },
   computed: {
-    waypointfields() {
-      try {
-        return this.waypointdata.fields;
-      } catch {
-        return {};
-      }
-    },
     waypointdata() {
-      return this.$route.params.waypointdata;
+      return this.$store.state.waypoints[this.thisid]
+    },
+    thisid() {
+      return this.$route.params.id;
     },
   },
 }
