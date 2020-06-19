@@ -4,7 +4,7 @@
       <button @click="panzoom.zoomOut()">-</button>
       <button @click="panzoom.zoomIn()">+</button>
       <button @click="panzoom.reset()">reset</button>
-      {{ posX }} / {{ posY }} // {{ scale }}
+      <button @click="toggleDraggable()">draggable: {{ isDraggable }}</button>
     </div>
     <div id="graphwindow">
       <div id="graphcontents">
@@ -12,9 +12,16 @@
           v-for="(waypoint, id) in waypoints"
           :key="id"
           :waypointdata="waypoint"
+          :id="'waypoint-' + id"
+          class="dragcandidate panzoom-exclude"
         />
         <svg id="trails">
-          <Trail v-for="(trail, id) in trails" :key="id" :traildata="trail" />
+          <Trail
+            v-for="(trail, id) in trails"
+            :key="id"
+            :traildata="trail"
+            class="panzoom-exclude"
+          />
         </svg>
 
         <GraphBackground />
@@ -30,6 +37,8 @@ const Arena = require("are.na");
 
 import Panzoom from "@panzoom/panzoom";
 
+import PlainDraggable from "plain-draggable";
+
 import Waypoint from "@/components/Waypoint.vue";
 import Trail from "@/components/Trail.vue";
 import GraphBackground from "@/components/GraphBackground.vue";
@@ -39,6 +48,8 @@ export default {
   data() {
     return {
       panzoom: null,
+      isDraggable: false,
+      draggablelist: null
     };
   },
   components: {
@@ -86,25 +97,32 @@ export default {
         startY: -1000,
         startScale: 1
       });
+    },
+    toggleDraggable() {
+      var self = this;
+
+      self.isDraggable = !self.isDraggable;
+      if (self.isDraggable) {
+        if (self.draggablelist == null) {
+          self.draggablelist = Array.from(
+            document.getElementsByClassName("dragcandidate")
+          ).map(elem => {
+            return new PlainDraggable(document.getElementById(elem.id));
+          });
+        } else {
+          self.draggablelist.forEach(function(dl) {
+            dl.setOptions({ disabled: false });
+          });
+        }
+      } else {
+        self.draggablelist.forEach(function(dl) {
+          dl.setOptions({ disabled: true });
+        });
+      }
     }
   }
 };
 
-/*
-window.addEventListener('wheel', (e) => {
-  e.preventDefault();
-
-  if (e.ctrlKey) {
-    scale -= e.deltaY * 0.01;
-  } else {
-    posX -= e.deltaX * 2;
-    posY -= e.deltaY * 2;
-  }
-
-  render();
-});
-
- */
 </script>
 
 <style scoped lang="scss">
@@ -146,5 +164,9 @@ a {
 svg#trails {
   height: 2000px;
   width: 2000px;
+}
+
+.WPWP {
+  background-color: red;
 }
 </style>

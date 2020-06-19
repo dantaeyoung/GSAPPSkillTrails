@@ -2,18 +2,22 @@
 
   <div id="ViewWaypoint">
     <div v-if="waypointdata && waypointdata.fields">
-      <h4>Viewing: {{ waypointdata.fields.Name }} at {{ waypointdata.fields.URL }}</h4>
-    <!--<iframe :src="ViewURL" />  -->
+      <h4>{{ waypointdata.fields.Name }}</h4>
+      {{ waypointdata.fields.URL }}<br />
+     <iframe :src="waypointdata.fields.URL" /> 
+      <VideoEmbed :url="waypointdata.fields.URL" />
     </div>
   </div>
 </template>
 
 <script>
 
+import VideoEmbed from "@/components/VideoEmbed.vue";
 
 export default {
   name: 'ViewWaypoint',
   components: {
+    VideoEmbed,
   },
   created() {
     console.log(this.$route.params);
