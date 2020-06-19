@@ -32,7 +32,8 @@ export default new Vuex.Store({
     trails: [],
     hasLoaded: false,
     waypointsDraggable: false,
-    hoveringTrails: []
+    hoveringTrails: [],
+    currentlyViewingWaypoint: null,
   },
   getters: {},
   mutations: {
@@ -41,6 +42,9 @@ export default new Vuex.Store({
     },
     setLoaded(state) {
       state.hasLoaded = true;
+    },
+    currentlyViewingWaypoint(state, payload) {
+      state.currentlyViewingWaypoint = payload.id;
     },
     addHoveringTrails(state, payload) {
       payload.ids.forEach(function(id) {

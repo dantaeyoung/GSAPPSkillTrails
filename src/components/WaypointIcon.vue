@@ -1,6 +1,7 @@
 <template>
   <svg
     class="waypoint"
+    :class="{ itsTrailHovered : itsTrailHovered, isBeingViewed: isBeingViewed }"
     xmlns="http://www.w3.org/2000/svg"
     xmlns:xlink="http://www.w3.org/1999/xlink"
     xml:space="preserve"
@@ -71,8 +72,23 @@ export default {
     this.polygonvalues = this.randomPointValues();
   },
   computed: {
+    hoveringTrails() {
+      return this.$store.state.hoveringTrails;
+    },
+    currentlyViewingWaypoint() {
+      return this.$store.state.currentlyViewingWaypoint;
+    },
     waypointsDraggable() {
       return this.$store.state.waypointsDraggable;
+    },
+    isBeingViewed() {
+      return this.currentlyViewingWaypoint === this.waypointdata.id;
+    },
+    itsTrailHovered() {
+      var self = this;
+      return self.hoveringTrails.filter(function(t) {
+        return self.waypointdata.fields.Trails.indexOf(t) > -1;
+      }).length > 0;
     },
     ThumbUrl() {
       try {
@@ -115,6 +131,7 @@ export default {
         name: "ViewWaypoint",
         params: { waypointdata: self.waypointdata, id: self.waypointdata.id }
       });
+      this.$store.commit("currentlyViewingWaypoint", { id: self.waypointdata.id });
     },
   }
 };
@@ -170,6 +187,15 @@ img {
   stroke-width: 4;
   stroke-linejoin: round;
   fill: none;
+
+
+  .itsTrailHovered & {
+    stroke-width: 10;
+  }
+
+  .isBeingViewed & {
+    stroke: red;
+  }
 }
 
 .polygonMask {

@@ -5,7 +5,6 @@
     :style="positionStyle"
     :class="{ isDraggable: waypointsDraggable, isBeingDragged: isBeingDragged }"
   >
-    {{ shiftDown }}
     <WaypointIcon
       :key="id"
       :waypointdata="waypointdata"
@@ -41,7 +40,7 @@ export default {
   props: ["waypointdata", "zoomscale", "id"],
   mounted() {
     var self = this;
-    //    this.initShiftDetect();
+    this.initShiftDetect();
     this.$parent.$on("endDragging", function() {
       self.endDragging();
     });
