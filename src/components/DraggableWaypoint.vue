@@ -3,14 +3,14 @@
     class="draggablewaypoint"
     @click="onClick"
     @mouseout="mouseOut"
-      :style="positionStyle"
+    :style="positionStyle"
+    :class="{ isDraggable: waypointsDraggable, isBeingDragged: isBeingDragged }"
   >
         <WaypointIcon
           :key="id"
           :waypointdata="waypointdata"
           :zoomscale="zoomscale"
           :id="id"
-          :isBeingDragged="isBeingDragged"
           class="panzoom-exclude" />
   </div>
 </template>
@@ -102,7 +102,7 @@ export default {
 };
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 .draggablewaypoint {
   width: 100px;
   height: 100px;
@@ -110,4 +110,21 @@ export default {
   margin-top: -50px;
   cursor: pointer;
 }
+
+@keyframes blink-stroke {
+  50% {
+    stroke: #ff0000;
+  }
+}
+
+
+.isDraggable.isBeingDragged .polygonBorder {
+  animation: blink-stroke 0.25s step-end infinite alternate;
+}
+
+.isDraggable .polygonBorder {
+  stroke-width: 10;
+  stroke-dasharray: 4;
+}
+
 </style>

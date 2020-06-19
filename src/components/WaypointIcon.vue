@@ -66,7 +66,7 @@ export default {
       location: null,
     };
   },
-  props: ["waypointdata", "zoomscale", "isBeingDragged"],
+  props: ["waypointdata", "zoomscale"],
   created() {
     this.polygonvalues = this.randomPointValues();
   },

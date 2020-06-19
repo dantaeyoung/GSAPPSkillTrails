@@ -1,8 +1,8 @@
 <template>
   <div>
-    <div id="DevInterface" draggable="true"  ondragstart="drag(event)">
+    <div id="DevInterface">
       <div>DevInterface</div>
-      <button @click="toggleDraggable2">draggable: {{ waypointsDraggable }}</button>
+      <button @click="toggleDraggable">draggable: {{ waypointsDraggable }}</button>
       <button @click="showCoordinates = !showCoordinates">
         toggle coordinate dialog
       </button>
@@ -36,14 +36,12 @@
 /* eslint-disable */
 /* PUT ALL THE HACKY STUFF IN EHRE */
 
-import PlainDraggable from "plain-draggable";
 import copy from "copy-to-clipboard";
 
 export default {
   name: "DevInterface",
   data() {
     return {
-      isDraggable: false,
       draggablelist: null,
       showCoordinates: false,
       copytablestatus: "",
@@ -71,9 +69,6 @@ export default {
   },
 
   methods: {
-    drag(e) {
-      console.log(e);
-    },
     coordinateDetransform(pxval) {
       let val = (pxval * 2) / this.sidelength - 1;
       return +val.toFixed(3);
@@ -97,65 +92,27 @@ export default {
         return { x: 0, y: 0 };
       }
     },
-    toggleDraggable2() {
+    toggleDraggable() {
       this.$store.commit('setWaypointsDraggable', !this.waypointsDraggable)
     },
-    toggleDraggable() {
-      var self = this;
-
-      self.isDraggable = !self.isDraggable;
-      if (self.isDraggable) {
-        if (self.draggablelist == null) {
-          self.draggablelist = Array.from(
-            document.getElementsByClassName("dragcandidate") //waypoints
-          ).map(elem => {
-            var self = this;
-            var pd = new PlainDraggable(document.getElementById(elem.id));
-            pd.onDragEnd = function(pos) {
-              self.$forceUpdate();
-              //              this.$store.commit("setWaypointCoordinates", { waypointid: ( waypointid, x, y) {
-            };
-            return pd;
-          });
-        } else {
-          self.draggablelist.forEach(function(dl) {
-            dl.disabled = false;
-          });
-        }
-      } else {
-        // draggable false
-        self.draggablelist.forEach(function(dl) {
-          dl.disabled = true;
-        });
-      }
-    }
   }
 };
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
 
-button {
-  background-color: #8fffff;
-}
+
+
 #DevInterface {
   border: 2px solid pink;
   display: flex;
   flex-direction: column;
   height: 100px;
 }
-
-@keyframes blink-stroke {
-  50% {
-    stroke: #ff0000;
-  }
+button {
+  background-color: #8fffff;
 }
 
-.waypoint.plain-draggable .polygonBorder {
-  stroke-width: 10;
-  stroke-dasharray: 4;
-  animation: blink-stroke 0.5s step-end infinite alternate;
-}
 
 .showcoordinates {
   max-width: 400px;
