@@ -1,5 +1,8 @@
 # GSAPPSkillTreeV3
 
+This is Version 3 of the GSAPP Skill Tree. UNDER DEVELOPMENT
+
+
 ## Project setup
 ```
 npm install
@@ -14,9 +17,3 @@ npm run serve
 ```
 npm run build
 ```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
