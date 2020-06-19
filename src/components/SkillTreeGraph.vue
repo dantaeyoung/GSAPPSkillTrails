@@ -7,6 +7,7 @@
       {{ zoomScale }}
       <DevInterface />
     </div>
+    <MouseDialog mouseeventid="graphframe" />
     <div id="graphwindow">
       <div id="graphcontents">
         <DraggableWaypoint
@@ -40,6 +41,7 @@ const Arena = require("are.na");
 import Panzoom from "@panzoom/panzoom";
 
 import DraggableWaypoint from "@/components/DraggableWaypoint.vue";
+import MouseDialog from "@/components/MouseDialog.vue";
 import Trail from "@/components/Trail.vue";
 import GraphBackground from "@/components/GraphBackground.vue";
 import DevInterface from "@/components/DevInterface.vue";
@@ -57,6 +59,7 @@ export default {
     Trail,
     GraphBackground,
     DevInterface,
+    MouseDialog
   },
   props: {},
   mounted() {
@@ -78,11 +81,14 @@ export default {
       const elemw = document.getElementById("graphwindow");
       const elem = document.getElementById("graphcontents");
 
+      console.log(elemw.width);
+      console.log(elemw.scrollHeight);
+
       self.panzoom = Panzoom(elem, {
         maxScale: 2,
         minScale: 0.1,
-        startX: -1000,
-        startY: -1000,
+        startX: -400,
+        startY: -400,
         startScale: 1
       });
 

@@ -1,6 +1,9 @@
 <template>
-  <g>
-    hello
+  <g
+    @mouseover="mouseOver()"
+    @mouseleave="mouseLeave()"
+    :class="{ isHovering: hover }"
+  >
     <path class="svgtrail" :d="svgTrailPath" :key="traildata.id" />
   </g>
 </template>
@@ -8,14 +11,15 @@
 <script>
 /* eslint-disable */
 
-import { CurveInterpolator } from 'curve-interpolator';
+import { CurveInterpolator } from "curve-interpolator";
 
 export default {
   name: "Trail",
   data() {
     return {
       radius: 50,
-      location: null
+      location: null,
+      hover: false
     };
   },
   props: ["traildata"],
@@ -42,9 +46,8 @@ export default {
       const numpts = Object.keys(this.waypoints).length * 8;
       const pts = interp.getPoints(numpts);
 
-
       var pathstring = "M";
-      pathstring += pts 
+      pathstring += pts
         .map(item => {
           return item[0] + " " + item[1];
         })
@@ -54,22 +57,32 @@ export default {
     }
   },
   methods: {
+    mouseOver() {
+      this.hover = true;
+      this.$store.commit("addHoveringTrails", {
+        ids: [ this.traildata.id ]
+      });
+    },
+    mouseLeave() {
+      this.hover = false;
+      this.$store.commit("removeHoveringTrails", {
+        ids: [ this.traildata.id ]
+      });
+    }
   }
 };
 </script>
 
 <style scoped lang="scss">
-svg {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 500px;
-  height: 500px;
-}
 .svgtrail {
   fill: none;
   stroke: black;
   stroke-width: 4;
   stroke-linejoin: round;
+  cursor: pointer;
+
+  .isHovering & {
+    stroke-width: 20;
+  }
 }
 </style>

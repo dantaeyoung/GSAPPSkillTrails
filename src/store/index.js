@@ -32,6 +32,7 @@ export default new Vuex.Store({
     trails: [],
     hasLoaded: false,
     waypointsDraggable: false,
+    hoveringTrails: []
   },
   getters: {},
   mutations: {
@@ -41,8 +42,20 @@ export default new Vuex.Store({
     setLoaded(state) {
       state.hasLoaded = true;
     },
+    addHoveringTrails(state, payload) {
+      payload.ids.forEach(function(id) {
+        if (!state.hoveringTrails.includes(id)) {
+          state.hoveringTrails.push(id);
+        }
+      });
+    },
+    removeHoveringTrails(state, payload) {
+      payload.ids.forEach(function(id) {
+        state.hoveringTrails = state.hoveringTrails.filter(v => v !== id);
+      });
+    },
     setWaypointsDraggable(state, val) {
-      if(val == true) {
+      if (val == true) {
         state.waypointsDraggable = true;
       } else {
         state.waypointsDraggable = false;
@@ -72,8 +85,14 @@ export default new Vuex.Store({
     },
     setWaypointCoordinates(state, payload) {
       var thiswp = state.waypoints[payload.waypointid];
-      thiswp.fields.coordinateX = Math.max(0, Math.min(state.sidelength, payload.x));
-      thiswp.fields.coordinateY = Math.max(0, Math.min(state.sidelength, payload.y));
+      thiswp.fields.coordinateX = Math.max(
+        0,
+        Math.min(state.sidelength, payload.x)
+      );
+      thiswp.fields.coordinateY = Math.max(
+        0,
+        Math.min(state.sidelength, payload.y)
+      );
     }
   },
   actions: {

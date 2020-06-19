@@ -6,6 +6,7 @@
     :style="positionStyle"
     :class="{ isDraggable: waypointsDraggable, isBeingDragged: isBeingDragged }"
   >
+    {{shiftDown}}
         <WaypointIcon
           :key="id"
           :waypointdata="waypointdata"
@@ -30,12 +31,22 @@ export default {
       startCoords: { x: 0, y: 0 },
       dragCoords: { x: 0, y: 0 },
       parentListenerElement: null,
+      shiftDown: false,
+      mouseX: 0,
+      mouseY: 0
     };
   },
   components: {
     WaypointIcon,
   },
   props: ["waypointdata", "zoomscale", "id"],
+  mounted() {
+    var self = this;
+    this.initShiftDetect();
+    this.$parent.$on('endDragging', function() {
+      self.endDragging();
+    });
+  },
   computed: {
     waypointsDraggable() {
       return this.$store.state.waypointsDraggable;
@@ -56,6 +67,17 @@ export default {
     }
   },
   methods: {
+    initShiftDetect() {
+      var self = this;
+      window.addEventListener("keydown", event => {
+        self.shiftDown = event.shiftKey;
+      });
+      window.addEventListener("keyup", event => {
+        self.shiftDown = event.shiftKey;
+        this.startCoords.x = this.mouseX;
+        this.startCoords.y = this.mouseY;
+      });
+    },
     onClick(event) {
       if (this.waypointsDraggable) {
         if(this.isBeingDragged == false) {
@@ -73,10 +95,11 @@ export default {
       this.startCoords = { x: event.pageX, y: event.pageY };
     },
     mouseMove(event) {
-      if (!this.isBeingDragged) {
+      this.mouseX = event.pageX;
+      this.mouseY = event.pageY;
+      if (!this.isBeingDragged || event.shiftKey) {
         return;
       }
-      event.stopPropagation();
       if (this.isBeingDragged) {
         this.dragCoords = {
           x: (event.pageX - this.startCoords.x) / this.zoomscale,
@@ -89,6 +112,7 @@ export default {
       }
     },
     endDragging(e) {
+      this.$parent.$emit('endDragging');
       this.parentListenerElement.removeEventListener('mousemove', self.mouseMove);
       this.$store.commit('setWaypointCoordinates', {
         waypointid: this.waypointdata.id,
