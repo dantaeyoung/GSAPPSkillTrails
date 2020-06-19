@@ -18,7 +18,9 @@
           :id="'waypoint-' + id"
           class="panzoom-exclude"
         />
-        <svg id="trails">
+        <svg id="trails" 
+          class="panzoom-exclude"
+          >
           <Trail
             v-for="(trail, id) in trails"
             :key="id"
@@ -27,7 +29,9 @@
           />
         </svg>
 
-        <GraphBackground />
+        <GraphBackground 
+          class="panzoom-exclude"
+        />
       </div>
     </div>
   </div>
@@ -103,7 +107,7 @@ export default {
         minScale: 0.1,
         startX: -400,
         startY: -400,
-        startScale: 1
+        startScale: 1,
       });
 
       elem.parentElement.addEventListener("wheel", function(e) {

@@ -18,7 +18,7 @@ function coordinateTransform(val, sidelength) {
     return 0;
   }
   // coordinates are from -1.0 to 1.0, remap to 0 to 2000
-  // or 2000 x 2000px
+  // or 2000 x 2000px , based on sidelength
   return (val * sidelength) / 2 + sidelength / 2;
 }
 
