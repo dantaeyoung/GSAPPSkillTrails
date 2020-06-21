@@ -38,8 +38,6 @@
 <script>
 /* eslint-disable */
 
-const Arena = require("are.na");
-
 import Panzoom from "@panzoom/panzoom";
 
 import MouseDialog from "@/components/MouseDialog.vue";

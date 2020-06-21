@@ -8,7 +8,6 @@ import About from "@/components/About.vue";
 import Home from "@/components/Home.vue";
 import ViewWaypoint from "@/components/ViewWaypoint.vue";
 import SkillTreeGraph from "@/components/SkillTreeGraph.vue";
-import ForceGraph from "@/components/ForceGraph.vue";
 import ListView from "@/components/ListView.vue";
 
 Vue.use(VueRouter);
@@ -27,13 +26,6 @@ const routes = [
     name: "ListView",
     components: {
       content: ListView
-    }
-  },
-  {
-    path: "/forcegraph",
-    name: "ForceGraph",
-    components: {
-      content: ForceGraph
     }
   },
   {

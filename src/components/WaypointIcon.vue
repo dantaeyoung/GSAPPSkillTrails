@@ -33,7 +33,6 @@
         <div class="circle colorfilter">
           <img :src="ThumbUrl" />
           <div class="text">
-            {{ imMarkedDone }}
             {{ waypointdata.fields.Name }}
           </div>
           <br />
