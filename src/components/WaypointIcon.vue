@@ -81,6 +81,9 @@ export default {
     this.polygonvalues = this.randomPointValues();
   },
   computed: {
+    cursorMode() {
+      return this.$store.state.cursorMode;
+    },
     hoveringTrails() {
       return this.$store.state.hoveringTrails;
     },
@@ -150,7 +153,9 @@ export default {
     },
     onClick(event) {
       if (this.waypointsDraggable == false) {
-        this.onClickViewWaypoint();
+        if(this.cursorMode['navigate'] == true) {
+          this.onClickViewWaypoint();
+        }
       }
     },
     onClickViewWaypoint() {

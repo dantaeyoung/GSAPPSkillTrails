@@ -40,7 +40,8 @@ export default new Vuex.Store({
     hoveringWaypoints: [],
     currentlyViewingWaypoint: null,
     waypointStatusesToShow: ["Published"],
-    trailStatusesToShow: ["Published"]
+    trailStatusesToShow: ["Published"],
+    cursorMode: { navigate: true, markasdone: false }
   },
   getters: {
     trails(state) {
@@ -51,8 +52,13 @@ export default new Vuex.Store({
     }
   },
   mutations: {
-    increment(state) {
-      state.count++;
+    setCursorMode(state, payload) {
+      if (payload.mode in state.cursorMode) {
+        Object.keys(state.cursorMode).forEach(k => {
+          state.cursorMode[k] = false;
+        });
+        state.cursorMode[payload.mode] = true;
+      }
     },
     setLoaded(state) {
       state.hasLoaded = true;
@@ -195,9 +201,12 @@ export default new Vuex.Store({
         })
         .map(thistr => thistr.id);
 
+      var newUnfilteredWaypoints = dcopy(state.unfilteredWaypoints);
+      // DEEP COPY NECESSARY otherwise reactivity gets fucked
+
       result.waypoints = Object.fromEntries(
         //1. filter waypoints if those waypoints don't have the right status
-        Object.entries(state.unfilteredWaypoints)
+        Object.entries(newUnfilteredWaypoints)
           .filter(thiswp => {
             var [wpid, wpdata] = thiswp;
             return visibleWaypointIDs.includes(wpid);
@@ -214,6 +223,7 @@ export default new Vuex.Store({
       );
 
       var newUnfilteredTrails = dcopy(state.unfilteredTrails);
+      // DEEP COPY NECESSARY otherwise reactivity gets fucked
 
       result.trails = Object.fromEntries(
         //1. filter trails if those trails don't have the right status

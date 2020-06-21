@@ -1,12 +1,12 @@
 <template>
-  <div id="graphframe">
+  <div id="graphframe" :class="cursorMode">
     <div id="graphnav">
       <button @click="panzoom.zoomOut()">-</button>
       <button @click="panzoom.zoomIn()">+</button>
       <button @click="panzoom.reset()">reset</button>
       {{ zoomScale }}
       <DevInterface />
-      <GraphToolbar />
+      <CursorToolbar />
     </div>
     <MouseDialog mouseeventid="graphframe" />
     <div id="graphwindow">
@@ -44,7 +44,7 @@ import Panzoom from "@panzoom/panzoom";
 
 import MouseDialog from "@/components/MouseDialog.vue";
 import DevInterface from "@/components/DevInterface.vue";
-import GraphToolbar from "@/components/GraphToolbar.vue";
+import CursorToolbar from "@/components/CursorToolbar.vue";
 
 import DraggableWaypoint from "@/components/DraggableWaypoint.vue";
 import Trail from "@/components/Trail.vue";
@@ -62,7 +62,7 @@ export default {
     DraggableWaypoint,
     Trail,
     GraphBackground,
-    GraphToolbar,
+    CursorToolbar,
     DevInterface,
     MouseDialog
   },
@@ -72,6 +72,9 @@ export default {
   },
   created() {},
   computed: {
+    cursorMode() {
+      return this.$store.state.cursorMode;
+    },
     currentlyViewingWaypoint() {
       return this.$store.state.currentlyViewingWaypoint;
     },
@@ -152,6 +155,10 @@ a {
 #graphframe {
   height: 100%;
   width: 100%;
+
+  &.markasdone {
+    background-color: blue;
+  }
 }
 
 #graphnav {
@@ -167,6 +174,11 @@ a {
 #graphcontents {
   width: 2000px;
   height: 2000px;
+
+  .markasdone & {
+    cursor: cell !important;
+  }
+
 }
 
 svg#trails {

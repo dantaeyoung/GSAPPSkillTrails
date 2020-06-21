@@ -1,26 +1,43 @@
 <template>
   <div id="MouseDialog" :style="positionStyle">
-    <div class="hoverTrail" v-for="tid in hoveringTrails" v-bind:key="tid">
-      <span class="trailName">{{ trails[tid].fields.Name }}</span>
-    </div>
+    <div class="waypointInfo" v-if="cursorMode.navigate == true">
+      <div class="hoverTrail" v-for="tid in hoveringTrails" v-bind:key="tid">
+        <span class="trailName">{{ trails[tid].fields.Name }}</span>
+      </div>
 
-    <div
-      class="hoverWaypoint"
-      v-for="wid in hoveringWaypoints"
-      v-bind:key="wid"
-    >
-      <span class="wpName">{{ waypoints[wid].fields.Name }}</span
-      >, part of
-      <div class="trailNames">
-        <div
-          class="trailName"
-          v-for="tid in trailsOfHoveringWaypoints"
-          v-bind:key="tid"
-        >
-          {{ trails[tid].fields.Name }}
+      <div
+        class="hoverWaypoint"
+        v-for="wid in hoveringWaypoints"
+        v-bind:key="wid"
+      >
+        <span class="wpName">{{ waypoints[wid].fields.Name }}</span
+        >, part of
+        <div class="trailNames">
+          <div
+            class="trailName"
+            v-for="tid in trailsOfHoveringWaypoints"
+            v-bind:key="tid"
+          >
+            {{ trails[tid].fields.Name }}
+          </div>
         </div>
       </div>
     </div>
+    <div class="markModeInfo" v-if="cursorMode.markasdone == true && hoveringWaypoints.length > 0">
+
+      Mark
+      <div
+        class="hoverMarkWaypoint"
+        v-for="wid in hoveringWaypoints"
+        v-bind:key="wid"
+      >
+        <span class="wpName">{{ waypoints[wid].fields.Name }}</span
+      >
+      </div>
+      As Done 
+
+    </div>
+
   </div>
 </template>
 
@@ -39,6 +56,9 @@ export default {
     this.initMouseListener();
   },
   computed: {
+    cursorMode() {
+      return this.$store.state.cursorMode;
+    },
     hoveringWaypoints() {
       return this.$store.state.hoveringWaypoints;
     },
@@ -110,8 +130,19 @@ export default {
     color: white;
     font-weight: bold;
     padding: 5px 10px;
-    float:left;
+    float: left;
     clear: left;
   }
 }
+
+
+.hoverMarkWaypoint {
+  .wpName {
+    background-color: orange;
+    color: white;
+    font-weight: bold;
+    padding: 5px 10px;
+  }
+}
+
 </style>
