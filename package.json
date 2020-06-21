@@ -17,6 +17,7 @@
     "curve-interpolator": "^2.0.8",
     "d3": "^5.16.0",
     "d3-force": "^2.0.1",
+    "deep-copy": "^1.4.2",
     "m-class-list": "^1.1.9",
     "node-sass": "^4.14.1",
     "plain-draggable": "^2.5.12",

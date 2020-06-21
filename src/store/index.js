@@ -10,6 +10,8 @@ const trailsApiUrl = `https://api.airtable.com/v0/${tableID}/Trails?api_key=${ap
 import Vue from "vue";
 import Vuex from "vuex";
 
+import dcopy from 'deep-copy';
+
 Vue.use(Vuex);
 
 function coordinateTransform(val, sidelength) {
@@ -38,17 +40,15 @@ export default new Vuex.Store({
     hoveringTrails: [],
     hoveringWaypoints: [],
     currentlyViewingWaypoint: null,
-    waypointStatesToShow: ["Published"],
-    trailStatesToShow: ["Published"],
+    waypointStatusesToShow: ["Published"],
+    trailStatusesToShow: ["Published"],
   },
   getters: {
     trails(state) {
       return state.trails;
-//      return state.statusFilteredTrails;
     },
     waypoints(state) {
       return state.waypoints;
-      //return state.statusFilteredWaypoints;
     }
   },
   mutations: {
@@ -101,11 +101,11 @@ export default new Vuex.Store({
     setTrails(state, tr) {
       state.trails = tr;
     },
-    setWaypointStatesToShow(state, wsts) {
-      state.waypointStatesToShow = wsts;
+    setWaypointStatusesToShow(state, wsts) {
+      state.waypointStatusesToShow = wsts;
     },
-    setTrailStatesToShow(state, tsts) {
-      state.trailStatesToShow = tsts;
+    setTrailStatusesToShow(state, tsts) {
+      state.trailStatusesToShow = tsts;
     },
     setWaypointCoordinates(state, payload) {
       var thiswp = state.waypoints[payload.waypointid];
@@ -191,13 +191,13 @@ export default new Vuex.Store({
 
       var visibleWaypointIDs = Object.values(state.unfilteredWaypoints)
         .filter(thiswp => {
-          return payload.waypointStatesToShow.includes(thiswp.fields.Status);
+          return payload.waypointStatusesToShow.includes(thiswp.fields.Status);
         })
         .map(thiswp => thiswp.id);
 
       var visibleTrailIDs = Object.values(state.unfilteredTrails)
         .filter(thistr => {
-          return payload.trailStatesToShow.includes(thistr.fields.Status);
+          return payload.trailStatusesToShow.includes(thistr.fields.Status);
         })
         .map(thistr => thistr.id);
 
@@ -221,10 +221,13 @@ export default new Vuex.Store({
           })
       );
 
+
+      var newUnfilteredTrails = dcopy(state.unfilteredTrails);
+
       result.trails = Object.fromEntries(
         //1. filter trails if those trails don't have the right status
         
-          Object.entries(state.unfilteredTrails)
+          Object.entries(newUnfilteredTrails)
             .filter(thistr => {
               var [trid, trdata] = thistr;
               return visibleTrailIDs.includes(trid);
@@ -232,17 +235,19 @@ export default new Vuex.Store({
             //2. filter trails' waypoints if those waypoints aren't visible
             .map(thistr => {
               var [trid, trdata] = thistr;
-              trdata.fields.Waypoints = trdata.fields.Waypoints.filter(thistr => {
-                return visibleWaypointIDs.includes(thistr);
+
+              trdata.fields.Waypoints = trdata.fields.Waypoints.filter(thiswp => {
+                return visibleWaypointIDs.includes(thiswp);
               });
               return [trid, trdata];
             })
         )
 
+
       commit("setWaypoints", result.waypoints);
       commit("setTrails", result.trails);
-      commit("setWaypointStatesToShow", payload.waypointStatesToShow);
-      commit("setTrailStatesToShow", payload.trailStatesToShow);
+      commit("setWaypointStatusesToShow", payload.waypointStatusesToShow);
+      commit("setTrailStatusesToShow", payload.trailStatusesToShow);
     },
 
   }

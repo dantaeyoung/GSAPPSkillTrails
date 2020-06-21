@@ -77,13 +77,13 @@ export default {
       this.isFiltered = !this.isFiltered;
       if (this.isFiltered) {
         this.$store.dispatch("filterTrailsAndWaypoints", {
-          trailStatesToShow: ["Published"],
-          waypointStatesToShow: ["Published"]
+          trailStatusesToShow: ["Published"],
+          waypointStatusesToShow: ["Published"]
         });
       } else {
         this.$store.dispatch("filterTrailsAndWaypoints", {
-          trailStatesToShow: ["Published", "Draft"],
-          waypointStatesToShow: ["Published", "Draft"]
+          trailStatusesToShow: ["Published", "Draft"],
+          waypointStatusesToShow: ["Published", "Draft"]
         });
       }
     },

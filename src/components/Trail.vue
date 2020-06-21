@@ -5,7 +5,8 @@
     class="gtrail"
     :class="{ amBeingHovered: amBeingHovered, myWaypointHovered: myWaypointHovered, myWaypointBeingViewed: myWaypointBeingViewed }"
   >
-    <path class="svgtrail" :d="svgTrailPath" :key="traildata.id" />
+    <path class="svgtrail" :d="svgTrailPath" :key="traildata.id + '-' + traildata.fields.Waypoints.length" />
+    {{traildata.id + '-' + traildata.fields.Waypoints.length}}
     {{ currentlyViewingWaypoint }}
      
   </g>
@@ -64,7 +65,6 @@ export default {
         return "";
       }
 
-      try { 
       const interp = new CurveInterpolator(wpcoords, { tension: 0.2 });
       const numpts = Object.keys(this.waypoints).length * 8;
       const pts = interp.getPoints(numpts);
@@ -76,9 +76,6 @@ export default {
         })
           .join(" L");
       return pathstring;
-      } catch { 
-        return "";
-      }
 
     }
   },

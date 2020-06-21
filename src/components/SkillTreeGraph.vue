@@ -18,6 +18,8 @@
           :id="'waypoint-' + id"
           class="panzoom-exclude"
         />
+
+
         <svg id="trails" 
           class="panzoom-exclude"
           >
@@ -74,6 +76,9 @@ export default {
   computed: {
     currentlyViewingWaypoint() {
       return this.$store.state.currentlyViewingWaypoint;
+    },
+    trailStatusesToShow() {
+      return this.$store.state.trailStatusesToShow;
     },
     waypoints() {
       return this.$store.getters.waypoints;
