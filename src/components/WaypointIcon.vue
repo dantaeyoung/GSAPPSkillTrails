@@ -1,7 +1,7 @@
 <template>
   <svg
     class="waypoint"
-    :class="{ myTrailHovered: myTrailHovered, imBeingViewed: imBeingViewed }"
+    :class="{ myTrailHovered: myTrailHovered, imBeingViewed: imBeingViewed, imMarkedDone: imMarkedDone }"
     xmlns="http://www.w3.org/2000/svg"
     xmlns:xlink="http://www.w3.org/1999/xlink"
     xml:space="preserve"
@@ -13,8 +13,7 @@
       @click="onClick"
       :class="{ imBeingHovered: imBeingHovered }"
     >
-      <clipPath class="polygonMask" :id="'polygonMask-' + waypointdata.id"
-      >
+      <clipPath class="polygonMask" :id="'polygonMask-' + waypointdata.id">
         <polygon :points="polygonPoints"></polygon>
       </clipPath>
       <polygon
@@ -23,8 +22,8 @@
         :id="'polygonBorder-' + waypointdata.id"
       ></polygon>
       <foreignObject
-      @mouseover="mouseEnter()"
-      @mouseleave="mouseLeave()"
+        @mouseover="mouseEnter()"
+        @mouseleave="mouseLeave()"
         x="0%"
         y="0%"
         width="100%"
@@ -34,8 +33,10 @@
         <div class="circle colorfilter">
           <img :src="ThumbUrl" />
           <div class="text">
-            {{ waypointdata.fields.Name }}</div>
-          <br/>
+            {{ imMarkedDone }}
+            {{ waypointdata.fields.Name }}
+          </div>
+          <br />
         </div>
       </foreignObject>
     </g>
@@ -84,6 +85,9 @@ export default {
     cursorMode() {
       return this.$store.state.cursorMode;
     },
+    waypointsMarkedDone() {
+      return this.$store.state.waypointsMarkedDone;
+    },
     hoveringTrails() {
       return this.$store.state.hoveringTrails;
     },
@@ -98,6 +102,9 @@ export default {
     },
     imBeingViewed() {
       return this.currentlyViewingWaypoint === this.waypointdata.id;
+    },
+    imMarkedDone() {
+      return this.waypointsMarkedDone.includes(this.waypointdata.id);
     },
     myTrailHovered() {
       var self = this;
@@ -132,7 +139,6 @@ export default {
     }
   },
   methods: {
-
     mouseEnter() {
       var self = this;
       this.imBeingHovered = true;
@@ -153,8 +159,11 @@ export default {
     },
     onClick(event) {
       if (this.waypointsDraggable == false) {
-        if(this.cursorMode['navigate'] == true) {
+        if (this.cursorMode["navigate"] == true) {
           this.onClickViewWaypoint();
+        }
+        if (this.cursorMode["markasdone"] == true) {
+          this.onClickToggleWaypointAsDone();
         }
       }
     },
@@ -169,6 +178,12 @@ export default {
           params: { id: self.waypointdata.id }
         })
         .catch(err => {});
+    },
+    onClickToggleWaypointAsDone() {
+      var self = this;
+      this.$store.dispatch("toggleWaypointDone", {
+        id: self.waypointdata.id
+      });
     }
   }
 };
@@ -182,8 +197,7 @@ svg.waypoint {
 
 foreignObject {
   pointer-events: auto;
-} 
-
+}
 
 img {
   opacity: 0.5;
@@ -246,7 +260,9 @@ g.shape {
     stroke-width: 8;
   }
 
-
+  .imMarkedDone & {
+    stroke: orange;
+  }
 }
 
 .polygonMask {

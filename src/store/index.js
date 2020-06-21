@@ -30,18 +30,26 @@ export default new Vuex.Store({
   state: {
     count: 0,
     sidelength: 2000,
+    hasLoaded: false,
+
+    currentlyViewingWaypoint: null,
+    waypointsDraggable: false,
+
     waypoints: {},
     trails: [],
+
     unfilteredWaypoints: {},
     unfilteredTrails: [],
-    hasLoaded: false,
-    waypointsDraggable: false,
+
     hoveringTrails: [],
     hoveringWaypoints: [],
-    currentlyViewingWaypoint: null,
+
     waypointStatusesToShow: ["Published"],
     trailStatusesToShow: ["Published"],
-    cursorMode: { navigate: true, markasdone: false }
+
+    cursorMode: { navigate: true, markasdone: false },
+
+    waypointsMarkedDone: []
   },
   getters: {
     trails(state) {
@@ -103,6 +111,14 @@ export default new Vuex.Store({
     setWaypoints(state, wp) {
       state.waypoints = wp;
     },
+    addWaypointMarkedDone(state, payload) {
+      if (!state.waypointsMarkedDone.includes(payload.id)) {
+        state.waypointsMarkedDone.push(payload.id);
+      }
+    },
+    removeWaypointMarkedDone(state, payload) {
+      state.waypointsMarkedDone = state.waypointsMarkedDone.filter(v => v !== payload.id);
+    },
     setTrails(state, tr) {
       state.trails = tr;
     },
@@ -125,6 +141,13 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    toggleWaypointDone({ state, commit }, payload) {
+      if (state.waypointsMarkedDone.includes(payload.id)) {
+        commit("removeWaypointMarkedDone", { id: payload.id });
+      } else {
+        commit("addWaypointMarkedDone", { id: payload.id });
+      }
+    },
     fetch(context) {
       if (!context.state.hasLoaded) {
         context.dispatch("fetchWaypointsAndTrails");
@@ -142,7 +165,10 @@ export default new Vuex.Store({
         );
 
         // COORDINATE TRANSFORMATION LOGIC
-        let transformedWaypoints = waypoints.reduce(function(obj, item) {
+        let transformedWaypoints = waypoints.reduce(function(
+          obj,
+          item
+        ) {
           item.fields.coordinateX = coordinateTransform(
             item.fields.coordinateX,
             context.state.sidelength
@@ -153,7 +179,8 @@ export default new Vuex.Store({
           );
           obj[item.id] = item;
           return obj;
-        }, {});
+        },
+        {});
 
         context.commit("setUnfilteredWaypoints", transformedWaypoints);
         context.commit("setWaypoints", transformedWaypoints);
