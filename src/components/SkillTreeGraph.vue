@@ -6,6 +6,7 @@
       <button @click="panzoom.reset()">reset</button>
       {{ zoomScale }}
       <DevInterface />
+      <GraphToolbar />
     </div>
     <MouseDialog mouseeventid="graphframe" />
     <div id="graphwindow">
@@ -19,10 +20,7 @@
           class="panzoom-exclude"
         />
 
-
-        <svg id="trails" 
-          class="panzoom-exclude"
-          >
+        <svg id="trails" class="panzoom-exclude">
           <Trail
             v-for="(trail, id) in trails"
             :key="id"
@@ -31,9 +29,7 @@
           />
         </svg>
 
-        <GraphBackground 
-          class="panzoom-exclude"
-        />
+        <GraphBackground class="panzoom-exclude" />
       </div>
     </div>
   </div>
@@ -48,6 +44,7 @@ import Panzoom from "@panzoom/panzoom";
 
 import MouseDialog from "@/components/MouseDialog.vue";
 import DevInterface from "@/components/DevInterface.vue";
+import GraphToolbar from "@/components/GraphToolbar.vue";
 
 import DraggableWaypoint from "@/components/DraggableWaypoint.vue";
 import Trail from "@/components/Trail.vue";
@@ -65,6 +62,7 @@ export default {
     DraggableWaypoint,
     Trail,
     GraphBackground,
+    GraphToolbar,
     DevInterface,
     MouseDialog
   },
@@ -89,7 +87,6 @@ export default {
   },
   methods: {
     onClick(e) {
-
       if (e.target === e.currentTarget) {
         // this presumes that graphbackground isn't clickable. if we want it to be then we can handle that later.
         this.unclickWaypoints();
@@ -112,7 +109,7 @@ export default {
         minScale: 0.1,
         startX: -400,
         startY: -400,
-        startScale: 1,
+        startScale: 1
       });
 
       elem.parentElement.addEventListener("wheel", function(e) {
@@ -175,12 +172,10 @@ a {
 svg#trails {
   height: 2000px;
   width: 2000px;
-  pointer-events: none
+  pointer-events: none;
 }
 
-svg#trails
-
-.WPWP {
+svg#trails .WPWP {
   background-color: red;
 }
 </style>

@@ -6,11 +6,10 @@ const tableview = "Grid%20view";
 const waypointApiUrl = `https://api.airtable.com/v0/${tableID}/Waypoint?api_key=${apikey}&view=${tableview}`;
 const trailsApiUrl = `https://api.airtable.com/v0/${tableID}/Trails?api_key=${apikey}&view=${tableview}`;
 
-
 import Vue from "vue";
 import Vuex from "vuex";
 
-import dcopy from 'deep-copy';
+import dcopy from "deep-copy";
 
 Vue.use(Vuex);
 
@@ -41,7 +40,7 @@ export default new Vuex.Store({
     hoveringWaypoints: [],
     currentlyViewingWaypoint: null,
     waypointStatusesToShow: ["Published"],
-    trailStatusesToShow: ["Published"],
+    trailStatusesToShow: ["Published"]
   },
   getters: {
     trails(state) {
@@ -136,9 +135,8 @@ export default new Vuex.Store({
           w => w.fields["Name"]
         );
 
-
         // COORDINATE TRANSFORMATION LOGIC
-        let transformedWaypoints =  waypoints.reduce(function(obj, item) {
+        let transformedWaypoints = waypoints.reduce(function(obj, item) {
           item.fields.coordinateX = coordinateTransform(
             item.fields.coordinateX,
             context.state.sidelength
@@ -150,7 +148,6 @@ export default new Vuex.Store({
           obj[item.id] = item;
           return obj;
         }, {});
-
 
         context.commit("setUnfilteredWaypoints", transformedWaypoints);
         context.commit("setWaypoints", transformedWaypoints);
@@ -168,13 +165,11 @@ export default new Vuex.Store({
           t => t.fields["Name"]
         );
 
-
         // turn into object
         let processedTrails = trails.reduce(function(obj, item) {
           obj[item.id] = item;
           return obj;
         }, {});
-
 
         context.commit("setUnfilteredTrails", processedTrails);
         context.commit("setTrails", processedTrails);
@@ -185,9 +180,8 @@ export default new Vuex.Store({
       };
       xhr2.send();
     },
-    filterTrailsAndWaypoints({commit, state}, payload) {
+    filterTrailsAndWaypoints({ commit, state }, payload) {
       var result = {};
-
 
       var visibleWaypointIDs = Object.values(state.unfilteredWaypoints)
         .filter(thiswp => {
@@ -201,8 +195,6 @@ export default new Vuex.Store({
         })
         .map(thistr => thistr.id);
 
-
-
       result.waypoints = Object.fromEntries(
         //1. filter waypoints if those waypoints don't have the right status
         Object.entries(state.unfilteredWaypoints)
@@ -211,7 +203,7 @@ export default new Vuex.Store({
             return visibleWaypointIDs.includes(wpid);
           })
           //2. filter waypoints' trails if those trails aren't visible
-        
+
           .map(thiswp => {
             var [wpid, wpdata] = thiswp;
             wpdata.fields.Trails = wpdata.fields.Trails.filter(thistr => {
@@ -221,34 +213,31 @@ export default new Vuex.Store({
           })
       );
 
-
       var newUnfilteredTrails = dcopy(state.unfilteredTrails);
 
       result.trails = Object.fromEntries(
         //1. filter trails if those trails don't have the right status
-        
-          Object.entries(newUnfilteredTrails)
-            .filter(thistr => {
-              var [trid, trdata] = thistr;
-              return visibleTrailIDs.includes(trid);
-            })
-            //2. filter trails' waypoints if those waypoints aren't visible
-            .map(thistr => {
-              var [trid, trdata] = thistr;
 
-              trdata.fields.Waypoints = trdata.fields.Waypoints.filter(thiswp => {
-                return visibleWaypointIDs.includes(thiswp);
-              });
-              return [trid, trdata];
-            })
-        )
+        Object.entries(newUnfilteredTrails)
+          .filter(thistr => {
+            var [trid, trdata] = thistr;
+            return visibleTrailIDs.includes(trid);
+          })
+          //2. filter trails' waypoints if those waypoints aren't visible
+          .map(thistr => {
+            var [trid, trdata] = thistr;
 
+            trdata.fields.Waypoints = trdata.fields.Waypoints.filter(thiswp => {
+              return visibleWaypointIDs.includes(thiswp);
+            });
+            return [trid, trdata];
+          })
+      );
 
       commit("setWaypoints", result.waypoints);
       commit("setTrails", result.trails);
       commit("setWaypointStatusesToShow", payload.waypointStatusesToShow);
       commit("setTrailStatusesToShow", payload.trailStatusesToShow);
-    },
-
+    }
   }
 });
