@@ -31,13 +31,145 @@ export default new Vuex.Store({
     sidelength: 2000,
     waypoints: {},
     trails: [],
+    statusFilteredWaypoints: {},
+    statusFilteredTrails: {},
     hasLoaded: false,
     waypointsDraggable: false,
     hoveringTrails: [],
     hoveringWaypoints: [],
-    currentlyViewingWaypoint: null
+    currentlyViewingWaypoint: null,
+    waypointStatesToShow: ["Published"],
+    trailStatesToShow: ["Published"],
   },
   getters: {
+    trails(state) {
+      return state.trails;
+//      return state.statusFilteredTrails;
+    },
+    waypoints(state) {
+      return state.waypoints;
+      //return state.statusFilteredWaypoints;
+    }
+  },
+  mutations: {
+    increment(state) {
+      state.count++;
+    },
+    setLoaded(state) {
+      state.hasLoaded = true;
+    },
+    currentlyViewingWaypoint(state, payload) {
+      state.currentlyViewingWaypoint = payload.id;
+    },
+    addHoveringWaypoint(state, payload) {
+      if (!state.hoveringWaypoints.includes(payload.id)) {
+        state.hoveringWaypoints.push(payload.id);
+      }
+    },
+    removeHoveringWaypoint(state, payload) {
+      state.hoveringWaypoints = [];
+      //    state.hoveringWaypoints = state.hoveringWaypoints.filter(v => v !== payload.id); // set to this if we want to support multiple waypoints
+    },
+    addHoveringTrails(state, payload) {
+      payload.ids.forEach(function(id) {
+        if (!state.hoveringTrails.includes(id)) {
+          state.hoveringTrails.push(id);
+        }
+      });
+    },
+    removeHoveringTrails(state, payload) {
+      payload.ids.forEach(function(id) {
+        state.hoveringTrails = state.hoveringTrails.filter(v => v !== id);
+      });
+    },
+    setWaypointsDraggable(state, val) {
+      if (val == true) {
+        state.waypointsDraggable = true;
+      } else {
+        state.waypointsDraggable = false;
+      }
+    },
+    setWaypoints(state, waypoints) {
+      state.waypoints = waypoints;
+    },
+    setTrails(state, trails) {
+      state.trails = trails;
+    },
+    setWaypointCoordinates(state, payload) {
+      var thiswp = state.waypoints[payload.waypointid];
+      thiswp.fields.coordinateX = Math.max(
+        0,
+        Math.min(state.sidelength, payload.x)
+      );
+      thiswp.fields.coordinateY = Math.max(
+        0,
+        Math.min(state.sidelength, payload.y)
+      );
+    }
+  },
+  actions: {
+    fetch(context) {
+      if (!context.state.hasLoaded) {
+        context.dispatch("fetchWaypointsAndTrails");
+      }
+    },
+    fetchWaypointsAndTrails(context) {
+      var successcount = 0;
+      var num_of_requests = 2;
+
+      var xhr1 = new XMLHttpRequest();
+      xhr1.open("GET", waypointApiUrl);
+      xhr1.onload = function() {
+        let waypoints = JSON.parse(xhr1.responseText).records.filter(
+          w => w.fields["Name"]
+        );
+
+
+        // COORDINATE TRANSFORMATION LOGIC
+        let transformedWaypoints =  waypoints.reduce(function(obj, item) {
+          item.fields.coordinateX = coordinateTransform(
+            item.fields.coordinateX,
+            context.state.sidelength
+          );
+          item.fields.coordinateY = coordinateTransform(
+            item.fields.coordinateY,
+            context.state.sidelength
+          );
+          obj[item.id] = item;
+          return obj;
+        }, {});
+
+
+        context.commit("setWaypoints", transformedWaypoints);
+
+        if (++successcount >= num_of_requests) {
+          context.commit("setLoaded");
+        } // ugh seriously this is how we check for all get requests finishing?
+      };
+      xhr1.send();
+
+      var xhr2 = new XMLHttpRequest();
+      xhr2.open("GET", trailsApiUrl);
+      xhr2.onload = function() {
+        let trails = JSON.parse(xhr2.responseText).records.filter(
+          t => t.fields["Name"]
+        );
+
+
+        // turn into object
+        let processedTrails = trails.reduce(function(obj, item) {
+          obj[item.id] = item;
+          return obj;
+        }, {});
+
+
+        context.commit("setTrails", processedTrails);
+        if (++successcount >= num_of_requests) {
+          context.commit("setLoaded");
+        } // ugh seriously this is how we check for all get requests finishing?
+      };
+      xhr2.send();
+    },
     filteredTrailsAndWaypoints(state, getters) {
       var result = {};
 
@@ -98,120 +230,6 @@ export default new Vuex.Store({
 
       return result;
     },
-    trails(state, getters) {
-      return getters.filteredTrailsAndWaypoints.trails;
-    },
-    waypoints(state, getters) {
-      return getters.filteredTrailsAndWaypoints.waypoints;
-    }
-  },
-  mutations: {
-    increment(state) {
-      state.count++;
-    },
-    setLoaded(state) {
-      state.hasLoaded = true;
-    },
-    currentlyViewingWaypoint(state, payload) {
-      state.currentlyViewingWaypoint = payload.id;
-    },
-    addHoveringWaypoint(state, payload) {
-      if (!state.hoveringWaypoints.includes(payload.id)) {
-        state.hoveringWaypoints.push(payload.id);
-      }
-    },
-    removeHoveringWaypoint(state, payload) {
-      state.hoveringWaypoints = [];
-      //    state.hoveringWaypoints = state.hoveringWaypoints.filter(v => v !== payload.id); // set to this if we want to support multiple waypoints
-    },
-    addHoveringTrails(state, payload) {
-      payload.ids.forEach(function(id) {
-        if (!state.hoveringTrails.includes(id)) {
-          state.hoveringTrails.push(id);
-        }
-      });
-    },
-    removeHoveringTrails(state, payload) {
-      payload.ids.forEach(function(id) {
-        state.hoveringTrails = state.hoveringTrails.filter(v => v !== id);
-      });
-    },
-    setWaypointsDraggable(state, val) {
-      if (val == true) {
-        state.waypointsDraggable = true;
-      } else {
-        state.waypointsDraggable = false;
-      }
-    },
-    setWaypoints(state, waypoints) {
-      var self = this;
 
-      state.waypoints = waypoints.reduce(function(obj, item) {
-        item.fields.coordinateX = coordinateTransform(
-          item.fields.coordinateX,
-          self.state.sidelength
-        );
-        item.fields.coordinateY = coordinateTransform(
-          item.fields.coordinateY,
-          self.state.sidelength
-        );
-        obj[item.id] = item;
-        return obj;
-      }, {});
-    },
-    setTrails(state, trails) {
-      state.trails = trails.reduce(function(obj, item) {
-        obj[item.id] = item;
-        return obj;
-      }, {});
-    },
-    setWaypointCoordinates(state, payload) {
-      var thiswp = state.waypoints[payload.waypointid];
-      thiswp.fields.coordinateX = Math.max(
-        0,
-        Math.min(state.sidelength, payload.x)
-      );
-      thiswp.fields.coordinateY = Math.max(
-        0,
-        Math.min(state.sidelength, payload.y)
-      );
-    }
-  },
-  actions: {
-    fetch(context) {
-      if (!context.state.hasLoaded) {
-        context.dispatch("fetchWaypointsAndTrails");
-      }
-    },
-    fetchWaypointsAndTrails(context) {
-      var successcount = 0;
-      var num_of_requests = 2;
-
-      var xhr1 = new XMLHttpRequest();
-      xhr1.open("GET", waypointApiUrl);
-      xhr1.onload = function() {
-        let waypoints = JSON.parse(xhr1.responseText).records.filter(
-          w => w.fields["Name"]
-        );
-        context.commit("setWaypoints", waypoints);
-        if (++successcount >= num_of_requests) {
-          context.commit("setLoaded");
-        } // ugh seriously this is how we check for all get requests finishing?
-      };
-      xhr1.send();
-
-      var xhr2 = new XMLHttpRequest();
-      xhr2.open("GET", trailsApiUrl);
-      xhr2.onload = function() {
-        let trails = JSON.parse(xhr2.responseText).records.filter(
-          t => t.fields["Name"]
-        );
-        context.commit("setTrails", trails);
-        if (++successcount >= num_of_requests) {
-          context.commit("setLoaded");
-        } // ugh seriously this is how we check for all get requests finishing?
-      };
-      xhr2.send();
-    }
   }
 });
