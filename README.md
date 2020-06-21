@@ -4,16 +4,13 @@ This is Version 3 of the GSAPP Skill Tree. UNDER DEVELOPMENT
 
 
 ## Project setup
-```
-npm install
-```
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+Install:
+- `npm install`
 
-### Compiles and minifies for production
-```
-npm run build
-```
+Development:
+- `npm run serve`
+
+## Deployment
+
+- run `deploy-staging.sh`
