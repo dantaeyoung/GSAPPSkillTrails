@@ -46,10 +46,10 @@ export default {
       return this.$store.state.hoveringTrails;
     },
     trails() {
-      return this.$store.state.trails;
+      return this.$store.getters.trails;
     },
     waypoints() {
-      return this.$store.state.waypoints;
+      return this.$store.getters.waypoints;
     },
     positionStyle() {
       return `position: absolute; 

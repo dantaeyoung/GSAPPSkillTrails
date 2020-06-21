@@ -6,7 +6,6 @@ const tableview = "Grid%20view";
 const waypointApiUrl = `https://api.airtable.com/v0/${tableID}/Waypoint?api_key=${apikey}&view=${tableview}`;
 const trailsApiUrl = `https://api.airtable.com/v0/${tableID}/Trails?api_key=${apikey}&view=${tableview}`;
 
-console.log(waypointApiUrl, trailsApiUrl);
 
 import Vue from "vue";
 import Vuex from "vuex";
@@ -38,7 +37,74 @@ export default new Vuex.Store({
     hoveringWaypoints: [],
     currentlyViewingWaypoint: null
   },
-  getters: {},
+  getters: {
+    filteredTrailsAndWaypoints(state, getters) {
+      var result = {};
+
+      var waypointStatesToShow = ["Published"];
+      var trailStatesToShow = ["Published"];
+
+      var visibleWaypointIDs = Object.values(state.waypoints)
+        .filter(thiswp => {
+          return waypointStatesToShow.includes(thiswp.fields.Status);
+        })
+        .map(thiswp => thiswp.id);
+
+      var visibleTrailIDs = Object.values(state.trails)
+        .filter(thistr => {
+          return trailStatesToShow.includes(thistr.fields.Status);
+        })
+        .map(thistr => thistr.id);
+
+
+      var wpentries = Object.entries(state.waypoints);
+      var trentries = Object.entries(state.trails);
+
+      result.waypoints = Object.fromEntries(
+        //1. filter waypoints if those waypoints don't have the right status
+        Object.entries(state.waypoints)
+          .filter(thiswp => {
+            var [wpid, wpdata] = thiswp;
+            return visibleWaypointIDs.includes(wpid);
+          })
+          //2. filter waypoints' trails if those trails aren't visible
+        
+          .map(thiswp => {
+            var [wpid, wpdata] = thiswp;
+            wpdata.fields.Trails = wpdata.fields.Trails.filter(thistr => {
+              return visibleTrailIDs.includes(thistr);
+            });
+            return [wpid, wpdata];
+          })
+      );
+
+      result.trails = Object.fromEntries(
+        //1. filter trails if those trails don't have the right status
+        
+          Object.entries(state.trails)
+            .filter(thistr => {
+              var [trid, trdata] = thistr;
+              return visibleTrailIDs.includes(trid);
+            })
+            //2. filter trails' waypoints if those waypoints aren't visible
+            .map(thistr => {
+              var [trid, trdata] = thistr;
+              trdata.fields.Waypoints = trdata.fields.Waypoints.filter(thistr => {
+                return visibleWaypointIDs.includes(thistr);
+              });
+              return [trid, trdata];
+            })
+        )
+
+      return result;
+    },
+    trails(state, getters) {
+      return getters.filteredTrailsAndWaypoints.trails;
+    },
+    waypoints(state, getters) {
+      return getters.filteredTrailsAndWaypoints.waypoints;
+    }
+  },
   mutations: {
     increment(state) {
       state.count++;

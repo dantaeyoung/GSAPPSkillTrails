@@ -29,10 +29,10 @@ export default {
   created() {},
   computed: {
     waypoints() {
-      return this.$store.state.waypoints;
+      return this.$store.getters.waypoints;
     },
     trails() {
-      return this.$store.state.trails;
+      return this.$store.getters.trails;
     }
   },
   methods: {}

@@ -6,12 +6,13 @@
       {{ waypointdata.fields.URL }}<br />
       {{thisid}}
       <!--     <iframe :src="waypointdata.fields.URL" />  -->
-      <VideoEmbed :url="waypointdata.fields.URL" />
+      <!-- <VideoEmbed :url="waypointdata.fields.URL" /> -->
     </div>
   </div>
 </template>
 
 <script>
+/* eslint-disable */
 
 import VideoEmbed from "@/components/VideoEmbed.vue";
 
@@ -25,7 +26,7 @@ export default {
   },
   computed: {
     waypointdata() {
-      return this.$store.state.waypoints[this.thisid]
+      return this.$store.getters.waypoints[this.thisid]
     },
     thisid() {
       return this.$route.params.id;

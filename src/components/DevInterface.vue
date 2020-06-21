@@ -53,7 +53,7 @@ export default {
   },
   computed: {
     waypoints() {
-      return this.$store.state.waypoints;
+      return this.$store.getters.waypoints;
     },
     waypointsDraggable() {
       return this.$store.state.waypointsDraggable;

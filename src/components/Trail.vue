@@ -29,7 +29,7 @@ export default {
   created() {},
   computed: {
     waypoints() {
-      return this.$store.state.waypoints;
+      return this.$store.getters.waypoints;
     },
     hoveringWaypoints() {
       return this.$store.state.hoveringWaypoints;
@@ -60,9 +60,11 @@ export default {
           ];
         });
       } catch {
+        console.log("i was caught");
         return "";
       }
 
+      try { 
       const interp = new CurveInterpolator(wpcoords, { tension: 0.2 });
       const numpts = Object.keys(this.waypoints).length * 8;
       const pts = interp.getPoints(numpts);
@@ -72,9 +74,12 @@ export default {
         .map(item => {
           return item[0] + " " + item[1];
         })
-        .join(" L");
-
+          .join(" L");
       return pathstring;
+      } catch { 
+        return "";
+      }
+
     }
   },
   methods: {

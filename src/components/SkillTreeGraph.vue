@@ -76,10 +76,10 @@ export default {
       return this.$store.state.currentlyViewingWaypoint;
     },
     waypoints() {
-      return this.$store.state.waypoints;
+      return this.$store.getters.waypoints;
     },
     trails() {
-      return this.$store.state.trails;
+      return this.$store.getters.trails;
     }
   },
   methods: {
