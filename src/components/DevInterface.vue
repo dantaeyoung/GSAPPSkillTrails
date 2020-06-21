@@ -2,13 +2,16 @@
   <div>
     <div id="DevInterface">
       <div>DevInterface</div>
-      <button @click="toggleDraggable">draggable: {{ waypointsDraggable }}</button>
+      <button @click="toggleDraggable">
+        draggable: {{ waypointsDraggable }}
+      </button>
       <button @click="showCoordinates = !showCoordinates">
         toggle coordinate dialog
       </button>
+      <button @click="toggleFilter">filter: {{ isFiltered }}</button>
     </div>
     <div class="showcoordinates" v-if="showCoordinates">
-      <button @click="tableclip()">copy table{{copytablestatus}}</button>
+      <button @click="tableclip()">copy table{{ copytablestatus }}</button>
       <table style="width:100%" id="coordinatestable">
         <tr v-for="wp in urlsortedWaypoints" :key="wp.id">
           <th>{{ wp.fields.URL }}</th>
@@ -45,6 +48,7 @@ export default {
       draggablelist: null,
       showCoordinates: false,
       copytablestatus: "",
+      isFiltered: false
     };
   },
   components: {},
@@ -69,6 +73,20 @@ export default {
   },
 
   methods: {
+    toggleFilter() {
+      this.isFiltered = !this.isFiltered;
+      if (this.isFiltered) {
+        this.$store.dispatch("filterTrailsAndWaypoints", {
+          trailStatesToShow: ["Published"],
+          waypointStatesToShow: ["Published"]
+        });
+      } else {
+        this.$store.dispatch("filterTrailsAndWaypoints", {
+          trailStatesToShow: ["Published", "Draft"],
+          waypointStatesToShow: ["Published", "Draft"]
+        });
+      }
+    },
     coordinateDetransform(pxval) {
       let val = (pxval * 2) / this.sidelength - 1;
       return +val.toFixed(3);
@@ -78,7 +96,9 @@ export default {
       this.$forceUpdate();
       copy(document.getElementById("coordinatestable").innerText);
       this.copytablestatus = " : copied!";
-      setTimeout(function() { self.copytablestatus = ""; }, 1000);
+      setTimeout(function() {
+        self.copytablestatus = "";
+      }, 1000);
     },
     lookupTransform(id) {
       let thistransform = document.getElementById("waypoint-" + id).style
@@ -93,16 +113,13 @@ export default {
       }
     },
     toggleDraggable() {
-      this.$store.commit('setWaypointsDraggable', !this.waypointsDraggable)
-    },
+      this.$store.commit("setWaypointsDraggable", !this.waypointsDraggable);
+    }
   }
 };
 </script>
 
 <style scoped lang="scss">
-
-
-
 #DevInterface {
   border: 2px solid pink;
   display: flex;
@@ -112,7 +129,6 @@ export default {
 button {
   background-color: #8fffff;
 }
-
 
 .showcoordinates {
   max-width: 400px;

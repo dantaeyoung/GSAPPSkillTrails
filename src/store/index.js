@@ -31,8 +31,8 @@ export default new Vuex.Store({
     sidelength: 2000,
     waypoints: {},
     trails: [],
-    statusFilteredWaypoints: {},
-    statusFilteredTrails: {},
+    unfilteredWaypoints: {},
+    unfilteredTrails: [],
     hasLoaded: false,
     waypointsDraggable: false,
     hoveringTrails: [],
@@ -89,11 +89,23 @@ export default new Vuex.Store({
         state.waypointsDraggable = false;
       }
     },
-    setWaypoints(state, waypoints) {
-      state.waypoints = waypoints;
+    setUnfilteredWaypoints(state, wp) {
+      state.unfilteredWaypoints = wp;
     },
-    setTrails(state, trails) {
-      state.trails = trails;
+    setUnfilteredTrails(state, tr) {
+      state.unfilteredTrails = tr;
+    },
+    setWaypoints(state, wp) {
+      state.waypoints = wp;
+    },
+    setTrails(state, tr) {
+      state.trails = tr;
+    },
+    setWaypointStatesToShow(state, wsts) {
+      state.waypointStatesToShow = wsts;
+    },
+    setTrailStatesToShow(state, tsts) {
+      state.trailStatesToShow = tsts;
     },
     setWaypointCoordinates(state, payload) {
       var thiswp = state.waypoints[payload.waypointid];
@@ -140,6 +152,7 @@ export default new Vuex.Store({
         }, {});
 
 
+        context.commit("setUnfilteredWaypoints", transformedWaypoints);
         context.commit("setWaypoints", transformedWaypoints);
 
         if (++successcount >= num_of_requests) {
@@ -163,38 +176,36 @@ export default new Vuex.Store({
         }, {});
 
 
+        context.commit("setUnfilteredTrails", processedTrails);
         context.commit("setTrails", processedTrails);
+
         if (++successcount >= num_of_requests) {
           context.commit("setLoaded");
         } // ugh seriously this is how we check for all get requests finishing?
       };
       xhr2.send();
     },
-    filteredTrailsAndWaypoints(state, getters) {
+    filterTrailsAndWaypoints({commit, state}, payload) {
       var result = {};
 
-      var waypointStatesToShow = ["Published"];
-      var trailStatesToShow = ["Published"];
 
-      var visibleWaypointIDs = Object.values(state.waypoints)
+      var visibleWaypointIDs = Object.values(state.unfilteredWaypoints)
         .filter(thiswp => {
-          return waypointStatesToShow.includes(thiswp.fields.Status);
+          return payload.waypointStatesToShow.includes(thiswp.fields.Status);
         })
         .map(thiswp => thiswp.id);
 
-      var visibleTrailIDs = Object.values(state.trails)
+      var visibleTrailIDs = Object.values(state.unfilteredTrails)
         .filter(thistr => {
-          return trailStatesToShow.includes(thistr.fields.Status);
+          return payload.trailStatesToShow.includes(thistr.fields.Status);
         })
         .map(thistr => thistr.id);
 
 
-      var wpentries = Object.entries(state.waypoints);
-      var trentries = Object.entries(state.trails);
 
       result.waypoints = Object.fromEntries(
         //1. filter waypoints if those waypoints don't have the right status
-        Object.entries(state.waypoints)
+        Object.entries(state.unfilteredWaypoints)
           .filter(thiswp => {
             var [wpid, wpdata] = thiswp;
             return visibleWaypointIDs.includes(wpid);
@@ -213,7 +224,7 @@ export default new Vuex.Store({
       result.trails = Object.fromEntries(
         //1. filter trails if those trails don't have the right status
         
-          Object.entries(state.trails)
+          Object.entries(state.unfilteredTrails)
             .filter(thistr => {
               var [trid, trdata] = thistr;
               return visibleTrailIDs.includes(trid);
@@ -228,7 +239,10 @@ export default new Vuex.Store({
             })
         )
 
-      return result;
+      commit("setWaypoints", result.waypoints);
+      commit("setTrails", result.trails);
+      commit("setWaypointStatesToShow", payload.waypointStatesToShow);
+      commit("setTrailStatesToShow", payload.trailStatesToShow);
     },
 
   }
