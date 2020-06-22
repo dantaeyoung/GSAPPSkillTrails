@@ -1,7 +1,11 @@
 <template>
   <svg
     class="waypoint"
-    :class="{ myTrailHovered: myTrailHovered, imBeingViewed: imBeingViewed, imMarkedDone: imMarkedDone }"
+    :class="{
+      myTrailHovered: myTrailHovered,
+      imBeingViewed: imBeingViewed,
+      imMarkedDone: imMarkedDone
+    }"
     xmlns="http://www.w3.org/2000/svg"
     xmlns:xlink="http://www.w3.org/1999/xlink"
     xml:space="preserve"
@@ -77,10 +81,10 @@ export default {
     };
   },
   props: ["waypointdata", "zoomscale"],
-  created() {
-    this.polygonvalues = this.randomPointValues();
-  },
   computed: {
+    zoomScale() {
+      return this.$store.state.zoomScale;
+    },
     cursorMode() {
       return this.$store.state.cursorMode;
     },
@@ -120,16 +124,34 @@ export default {
         return "";
       }
     },
+    polygonPointValues() {
+      let chunkcount = 3;
+      let chunkpoints = 3;
+      let chunkalternate = true;
+
+      var myrng = new seedrandom(this.waypointdata.id);
+
+      var self = this;
+      let symchunk = Array.from({ length: chunkpoints }, () => {
+        return self.imBeingHovered ? 0.95 : mapToRange(myrng(), 0.5, 0.95);
+      });
+      let allpts = [].concat.apply([], Array(chunkcount).fill(symchunk));
+
+
+      return allpts;
+
+      return Array.from({ length: 15 }, () => mapToRange(myrng(), 0.5, 0.95));
+    },
     polygonPoints() {
-      var rpv = this.randomPointValues;
+      var rpv = this.polygonPointValues;
       var total = rpv.length;
       var self = this;
-      return self.polygonvalues
+      return self.polygonPointValues
         .map(function(v, i) {
           var point = valueToPoint(
             v,
             i,
-            self.polygonvalues.length,
+            self.polygonPointValues.length,
             self.radius
           );
           return point.x + "," + point.y;
@@ -151,10 +173,6 @@ export default {
       this.$store.commit("removeHoveringWaypoint", {
         id: self.waypointdata.id
       });
-    },
-    randomPointValues() {
-      var myrng = new seedrandom(this.waypointdata.id);
-      return Array.from({ length: 8 }, () => mapToRange(myrng(), 0.5, 0.95));
     },
     onClick(event) {
       if (this.waypointsDraggable == false) {

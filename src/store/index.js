@@ -47,6 +47,8 @@ export default new Vuex.Store({
     waypointStatusesToShow: ["Published"],
     trailStatusesToShow: ["Published"],
 
+    zoomScale: 1,
+
     cursorMode: { navigate: true, markasdone: false },
 
     waypointsMarkedDone: []
@@ -60,6 +62,9 @@ export default new Vuex.Store({
     }
   },
   mutations: {
+    setZoomScale(state, payload) {
+      state.zoomScale = payload.zoomScale;
+    },
     setCursorMode(state, payload) {
       if (payload.mode in state.cursorMode) {
         Object.keys(state.cursorMode).forEach(k => {

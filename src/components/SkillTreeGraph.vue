@@ -53,7 +53,6 @@ export default {
   data() {
     return {
       panzoom: null,
-      zoomScale: 1
     };
   },
   components: {
@@ -70,6 +69,9 @@ export default {
   },
   created() {},
   computed: {
+    zoomScale() {
+      return this.$store.state.zoomScale;
+    },
     cursorMode() {
       return this.$store.state.cursorMode;
     },
@@ -126,8 +128,11 @@ export default {
         }
       });
 
+
+      window.pz = self.panzoom;
+
       elem.addEventListener("panzoomzoom", function(event) {
-        self.zoomScale = self.panzoom.getScale();
+        self.$store.commit("setZoomScale", { zoomScale: event.detail.scale });
       });
     }
   }
