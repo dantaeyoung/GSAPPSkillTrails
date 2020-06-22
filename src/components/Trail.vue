@@ -103,10 +103,11 @@ export default {
 }
 .svgtrail {
   fill: none;
-  stroke: black;
-  stroke-width: 4;
+  stroke: #666;
+  stroke-width: 6;
   stroke-linejoin: round;
   cursor: pointer;
+  stroke-dasharray: 20, 10;
 
   .amBeingHovered & {
     stroke-width: 20;
@@ -117,7 +118,8 @@ export default {
   }
 
   .myWaypointBeingViewed & {
-    stroke-width: 20;
+    stroke-width: 12;
+    stroke: black;
   }
 }
 </style>

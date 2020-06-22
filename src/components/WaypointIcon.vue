@@ -232,10 +232,11 @@ img {
 .text {
   z-index: 100;
   font-weight: bold;
-  font-size: 0.5em;
+  font-size: 0.8em;
   text-align: center;
   width: 100%;
   overflow-wrap: break-word;
+  color: black;
 }
 
 .colorfilter {
@@ -250,7 +251,7 @@ img {
   left: 0;
   height: 100%;
   width: 100%;
-  background: #a3a7ce;
+  background: #FC0452;
   mix-blend-mode: multiply;
 }
 

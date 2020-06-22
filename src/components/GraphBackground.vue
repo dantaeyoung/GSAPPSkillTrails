@@ -1,5 +1,7 @@
 <template>
   <div class="graphbackground" :style="widthheightstyle">
+    <!--<img src="http://discovery.urlibraries.org/wordpress/wp-content/uploads/2014/11/topo-chunk.jpg"> --> --> --> -->
+     <img src="https://i.imgur.com/mCcxGUH.jpg"> 
   </div>
 </template>
 
