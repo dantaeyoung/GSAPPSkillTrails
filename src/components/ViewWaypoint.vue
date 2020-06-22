@@ -2,7 +2,14 @@
 
   <div id="ViewWaypoint">
     <div v-if="waypointdata && waypointdata.fields">
-      <h4>{{ waypointdata.fields.Name }}</h4>
+      <div class="title">{{ waypointdata.fields.Name }}</div>
+
+      <div class="trailsPartOf" v-if="'Trails' in waypoints[thisid].fields && waypoints[thisid].fields.Trails.length > 0">
+        Part of
+        <div v-for="tid in waypoints[thisid].fields.Trails" :key="tid">
+          {{ trails[tid].fields.Name }}
+        </div>
+      </div>
       {{ waypointdata.fields.URL }}<br />
       {{thisid}}
       <!--     <iframe :src="waypointdata.fields.URL" />  -->
@@ -27,6 +34,12 @@ export default {
   computed: {
     waypointdata() {
       return this.$store.getters.waypoints[this.thisid]
+    },
+    waypoints() {
+      return this.$store.state.waypoints;
+    },
+    trails() {
+      return this.$store.state.trails;
     },
     thisid() {
       return this.$route.params.id;

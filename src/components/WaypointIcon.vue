@@ -10,6 +10,7 @@
     xmlns:xlink="http://www.w3.org/1999/xlink"
     xml:space="preserve"
     style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality;"
+    :style="svgStyle"
     viewBox="0 0 100 100"
   >
     <g
@@ -75,13 +76,19 @@ export default {
   data() {
     return {
       polygonvalues: [],
-      radius: 50,
+      maxRadius: 50,
       location: null,
       imBeingHovered: false
     };
   },
   props: ["waypointdata", "zoomscale"],
   computed: {
+    svgStyle() {
+      return `width: ${this.radius * 2}; height: ${this.radius * 2};`
+    },
+    radius() {
+      return this.maxRadius
+    },
     zoomScale() {
       return this.$store.state.zoomScale;
     },
@@ -208,8 +215,8 @@ export default {
 
 <style scoped lang="scss">
 svg.waypoint {
-  width: 100px;
-  height: 100px;
+  /*  width: 100px;
+  height: 100px; */
 }
 
 foreignObject {

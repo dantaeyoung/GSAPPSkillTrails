@@ -165,9 +165,13 @@ export default new Vuex.Store({
       var xhr1 = new XMLHttpRequest();
       xhr1.open("GET", waypointApiUrl);
       xhr1.onload = function() {
-        let waypoints = JSON.parse(xhr1.responseText).records.filter(
+        var waypoints = JSON.parse(xhr1.responseText).records.filter(
           w => w.fields["Name"]
         );
+
+        waypoints.forEach(function(wp) {
+            wp.fields.Trails = wp.fields.Trails || [];
+        });
 
         // COORDINATE TRANSFORMATION LOGIC
         let transformedWaypoints = waypoints.reduce(function(
@@ -190,6 +194,8 @@ export default new Vuex.Store({
         context.commit("setUnfilteredWaypoints", transformedWaypoints);
         context.commit("setWaypoints", transformedWaypoints);
 
+        console.log("FUCK");
+
         if (++successcount >= num_of_requests) {
           context.commit("setLoaded");
         } // ugh seriously this is how we check for all get requests finishing?
@@ -204,7 +210,11 @@ export default new Vuex.Store({
         );
 
         // turn into object
-        let processedTrails = trails.reduce(function(obj, item) {
+        let processedTrails = trails.
+          filter(function(tr) {
+            return "Waypoints" in tr.fields;
+          })
+          .reduce(function(obj, item) {
           obj[item.id] = item;
           return obj;
         }, {});
@@ -233,6 +243,9 @@ export default new Vuex.Store({
         })
         .map(thistr => thistr.id);
 
+      console.log(state.unfilteredWaypoints, state.unfilteredTrails);
+      console.log(visibleWaypointIDs, visibleTrailIDs);
+
       var newUnfilteredWaypoints = dcopy(state.unfilteredWaypoints);
       // DEEP COPY NECESSARY otherwise reactivity gets fucked
 
@@ -256,6 +269,8 @@ export default new Vuex.Store({
 
       var newUnfilteredTrails = dcopy(state.unfilteredTrails);
       // DEEP COPY NECESSARY otherwise reactivity gets fucked
+      //
+      console.log("WHOA");
 
       result.trails = Object.fromEntries(
         //1. filter trails if those trails don't have the right status
@@ -264,6 +279,15 @@ export default new Vuex.Store({
           .filter(thistr => {
             var [trid, trdata] = thistr;
             return visibleTrailIDs.includes(trid);
+          })
+
+        // 1.5 filter trails if they don't have any waypoints!
+          .filter(thistr => {
+            var [trid, trdata] = thistr;
+            console.log(trdata.fields);
+            return false;
+            console.log("Waypoints" in trdata.fields)
+            return ("Waypoints" in trdata.fields)
           })
           //2. filter trails' waypoints if those waypoints aren't visible
           .map(thistr => {

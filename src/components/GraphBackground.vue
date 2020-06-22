@@ -1,12 +1,16 @@
 <template>
   <div class="graphbackground" :style="widthheightstyle">
     <!--<img src="http://discovery.urlibraries.org/wordpress/wp-content/uploads/2014/11/topo-chunk.jpg"> --> --> --> -->
-     <img src="https://i.imgur.com/mCcxGUH.jpg"> 
+      <!--      <ContourMap /> -->
+      <!--      <iframe class="graphcommons" src="https://graphcommons.com/graphs/79a352f7-b77a-4395-ae02-63c59251aaf6/embed?topbar=false&fitgraph=true" frameborder="0" style="overflow:hidden;" width="100%" height="100%" allowfullscreen></iframe> -->
+      <!--<img src="https://i.imgur.com/mCcxGUH.jpg">  -->
   </div>
 </template>
 
 <script>
 /* eslint-disable */
+
+import ContourMap from "@/components/ContourMap.vue";
 
 export default {
   name: 'GraphBackground',
@@ -15,6 +19,9 @@ export default {
     };
   },
   props: ['leafdata'],
+  components: {
+    ContourMap,
+  },
   created() {
   },
   computed: {
@@ -45,5 +52,14 @@ export default {
 
   pointer-events: none;
 }
+iframe.graphcommons {
+width: 90%;
+height: 90%;
+top: 5%;
+left: 5%;
+position: absolute;
+opacity: 0.5
+}
+
 
 </style>

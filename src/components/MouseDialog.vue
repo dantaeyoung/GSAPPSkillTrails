@@ -23,21 +23,20 @@
         </div>
       </div>
     </div>
-    <div class="markModeInfo" v-if="cursorMode.markasdone == true && hoveringWaypoints.length > 0">
-
+    <div
+      class="markModeInfo"
+      v-if="cursorMode.markasdone == true && hoveringWaypoints.length > 0"
+    >
       Mark
       <div
         class="hoverMarkWaypoint"
         v-for="wid in hoveringWaypoints"
         v-bind:key="wid"
       >
-        <span class="wpName">{{ waypoints[wid].fields.Name }}</span
-      >
+        <span class="wpName">{{ waypoints[wid].fields.Name }}</span>
       </div>
-      As Done 
-
+      As Done
     </div>
-
   </div>
 </template>
 
@@ -72,16 +71,24 @@ export default {
       return this.$store.getters.waypoints;
     },
     positionStyle() {
-      return `position: absolute; 
-      top: ${this.posY}px; 
+      return `position: absolute;
+      top: ${this.posY}px;
       left: ${this.posX}px;`;
     },
     trailsOfHoveringWaypoints() {
       var self = this;
-      let traillist = self.hoveringWaypoints.map(wid => {
-        return self.waypoints[wid].fields.Trails;
-      });
-      return [].concat.apply([], traillist); // flatten list
+      let traillist = self.hoveringWaypoints
+        .map(wid => {
+          return self.waypoints[wid].fields.Trails;
+        })
+        .filter(function(element) {
+          return element !== undefined;
+        });
+      if (traillist.length > 0) {
+        return [].concat.apply([], traillist); // flatten list
+      } else {
+        return null;
+      }
     }
   },
   methods: {
@@ -135,7 +142,6 @@ export default {
   }
 }
 
-
 .hoverMarkWaypoint {
   .wpName {
     background-color: orange;
@@ -144,5 +150,4 @@ export default {
     padding: 5px 10px;
   }
 }
-
 </style>
