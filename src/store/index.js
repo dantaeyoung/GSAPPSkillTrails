@@ -8,6 +8,7 @@ const trailsApiUrl = `https://api.airtable.com/v0/${tableID}/Trails?api_key=${ap
 
 import Vue from "vue";
 import Vuex from "vuex";
+import createPersistedState from "vuex-persistedstate";
 
 import dcopy from "deep-copy";
 
@@ -27,6 +28,18 @@ function coordinateTransform(val, sidelength) {
 }*/
 
 export default new Vuex.Store({
+  plugins: [
+    createPersistedState({
+      key: "vuex",
+      reducer(val) {
+        if (val.clearState === true) {
+          // return empty state when user logged out
+          return {};
+        }
+        return val;
+      }
+    })
+  ],
   state: {
     count: 0,
     sidelength: 2000,
@@ -49,11 +62,18 @@ export default new Vuex.Store({
 
     zoomScale: 1,
 
-    cursorMode: { navigate: true, markasdone: false, zoom: false, hiking: false },
+    cursorMode: {
+      navigate: true,
+      markasdone: false,
+      zoom: false,
+      hiking: false
+    },
 
     waypointsMarkedDone: [],
 
     isTouchDevice: false,
+
+    clearState: false
   },
   getters: {
     trails(state) {
@@ -64,6 +84,9 @@ export default new Vuex.Store({
     }
   },
   mutations: {
+    clearPersistedState(state) {
+      state.clearState = true;
+    },
     setTouchDevice(state, payload) {
       state.isTouchDevice = payload;
     },
@@ -127,7 +150,9 @@ export default new Vuex.Store({
       }
     },
     removeWaypointMarkedDone(state, payload) {
-      state.waypointsMarkedDone = state.waypointsMarkedDone.filter(v => v !== payload.id);
+      state.waypointsMarkedDone = state.waypointsMarkedDone.filter(
+        v => v !== payload.id
+      );
     },
     setTrails(state, tr) {
       state.trails = tr;
@@ -151,6 +176,10 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    clearPersistedState({ state, commit }) {
+      commit("clearPersistedState");
+      location.reload();
+    },
     toggleWaypointDone({ state, commit }, payload) {
       if (state.waypointsMarkedDone.includes(payload.id)) {
         commit("removeWaypointMarkedDone", { id: payload.id });
@@ -175,14 +204,11 @@ export default new Vuex.Store({
         );
 
         waypoints.forEach(function(wp) {
-            wp.fields.Trails = wp.fields.Trails || [];
+          wp.fields.Trails = wp.fields.Trails || [];
         });
 
         // COORDINATE TRANSFORMATION LOGIC
-        let transformedWaypoints = waypoints.reduce(function(
-          obj,
-          item
-        ) {
+        let transformedWaypoints = waypoints.reduce(function(obj, item) {
           item.fields.coordinateX = coordinateTransform(
             item.fields.coordinateX,
             context.state.sidelength
@@ -193,17 +219,15 @@ export default new Vuex.Store({
           );
           obj[item.id] = item;
           return obj;
-        },
-        {});
+        }, {});
 
         context.commit("setUnfilteredWaypoints", transformedWaypoints);
         context.commit("setWaypoints", transformedWaypoints);
 
-
         if (++successcount >= num_of_requests) {
           context.dispatch("filterTrailsAndWaypoints", {
             trailStatusesToShow: context.state.trailStatusesToShow,
-            waypointStatusesToShow: context.state.waypointStatusesToShow,
+            waypointStatusesToShow: context.state.waypointStatusesToShow
           });
           context.commit("setLoaded");
         } // ugh seriously this is how we check for all get requests finishing?
@@ -218,14 +242,14 @@ export default new Vuex.Store({
         );
 
         // turn into object
-        let processedTrails = trails.
-          filter(function(tr) {
+        let processedTrails = trails
+          .filter(function(tr) {
             return "Waypoints" in tr.fields;
           })
           .reduce(function(obj, item) {
-          obj[item.id] = item;
-          return obj;
-        }, {});
+            obj[item.id] = item;
+            return obj;
+          }, {});
 
         context.commit("setUnfilteredTrails", processedTrails);
         context.commit("setTrails", processedTrails);
@@ -233,7 +257,7 @@ export default new Vuex.Store({
         if (++successcount >= num_of_requests) {
           context.dispatch("filterTrailsAndWaypoints", {
             trailStatusesToShow: context.state.trailStatusesToShow,
-            waypointStatusesToShow: context.state.waypointStatusesToShow,
+            waypointStatusesToShow: context.state.waypointStatusesToShow
           });
 
           context.commit("setLoaded");
@@ -290,10 +314,10 @@ export default new Vuex.Store({
             return visibleTrailIDs.includes(trid);
           })
 
-        // 1.5 filter trails if they don't have any waypoints!
+          // 1.5 filter trails if they don't have any waypoints!
           .filter(thistr => {
             var [trid, trdata] = thistr;
-            return ("Waypoints" in trdata.fields)
+            return "Waypoints" in trdata.fields;
           })
           //2. filter trails' waypoints if those waypoints aren't visible
           .map(thistr => {

@@ -9,6 +9,7 @@
         toggle coordinate dialog
       </button>
       <button @click="toggleFilter">filter: {{ isFiltered }}</button>
+      <button @click="clearState">clear vuex state</button>
     </div>
     <div class="showcoordinates" v-if="showCoordinates">
       <button @click="tableclip()">copy table{{ copytablestatus }}</button>
@@ -73,6 +74,9 @@ export default {
   },
 
   methods: {
+    clearState () {
+      this.$store.dispatch("clearPersistedState")
+    },
     toggleFilter() {
       this.isFiltered = !this.isFiltered;
       if (this.isFiltered) {
