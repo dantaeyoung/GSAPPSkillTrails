@@ -3,12 +3,16 @@
     @mouseenter="mouseEnter()"
     @mouseleave="mouseLeave()"
     class="gtrail"
-    :class="{ amBeingHovered: amBeingHovered, myWaypointHovered: myWaypointHovered, myWaypointBeingViewed: myWaypointBeingViewed }"
+    :class="{
+      amBeingHovered: amBeingHovered,
+      myWaypointHovered: myWaypointHovered,
+      myWaypointBeingViewed: myWaypointBeingViewed
+    }"
   >
-    <path class="svgtrail" :d="svgTrailPath" :key="traildata.id + '-' + traildata.fields.Waypoints.length" />
-    {{traildata.id + '-' + traildata.fields.Waypoints.length}}
+    <path class="svgtrail" :d="svgTrailPath" />
+    <path class="svgtrail-arrows" :d="svgTrailPath" />
+    {{ traildata.id + "-" + traildata.fields.Waypoints.length }}
     {{ currentlyViewingWaypoint }}
-     
   </g>
 </template>
 
@@ -48,7 +52,9 @@ export default {
     },
     myWaypointBeingViewed() {
       var self = this;
-      return self.traildata.fields.Waypoints.includes(self.currentlyViewingWaypoint)
+      return self.traildata.fields.Waypoints.includes(
+        self.currentlyViewingWaypoint
+      );
     },
     svgTrailPath() {
       var self = this;
@@ -66,7 +72,7 @@ export default {
       }
 
       const interp = new CurveInterpolator(wpcoords, { tension: 0.2 });
-      const numpts = Object.keys(this.waypoints).length * 8;
+      const numpts = Object.keys(this.waypoints).length * 1.5;
       const pts = interp.getPoints(numpts);
 
       var pathstring = "M";
@@ -74,52 +80,80 @@ export default {
         .map(item => {
           return item[0] + " " + item[1];
         })
-          .join(" L");
+        .join(" L");
       return pathstring;
-
     }
   },
   methods: {
     mouseEnter() {
       this.amBeingHovered = true;
       this.$store.commit("addHoveringTrails", {
-        ids: [ this.traildata.id ]
+        ids: [this.traildata.id]
       });
     },
     mouseLeave() {
       this.amBeingHovered = false;
       this.$store.commit("removeHoveringTrails", {
-        ids: [ this.traildata.id ]
+        ids: [this.traildata.id]
       });
     }
   }
 };
 </script>
 
-<style scoped lang="scss">
-
+<style lang="scss">
 .gtrail {
   pointer-events: auto;
 }
+
 .svgtrail {
   fill: none;
-  stroke: #666;
+  stroke: #43aed0;
   stroke-width: 6;
+  stroke-linecap: round;
   stroke-linejoin: round;
   cursor: pointer;
-  stroke-dasharray: 20, 10;
+  stroke-dasharray: 10, 12;
 
   .amBeingHovered & {
     stroke-width: 20;
+    stroke-dasharray: none;
   }
 
   .myWaypointHovered & {
     stroke-width: 20;
+    stroke-dasharray: none;
   }
 
   .myWaypointBeingViewed & {
-    stroke-width: 12;
-    stroke: black;
+    stroke-width: 40;
+    stroke-dasharray: none;
+    stroke: #70c0d8;
+  }
+
+}
+
+
+#svgtrailarrow path {
+  fill:  white;
+  opacity: 0.6;
+}
+.svgtrail-arrows {
+  display: none;
+  fill: none;
+  stroke: #43aed0;
+
+   marker-start:url(#svgtrailarrow);
+  marker-mid:url(#svgtrailarrow);
+  marker-end:url(#svgtrailarrow);
+
+  .myWaypointBeingViewed & {
+    display: block;
+    stroke-width: 4;
+    stroke-dasharray: none;
+    stroke: none;
   }
 }
+
+
 </style>

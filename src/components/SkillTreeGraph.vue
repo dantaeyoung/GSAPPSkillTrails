@@ -21,6 +21,17 @@
         />
 
         <svg id="trails" class="panzoom-exclude">
+          <defs>
+            <marker
+              id="svgtrailarrow"
+              markerWidth="4"
+              markerHeight="4"
+              orient="auto"
+              refY="2"
+            >
+              <path d="M0,0 L4,2 0,4" />
+            </marker>
+          </defs>
           <Trail
             v-for="(trail, id) in trails"
             :key="id"
@@ -52,7 +63,7 @@ export default {
   name: "SkillTreeGraph",
   data() {
     return {
-      panzoom: null,
+      panzoom: null
     };
   },
   components: {
@@ -128,7 +139,6 @@ export default {
         }
       });
 
-
       window.pz = self.panzoom;
 
       elem.addEventListener("panzoomzoom", function(event) {
@@ -181,7 +191,6 @@ a {
   .markasdone & {
     cursor: cell !important;
   }
-
 }
 
 svg#trails {

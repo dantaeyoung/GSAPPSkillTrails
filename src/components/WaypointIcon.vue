@@ -258,7 +258,7 @@ img {
   left: 0;
   height: 100%;
   width: 100%;
-  background: #FC0452;
+  background: #EEE;
   mix-blend-mode: multiply;
 }
 
@@ -269,8 +269,7 @@ g.shape {
 .polygonBorder {
   border: 1px solid blue;
   stroke: black;
-  stroke-width: 4;
-  stroke-linejoin: round;
+  stroke-width: 7;
   fill: none;
 
   .myTrailHovered & {
@@ -278,7 +277,7 @@ g.shape {
   }
 
   .imBeingViewed & {
-    stroke: red;
+    stroke: #FC0452;
   }
 
   .imBeingHovered & {

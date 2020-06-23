@@ -5,7 +5,6 @@ import VueRouter from "vue-router";
 
 
 import About from "@/components/About.vue";
-import Home from "@/components/Home.vue";
 import ViewWaypoint from "@/components/ViewWaypoint.vue";
 import SkillTreeGraph from "@/components/SkillTreeGraph.vue";
 import ListView from "@/components/ListView.vue";

@@ -194,7 +194,6 @@ export default new Vuex.Store({
         context.commit("setUnfilteredWaypoints", transformedWaypoints);
         context.commit("setWaypoints", transformedWaypoints);
 
-        console.log("FUCK");
 
         if (++successcount >= num_of_requests) {
           context.commit("setLoaded");
@@ -243,9 +242,6 @@ export default new Vuex.Store({
         })
         .map(thistr => thistr.id);
 
-      console.log(state.unfilteredWaypoints, state.unfilteredTrails);
-      console.log(visibleWaypointIDs, visibleTrailIDs);
-
       var newUnfilteredWaypoints = dcopy(state.unfilteredWaypoints);
       // DEEP COPY NECESSARY otherwise reactivity gets fucked
 
@@ -270,7 +266,6 @@ export default new Vuex.Store({
       var newUnfilteredTrails = dcopy(state.unfilteredTrails);
       // DEEP COPY NECESSARY otherwise reactivity gets fucked
       //
-      console.log("WHOA");
 
       result.trails = Object.fromEntries(
         //1. filter trails if those trails don't have the right status
@@ -284,9 +279,6 @@ export default new Vuex.Store({
         // 1.5 filter trails if they don't have any waypoints!
           .filter(thistr => {
             var [trid, trdata] = thistr;
-            console.log(trdata.fields);
-            return false;
-            console.log("Waypoints" in trdata.fields)
             return ("Waypoints" in trdata.fields)
           })
           //2. filter trails' waypoints if those waypoints aren't visible

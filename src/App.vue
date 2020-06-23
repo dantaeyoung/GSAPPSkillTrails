@@ -3,36 +3,42 @@
     <section id="header">
       <TopHeader />
     </section>
-    
+
     <section id="center">
       <section id="graph">
         <SkillTreeGraph />
       </section>
       <section id="content">
-        <router-view name="content"/>
+        <router-view name="content" />
       </section>
     </section>
 
-    <section id="footer">footer</section>
   </div>
 </template>
 
-
 <script>
-import TopHeader from '@/components/TopHeader.vue'
-import SkillTreeGraph from '@/components/SkillTreeGraph.vue'
+import TopHeader from "@/components/TopHeader.vue";
+import SkillTreeGraph from "@/components/SkillTreeGraph.vue";
 
 export default {
   components: { TopHeader, SkillTreeGraph },
-            created() {
-                this.$store.dispatch('fetch');
-            },
+  created() {
+    this.$store.dispatch("fetch");
+  },
+  computed: {
+    currentlyViewingWaypoint() {
+      return this.$store.state.currentlyViewingWaypoint;
+    },
+  }
 };
-</script> 
+</script>
 
 <style lang="scss">
-
-body, html { margin: 0; padding: 0; }
+body,
+html {
+  margin: 0;
+  padding: 0;
+}
 
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
@@ -47,21 +53,19 @@ body, html { margin: 0; padding: 0; }
 }
 
 section {
-
   &#center {
     flex-grow: 1;
     display: flex;
     flex-direction: row;
 
-    #graph{
-      background-color: #DDD;
+    #graph {
+      background-color: #ddd;
       flex-grow: 1;
       overflow: hidden;
     }
 
     #content {
-      width: 50vw; 
-      max-width: 500px;
+      flex-grow: 1;
     }
   }
 }
