@@ -6,6 +6,9 @@ import store from './store'
 
 Vue.config.productionTip = false
 
+import VueMobileDetection from "vue-mobile-detection";
+
+Vue.use(VueMobileDetection);
 
 new Vue({
   router,

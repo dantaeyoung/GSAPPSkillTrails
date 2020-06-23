@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" :class="{ mobile: isTouchDevice }">
     <section id="header">
       <TopHeader />
     </section>
@@ -21,12 +21,18 @@
 import TopHeader from "@/components/TopHeader.vue";
 import SkillTreeGraph from "@/components/SkillTreeGraph.vue";
 
+import { is_touch_device } from "@/scripts/detectDevice.js"
+
 export default {
   components: { TopHeader, SkillTreeGraph },
   created() {
     this.$store.dispatch("fetch");
+    this.$store.commit("setTouchDevice", this.isTouchDevice);
   },
   computed: {
+    isTouchDevice() {
+      return is_touch_device();
+    },
     currentlyViewingWaypoint() {
       return this.$store.state.currentlyViewingWaypoint;
     }
@@ -40,6 +46,7 @@ html {
   margin: 0;
   padding: 0;
 }
+
 
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;

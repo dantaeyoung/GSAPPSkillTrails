@@ -49,9 +49,11 @@ export default new Vuex.Store({
 
     zoomScale: 1,
 
-    cursorMode: { navigate: true, markasdone: false },
+    cursorMode: { navigate: true, markasdone: false, zoom: false, hiking: false },
 
-    waypointsMarkedDone: []
+    waypointsMarkedDone: [],
+
+    isTouchDevice: false,
   },
   getters: {
     trails(state) {
@@ -62,6 +64,9 @@ export default new Vuex.Store({
     }
   },
   mutations: {
+    setTouchDevice(state, payload) {
+      state.isTouchDevice = payload;
+    },
     setZoomScale(state, payload) {
       state.zoomScale = payload.zoomScale;
     },

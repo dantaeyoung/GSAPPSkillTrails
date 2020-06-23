@@ -65,6 +65,7 @@ export default {
     rgba(255, 2, 2, 0) 6%
   );
 
+
   /*background: rgb(231,231,231);*/
   /*background: radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 42%, rgba(206,148,233,0) 63%); */
 

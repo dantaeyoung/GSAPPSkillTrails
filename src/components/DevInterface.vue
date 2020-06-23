@@ -129,6 +129,7 @@ export default {
   bottom: 30px;
   left: 30px;
 }
+
 button {
   background-color: #8fffff;
 }

@@ -1,6 +1,7 @@
 <template>
   <div>
     <div id="CursorToolbar">
+
       <button
         :class="{ active: cursorMode['navigate'] }"
         @click="setCursorMode('navigate')"
@@ -8,6 +9,7 @@
       >
         <font-awesome-icon class="icon" icon="mouse-pointer" />
       </button>
+
       <button
         :class="{ active: cursorMode['markasdone'] }"
         @click="setCursorMode('markasdone')"
@@ -15,6 +17,7 @@
       >
         <font-awesome-icon class="icon" icon="check-square" />
       </button>
+
       <button
         :class="{ active: cursorMode['zoom'] }"
         @click="setCursorMode('zoom')"
@@ -22,6 +25,17 @@
       >
         <font-awesome-icon class="icon" icon="search" />
       </button>
+
+      <button
+        v-if="!isTouchDevice"
+        :class="{ active: cursorMode['hiking'] }"
+        @click="setCursorMode('hiking')"
+        alt="Zoom"
+      >
+        <font-awesome-icon class="icon" icon="hiking" />
+      </button>
+
+
     </div>
   </div>
 </template>
@@ -33,12 +47,16 @@ import { library } from "@fortawesome/fontawesome-svg-core";
 import {
   faMousePointer,
   faCheckSquare,
-  faSearch
+  faSearch,
+  faHiking,
+  faExclamationTriangle,
 } from "@fortawesome/free-solid-svg-icons";
 
 library.add(faMousePointer);
 library.add(faCheckSquare);
 library.add(faSearch);
+library.add(faHiking);
+library.add(faExclamationTriangle);
 
 export default {
   name: "CursorToolbar",
@@ -50,6 +68,9 @@ export default {
   },
   created() {},
   computed: {
+    isTouchDevice() {
+      return this.$store.state.isTouchDevice;
+    },
     cursorMode() {
       return this.$store.state.cursorMode;
     }
@@ -74,6 +95,7 @@ export default {
 }
 
 button {
+  cursor: pointer;
   width: 40px;
   height: 40px;
   flex-shrink: 0;

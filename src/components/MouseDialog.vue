@@ -1,5 +1,5 @@
 <template>
-  <div id="MouseDialog" :style="positionStyle">
+  <div id="MouseDialog" :style="positionStyle" v-if="!isTouchDevice">
     <div class="waypointInfo" v-if="cursorMode.navigate == true">
       <div class="hoverTrail" v-for="tid in hoveringTrails" v-bind:key="tid">
         <span class="trailName">{{ trails[tid].fields.Name }}</span>
@@ -55,6 +55,9 @@ export default {
     this.initMouseListener();
   },
   computed: {
+    isTouchDevice() {
+      return this.$store.state.isTouchDevice;
+    },
     cursorMode() {
       return this.$store.state.cursorMode;
     },

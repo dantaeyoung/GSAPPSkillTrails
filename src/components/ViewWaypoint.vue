@@ -17,8 +17,8 @@
             waypointdata.fields.URL
           }}</a>
         </div>
-
-        <VideoEmbed :url="waypointdata.fields.URL" />
+        <!--  -->
+        <!-- <VideoEmbed :url="waypointdata.filds.URL" /> -->
 
         <div class="coverimage" v-if="coverImageThumbnail">
           <img :src="coverImageThumbnail" />

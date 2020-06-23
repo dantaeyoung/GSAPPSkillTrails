@@ -250,17 +250,17 @@ img {
   position: relative;
 }
 
-.colorfilter:after {
-  position: absolute;
-  content: "";
-  display: block;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 100%;
-  background: #EEE;
-  mix-blend-mode: multiply;
-}
+/* .colorfilter:after { */
+/*   position: absolute; */
+/*   content: ""; */
+/*   display: block; */
+/*   top: 0; */
+/*   left: 0; */
+/*   height: 100%; */
+/*   width: 100%; */
+/*   background: #EEE; */
+/*   mix-blend-mode: multiply; */
+/* } */
 
 g.shape {
   cursor: pointer;
@@ -269,8 +269,8 @@ g.shape {
 .polygonBorder {
   border: 1px solid blue;
   stroke: black;
-  stroke-width: 7;
-  fill: none;
+  stroke-width: 5;
+  fill: #EEE;
 
   .myTrailHovered & {
     stroke-width: 10;
@@ -281,7 +281,7 @@ g.shape {
   }
 
   .imBeingHovered & {
-    stroke-width: 8;
+    stroke-width: 7;
   }
 
   .imMarkedDone & {

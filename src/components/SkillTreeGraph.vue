@@ -3,10 +3,6 @@
     <div id="graphnav">
       <DevInterface />
       <CursorToolbar />
-      <button @click="panzoom.zoomOut()">-</button>
-      <button @click="panzoom.zoomIn()">+</button>
-      <button @click="panzoom.reset()">reset</button>
-      {{ zoomScale }}
     </div>
     <MouseDialog mouseeventid="graphframe" />
     <div id="graphwindow">
