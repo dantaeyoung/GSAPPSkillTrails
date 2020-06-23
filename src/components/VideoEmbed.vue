@@ -3,8 +3,8 @@
     <div class="video-vimeo" v-if="isVimeo">
       <iframe
         :src="'https://player.vimeo.com/video/' + videoid"
-        width="640"
-        height="400"
+        width="100%"
+        height="100%"
         frameborder="0"
         allow="autoplay; fullscreen"
         allowfullscreen
@@ -12,8 +12,8 @@
     </div>
     <div class="video-youtube" v-if="isYoutube">
       <iframe
-        width="560"
-        height="315"
+        width="100%"
+        height="100%"
         :src="'https://www.youtube-nocookie.com/embed/' + videoid"
         frameborder="0"
         allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
@@ -59,14 +59,19 @@ export default {
 #VideoEmbed {
   display: flex;
   flex-direction: column;
-  height: 100%;
+
+  div {
+    height: 100%;
+  }
 }
 
 iframe {
   flex-grow: 1;
-  max-width: 100% !important;
+  width: 100%;
+  height: auto;
+  /*max-width: 100% !important;
   width: auto !important;
-  height: auto !important;
+  height: auto !important; */
   border: none;
 }
 </style>

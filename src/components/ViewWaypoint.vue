@@ -1,8 +1,28 @@
 <template>
-  <div id="ViewWaypoint" :class="{ isViewing: currentlyViewingWaypoint }">
-    {{ currentlyViewingWaypoint }}
+  <div class="vwFrame" :class="{ isViewing: currentlyViewingWaypoint }">
+    <div class="vwContent">
       <div v-if="waypointdata && waypointdata.fields">
-        <div class="title">{{ waypointdata.fields.Name }}</div>
+        <div class="title">
+          <img class="waypointicon" src="@/assets/waypoint-icon.svg" />
+          {{ waypointdata.fields.Name }}
+        </div>
+        <div class="author" v-if="waypointdata.fields['Author Name']">
+          By <span class="name"> {{ waypointdata.fields["Author Name"] }}</span>
+        </div>
+        <div class="description">{{ waypointdata.fields.Description }}</div>
+
+        <div class="link">
+          <div class="linkto skew">Link:</div>
+          <a :href="waypointdata.fields.URL" target="_blank">{{
+            waypointdata.fields.URL
+          }}</a>
+        </div>
+
+        <VideoEmbed :url="waypointdata.fields.URL" />
+
+        <div class="coverimage" v-if="coverImageThumbnail">
+          <img :src="coverImageThumbnail" />
+        </div>
 
         <div
           class="trailsPartOf"
@@ -11,16 +31,24 @@
               waypoints[thisid].fields.Trails.length > 0
           "
         >
-          Part of
-          <div v-for="tid in waypoints[thisid].fields.Trails" :key="tid">
-            {{ trails[tid].fields.Name }}
+          <div class="partof skew">
+            Part of:
+          </div>
+          <div class="trails">
+            <div
+              class="trail"
+              v-for="tid in waypoints[thisid].fields.Trails"
+              :key="tid"
+            >
+              <img class="trailicon" src="@/assets/trail-icon.svg" />{{
+                trails[tid].fields.Name
+              }}
+            </div>
           </div>
         </div>
-        {{ waypointdata.fields.URL }}<br />
-        {{ thisid }}
         <!--     <iframe :src="waypointdata.fields.URL" />  -->
-        <!-- <VideoEmbed :url="waypointdata.fields.URL" /> -->
       </div>
+    </div>
   </div>
 </template>
 
@@ -52,25 +80,128 @@ export default {
     },
     thisid() {
       return this.$route.params.id;
+    },
+    coverImageThumbnail() {
+      try {
+        return this.waypointdata.fields["Cover Image"][0]["thumbnails"][
+          "large"
+        ]["url"];
+      } catch (e) {
+        return null;
+      }
     }
   }
 };
 </script>
 
 <style scoped lang="scss">
-#ViewWaypoint {
+.vwFrame {
+
+  position: relative;
+  overflow-x: hidden;
+}
+
+.vwContent {
+  position: relative;
+
+  width: 360px;
+  /*height: 80vh;*/
+  padding: 20px;
+  text-align: left;
+
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: 20px;
+  background-color: white;
+
+  transition: all 0.4s ease-in-out;
+
+  right: -100px;
+  .isViewing & {
+    right: 0px;
+  }
+}
+
+.skew {
+  text-transform: uppercase;
+  transform: rotate(-25deg) skew(-25deg);
+  font-weight: bold;
+}
+
+.title {
   display: flex;
-  flex-direction: column;
-  width: 0px;
-  overflow: hidden;
+  flex-direction: row;
+  align-items: center;
 
-  /* TODO FINISH */
+  .waypointicon {
+    height: 20px;
+    margin-right: 5px;
+  }
+  font-size: 1.2em;
+  font-weight: bold;
+  width: 80%;
+  color: darken(#fc0452, 5%);
+  margin-bottom: 5px;
+}
 
-  &.isViewing {
-    width: 500px;
+.coverimage img {
+  width: 100%;
+  height: auto;
+}
+
+.trailsPartOf {
+  display: flex;
+  align-items: center;
+  margin: 15px 0px;
+
+  .partof {
+    font-size: 0.8em;
+    margin-right: 5px;
   }
 
-    transition: all .4s ease-in-out;
+  .trail {
+    display: flex;
+    align-items: center;
+    font-size: 0.95em;
+    color: #2da6bd;
+    font-weight: bold;
+    padding: 3px 5px;
+    border-radius: 8px;
+
+    .trailicon {
+      height: 15px;
+      margin-right: 5px;
+    }
+  }
+}
+.author {
+  font-size: 0.9em;
+  font-weight: bold;
+
+  .name {
+    text-style: italic;
+  }
+  margin-bottom: 15px;
+}
+
+.description {
+  font-size: 0.85em;
+  margin-top: 15px;
+}
+
+.link {
+  font-size: 0.9em;
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+
+  .linkto { margin-right: 5px; }
+
+  a {
+    color: darken(#fc0452, 10%);
+    font-size: 0.8em;
+    font-weight: bold;
+    display: inline-block;
+  }
 }
 
 iframe {
@@ -80,5 +211,4 @@ iframe {
   height: auto !important;
   border: none;
 }
-
 </style>

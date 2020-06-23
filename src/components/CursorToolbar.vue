@@ -1,18 +1,26 @@
 <template>
   <div>
     <div id="CursorToolbar">
-      <div>CursorToolbar</div>
       <button
         :class="{ active: cursorMode['navigate'] }"
         @click="setCursorMode('navigate')"
+        alt="Navigate"
       >
-        Navigate
+        <font-awesome-icon class="icon" icon="mouse-pointer" />
       </button>
       <button
         :class="{ active: cursorMode['markasdone'] }"
         @click="setCursorMode('markasdone')"
+        alt="Mark as Finished"
       >
-        MarkAsFinished
+        <font-awesome-icon class="icon" icon="check-square" />
+      </button>
+      <button
+        :class="{ active: cursorMode['zoom'] }"
+        @click="setCursorMode('zoom')"
+        alt="Zoom"
+      >
+        <font-awesome-icon class="icon" icon="search" />
       </button>
     </div>
   </div>
@@ -20,13 +28,22 @@
 
 <script>
 /* eslint-disable */
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { faMousePointer, faCheckSquare, faSearch} from "@fortawesome/free-solid-svg-icons";
+
+library.add(faMousePointer);
+library.add(faCheckSquare);
+library.add(faSearch);
 
 export default {
   name: "CursorToolbar",
   data() {
     return {};
   },
-  components: {},
+  components: {
+    FontAwesomeIcon,
+  },
   created() {},
   computed: {
     cursorMode() {
@@ -44,18 +61,32 @@ export default {
 
 <style scoped lang="scss">
 #CursorToolbar {
-  border: 2px solid red;
   display: flex;
   flex-direction: column;
   height: 100px;
+  margin-left: 30px;
 }
 
 button {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+
   background-color: #d4dbd2;
 
   &.active {
-    background-color: #8fff8f;
+    background-color: #888;
   }
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+
+  .icon {
+    font-size: 2em;
+  }
+
+
 }
 
 .showcoordinates {

@@ -54,9 +54,8 @@ html {
 
 section {
   &#center {
-    flex-grow: 1;
-    display: flex;
-    flex-direction: row;
+
+    position: relative;
 
     #graph {
       background-color: #ddd;
@@ -65,7 +64,9 @@ section {
     }
 
     #content {
-      flex-grow: 1;
+      position: absolute;
+      right: 0px;
+      top: 20px;
     }
   }
 }
