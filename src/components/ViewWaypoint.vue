@@ -32,7 +32,7 @@
           "
         >
           <div class="partof skew">
-            Part of:
+            In trails:
           </div>
           <div class="trails">
             <div
@@ -125,6 +125,7 @@ export default {
   text-transform: uppercase;
   transform: rotate(-25deg) skew(-25deg);
   font-weight: bold;
+  line-height: 1em;
 }
 
 .title {

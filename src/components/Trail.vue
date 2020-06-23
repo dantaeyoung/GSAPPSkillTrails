@@ -72,7 +72,7 @@ export default {
       }
 
       const interp = new CurveInterpolator(wpcoords, { tension: 0.2 });
-      const numpts = Object.keys(this.waypoints).length * 1.5;
+      const numpts = Object.keys(this.waypoints).length * 1;
       const pts = interp.getPoints(numpts);
 
       var pathstring = "M";
@@ -109,7 +109,7 @@ export default {
 .svgtrail {
   fill: none;
   stroke: #43aed0;
-  stroke-width: 6;
+  stroke-width: 4;
   stroke-linecap: round;
   stroke-linejoin: round;
   cursor: pointer;
