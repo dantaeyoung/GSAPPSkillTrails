@@ -30,7 +30,11 @@
 /* eslint-disable */
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { library } from "@fortawesome/fontawesome-svg-core";
-import { faMousePointer, faCheckSquare, faSearch} from "@fortawesome/free-solid-svg-icons";
+import {
+  faMousePointer,
+  faCheckSquare,
+  faSearch
+} from "@fortawesome/free-solid-svg-icons";
 
 library.add(faMousePointer);
 library.add(faCheckSquare);
@@ -42,7 +46,7 @@ export default {
     return {};
   },
   components: {
-    FontAwesomeIcon,
+    FontAwesomeIcon
   },
   created() {},
   computed: {
@@ -64,7 +68,9 @@ export default {
   display: flex;
   flex-direction: column;
   height: 100px;
-  margin-left: 30px;
+  position: absolute;
+  top: 30px;
+  left: 30px;
 }
 
 button {
@@ -81,12 +87,9 @@ button {
   align-items: center;
   justify-content: center;
 
-
   .icon {
     font-size: 2em;
   }
-
-
 }
 
 .showcoordinates {

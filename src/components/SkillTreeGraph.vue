@@ -1,12 +1,12 @@
 <template>
   <div id="graphframe" :class="cursorMode">
     <div id="graphnav">
+      <DevInterface />
+      <CursorToolbar />
       <button @click="panzoom.zoomOut()">-</button>
       <button @click="panzoom.zoomIn()">+</button>
       <button @click="panzoom.reset()">reset</button>
       {{ zoomScale }}
-      <DevInterface />
-      <CursorToolbar />
     </div>
     <MouseDialog mouseeventid="graphframe" />
     <div id="graphwindow">
@@ -166,7 +166,6 @@ a {
 }
 
 #graphframe {
-  height: 100%;
   width: 100%;
 
   &.markasdone {
@@ -177,6 +176,14 @@ a {
 #graphnav {
   position: absolute;
   z-index: 100;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+
+  & > * {
+    pointer-events: auto;
+  }
 }
 
 #graphwindow {

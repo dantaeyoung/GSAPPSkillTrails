@@ -12,7 +12,6 @@
         <router-view name="content" />
       </section>
     </section>
-
   </div>
 </template>
 
@@ -30,7 +29,7 @@ export default {
   computed: {
     currentlyViewingWaypoint() {
       return this.$store.state.currentlyViewingWaypoint;
-    },
+    }
   }
 };
 </script>
@@ -54,22 +53,31 @@ html {
   height: 100vh;
 }
 
-section {
-  &#center {
+#header {
+  /* position: fixed; */
+  /* width: 100%; */
+  /* z-index: 1000; */
+  /* top: 0px; */
+  /* left: 0px; */
 
-    position: relative;
+  height: 30px;
+}
+#center {
 
-    #graph {
-      background-color: #ddd;
-      flex-grow: 1;
-      overflow: hidden;
-    }
+  position: relative;
+  height: calc(100vh - 30px);
 
-    #content {
-      position: absolute;
-      right: 0px;
-      top: 20px;
-    }
+  #graph {
+    background-color: #ddd;
+    flex-grow: 1;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  #content {
+    position: absolute;
+    right: 0px;
+    top: 20px;
   }
 }
 

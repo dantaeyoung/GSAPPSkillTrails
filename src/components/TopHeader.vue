@@ -38,8 +38,7 @@ export default {
 <style scoped>
 #topheader {
   background-color: #fc0452;
-  height: 8vh;
-  min-height: 25px;
+  height: 30px;
   text-align: center;
 
   display: flex;
@@ -52,8 +51,7 @@ export default {
 .svglogo {
   display: block;
   width: auto;
-  height: 6vh;
-  min-height: 20px;
+  height: 25px;
 }
 
 .rightlinks {

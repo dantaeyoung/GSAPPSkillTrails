@@ -48,7 +48,7 @@ export default {
       draggablelist: null,
       showCoordinates: false,
       copytablestatus: "",
-      isFiltered: false
+      isFiltered:true,  
     };
   },
   components: {},
@@ -125,6 +125,9 @@ export default {
   display: flex;
   flex-direction: column;
   height: 100px;
+  position: absolute;
+  bottom: 30px;
+  left: 30px;
 }
 button {
   background-color: #8fffff;

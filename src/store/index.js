@@ -196,6 +196,10 @@ export default new Vuex.Store({
 
 
         if (++successcount >= num_of_requests) {
+          context.dispatch("filterTrailsAndWaypoints", {
+            trailStatusesToShow: context.state.trailStatusesToShow,
+            waypointStatusesToShow: context.state.waypointStatusesToShow,
+          });
           context.commit("setLoaded");
         } // ugh seriously this is how we check for all get requests finishing?
       };
@@ -222,6 +226,11 @@ export default new Vuex.Store({
         context.commit("setTrails", processedTrails);
 
         if (++successcount >= num_of_requests) {
+          context.dispatch("filterTrailsAndWaypoints", {
+            trailStatusesToShow: context.state.trailStatusesToShow,
+            waypointStatusesToShow: context.state.waypointStatusesToShow,
+          });
+
           context.commit("setLoaded");
         } // ugh seriously this is how we check for all get requests finishing?
       };
