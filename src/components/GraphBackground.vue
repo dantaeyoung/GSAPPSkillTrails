@@ -12,7 +12,7 @@
     </svg>
     <!--<img src="http://discovery.urlibraries.org/wordpress/wp-content/uploads/2014/11/topo-chunk.jpg"> -->
     <!--      <ContourMap /> -->
-          <iframe class="graphcommons" src="https://graphcommons.com/graphs/79a352f7-b77a-4395-ae02-63c59251aaf6/embed?topbar=false&fitgraph=true" frameborder="0" style="overflow:hidden;" width="100%" height="100%" allowfullscreen></iframe> 
+    <!--          <iframe class="graphcommons" src="https://graphcommons.com/graphs/79a352f7-b77a-4395-ae02-63c59251aaf6/embed?topbar=false&fitgraph=true" frameborder="0" style="overflow:hidden;" width="100%" height="100%" allowfullscreen></iframe>  -->
     <!--<img src="https://i.imgur.com/mCcxGUH.jpg">  -->
   </div>
 </template>
