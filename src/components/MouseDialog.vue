@@ -94,28 +94,31 @@ export default {
   methods: {
     initMouseListener() {
       var self = this;
-      document
-        .getElementById(self.mouseeventid)
-        .addEventListener("mousemove", function(e) {
-          self.posX = e.pageX;
-          self.posY = e.pageY;
-        });
+      var elem = document.getElementById(self.mouseeventid);
+      var rect = elem.getBoundingClientRect();
+      elem.addEventListener("mousemove", function(e) {
+        self.posX = e.clientX - rect.left;
+        self.posY = e.clientY - rect.top;
+      });
     }
   }
 };
 </script>
 
 <style scoped lang="scss">
+$trailblue: #43aed0;
+$waypointred: #fc0452;
+
 #MouseDialog {
-  margin: 10px;
   z-index: 100;
   text-align: left;
   pointer-events: none;
+  margin: 15px;
 }
 
 .hoverTrail {
   .trailName {
-    background-color: blue;
+    background-color: $trailblue;
     color: white;
     font-weight: bold;
     padding: 5px 10px;
@@ -124,7 +127,7 @@ export default {
 
 .hoverWaypoint {
   .wpName {
-    background-color: red;
+    background-color: $waypointred;
     color: white;
     font-weight: bold;
     padding: 5px 10px;
@@ -133,7 +136,7 @@ export default {
   }
   .trailName {
     display: inline-block;
-    background-color: blue;
+    background-color: $trailblue;
     color: white;
     font-weight: bold;
     padding: 5px 10px;

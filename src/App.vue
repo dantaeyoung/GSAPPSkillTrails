@@ -17,6 +17,8 @@
 </template>
 
 <script>
+/* eslint-disable */
+
 import TopHeader from "@/components/TopHeader.vue";
 import SkillTreeGraph from "@/components/SkillTreeGraph.vue";
 
