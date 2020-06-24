@@ -86,8 +86,11 @@ svg.waypoint {
   font-size: 0.9em;
   font-weight: bold;
   line-height: 1.2em;
-
   color: black;
+
+  &.router-link-active {
+    color: darken(#fc0452, 5%);
+  }
 }
 
 

@@ -5,7 +5,7 @@
       <CursorToolbar />
     </div>
     <MouseDialog mouseeventid="graphframe" />
-    <div id="graphwindow">
+    <div id="graphwindow" :class="{ shiftPressed: shiftPressed, altPressed: altPressed }">
       <div id="graphcontents" @click="onClick">
         <DraggableWaypoint
           v-for="(waypoint, id) in waypoints"
@@ -59,7 +59,9 @@ export default {
   name: "SkillTreeGraph",
   data() {
     return {
-      panzoom: null
+      panzoom: null,
+      shiftPressed: false,
+      altPressed: false,
     };
   },
   components: {
@@ -73,6 +75,7 @@ export default {
   props: {},
   mounted() {
     this.initPanZoom();
+    this.initKeyHandler();
   },
   created() {},
   computed: {
@@ -97,15 +100,38 @@ export default {
   },
   methods: {
     onClick(e) {
-      if (e.target === e.currentTarget) {
-        // this presumes that graphbackground isn't clickable. if we want it to be then we can handle that later.
-        this.unclickWaypoints();
+      if(this.cursorMode.navigate) { 
+        if (e.target === e.currentTarget) {
+          // this presumes that graphbackground isn't clickable. if we want it to be then we can handle that later.
+          this.unclickWaypoints();
+        }
+      }
+      if(this.cursorMode.zoom) { 
+        if (this.shiftPressed || this.altPressed) {
+          this.panzoom.zoomOut();
+        } else {
+          this.panzoom.zoomIn();
+        }
       }
     },
     unclickWaypoints() {
       if (this.currentlyViewingWaypoint) {
         this.$router.push("/map").catch(err => {});
       }
+    },
+    initKeyHandler() {
+      var self = this;
+
+      var keyHandler = function(event) {
+        try {
+          self.shiftPressed = event.shiftKey;
+          self.altPressed = event.altKey;
+        } catch {
+        }
+      };
+      
+      window.addEventListener("keydown", keyHandler, false);
+      window.addEventListener("keyup", keyHandler, false);
     },
     initPanZoom() {
       var self = this;
@@ -166,6 +192,8 @@ a {
   &.markasdone {
     background-color: blue;
   }
+
+
 }
 
 #graphnav {
@@ -192,6 +220,12 @@ a {
 
   .markasdone & {
     cursor: cell !important;
+  }
+  .zoom & {
+    cursor: zoom-in !important;
+  }
+  .zoom .shiftPressed &, .zoom .altPressed & {
+    cursor: zoom-out !important;
   }
 }
 

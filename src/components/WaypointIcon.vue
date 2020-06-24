@@ -317,13 +317,12 @@ g.shape {
   }
 
   .imBeingViewed & {
-    stroke: #fc0452;
+    stroke: #fc0452 !important;
   }
 
   .imBeingHovered & {
     stroke-width: 7;
   }
-
 
   .imMarkedDone & {
     fill: #70C0D8;
