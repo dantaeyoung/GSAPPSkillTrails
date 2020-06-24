@@ -1,26 +1,27 @@
 <template>
-  <div class="hello">
-    <h2>SKIL TREE GRAPH - LIST VIEW</h2>
-
-    <div class="maingraph">
+    <div class="listview">
       <div v-for="(trail, id) in trails" :key="id">
-        <h2>{{ trail.fields.Name }}</h2>
+        <div class="trailname">{{ trail.fields.Name }}</div>
 
-        <div v-for="waypointid in trail.fields.Waypoints" :key="waypointid">
-          <a :href="waypoints[waypointid].fields.URL"
-            >{{ waypoints[waypointid].fields.Name }}
-          </a>
-        </div>
+        <ul>
+          <li v-for="waypointid in trail.fields.Waypoints" :key="waypointid">
+            <router-link class="navlink" :to="'/list/' + waypointid + '/' + convertToSlug(waypoints[waypointid].fields.Name)" >
+              {{ waypoints[waypointid].fields.Name }}
+            </router-link>
+          </li>
+        </ul>
       </div>
     </div>
-  </div>
 </template>
 
 <script>
 /* eslint-disable */
 
+import { slug } from '@/mixins/slug.js';
+
 export default {
   name: "ListView",
+  mixins: [slug],
   data() {
     return {};
   },
@@ -40,15 +41,15 @@ export default {
 </script>
 
 <style scoped lang="scss">
-h3 {
-  margin: 40px 0 0;
+.listview {
+  text-align: left;
+  margin-left: 100px;
 }
 ul {
   list-style-type: none;
   padding: 0;
 }
 li {
-  display: inline-block;
   margin: 0 10px;
 }
 a {
@@ -57,5 +58,11 @@ a {
 
 .maingraph {
   position: relative;
+}
+
+.trailname {
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #2da6bd;
 }
 </style>

@@ -4,6 +4,8 @@
 
     <router-link to="/about">|About</router-link>
     <router-link to="/forcegraph">|ForceGraph</router-link>
+            def<router-view></router-view>
+            abc
   </div>
 </template>
 

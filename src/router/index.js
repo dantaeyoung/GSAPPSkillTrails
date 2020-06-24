@@ -3,28 +3,33 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 
-
 import About from "@/components/About.vue";
 import ViewWaypoint from "@/components/ViewWaypoint.vue";
 import SkillTreeGraph from "@/components/SkillTreeGraph.vue";
 import ListView from "@/components/ListView.vue";
+
 
 Vue.use(VueRouter);
 
 const routes = [
   {
     path: "/",
-    redirect: "/graph"
+    redirect: "/map"
   },
   {
-    path: "/graph",
-    name: "Graph"
+    path: "/map/:id?/:slug?",
+    name: "Map",
+    components: {
+      map: SkillTreeGraph,
+      content: ViewWaypoint
+    }
   },
   {
-    path: "/list",
+    path: "/list/:id?/:slug?",
     name: "ListView",
     components: {
-      content: ListView
+      map: ListView,
+      content: ViewWaypoint
     }
   },
   {
@@ -32,15 +37,11 @@ const routes = [
     name: "About",
     components: {
       content: About
-    }
+    },
+    children: [
+      { path: 'list', component: ListView }
+    ]
   },
-  {
-    path: "/ViewWaypoint/:id",
-    name: "ViewWaypoint",
-    components: {
-      content: ViewWaypoint
-    }
-  }
 ];
 
 const router = new VueRouter({

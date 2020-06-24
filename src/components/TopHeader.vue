@@ -1,13 +1,15 @@
 <template>
   <div id="topheader">
-    <div class="leftlinks"></div>
+    <div class="leftlinks">
+    </div>
 
     <div class="centerlogo">
       <img class="svglogo" src="@/assets/logo.svg" alt="GSAPP SKILL TRAILS" />
     </div>
 
     <div class="rightlinks">
-      <router-link class="navlink" to="/list">ListView</router-link>
+      <router-link class="navlink"  to="/list">List View</router-link>
+      <router-link class="navlink"  to="/map">Map View</router-link>
       <router-link class="navlink" to="/about">
         <font-awesome-icon icon="question" />
         About</router-link
@@ -26,16 +28,22 @@ library.add(faQuestion);
 export default {
   name: "TopHeader",
   data() {
-    return {};
+    return {
+    };
   },
   components: {
     FontAwesomeIcon
   },
-  computed: {},
-  methods: {}
+  computed: {
+    currentRouteName() {
+      return this.$route.name;
+    }
+  },
+  methods: {
+  }
 };
 </script>
-<style scoped>
+<style scoped lang="scss">
 #topheader {
   background-color: #fc0452;
   height: 30px;
@@ -48,6 +56,12 @@ export default {
   align-content: center;
 }
 
+.centerlogo {
+      position: absolute;             /* new */
+      left: 50%;
+      transform: translateX(-50%);
+}
+
 .svglogo {
   display: block;
   width: auto;
@@ -56,16 +70,32 @@ export default {
 
 .rightlinks {
   display: flex;
+}
+
+.navlink {
+  font-size: calc(0.3em + 2vh);
+  background-color: white;
+  color: #fc0452;
+  font-weight: bold;
+  padding: 3px 5px;
+  margin: 0px 5px;
+  border-radius: 5px;
+  text-decoration: none;
+}
+
+button {
+
+  background-color: white;
+
+  &.active {
+    background-color: blue;
   }
 
-  .navlink {
-    font-size: calc(0.3em + 2vh);
-    background-color: white;
-    color: #fc0452;
-    font-weight: bold;
-    padding: 3px 5px;
-    margin: 0px 5px;
-    border-radius: 5px;
-    text-decoration: none;
+}
+
+
+.router-link-active {
+  opacity: 0.6;
+  pointer-events: none;
 }
 </style>

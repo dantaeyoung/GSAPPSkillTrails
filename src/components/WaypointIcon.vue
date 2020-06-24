@@ -198,7 +198,7 @@ export default {
       });
       self.$router
         .push({
-          name: "ViewWaypoint",
+          name: "Map",
           params: { id: self.waypointdata.id }
         })
         .catch(err => {});

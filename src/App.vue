@@ -6,7 +6,8 @@
 
     <section id="center">
       <section id="graph">
-        <SkillTreeGraph />
+        <!-- <SkillTreeGraph /> -->
+        <router-view name="map" />
       </section>
       <section id="content">
         <router-view name="content" />
@@ -61,18 +62,19 @@ html {
 }
 
 #header {
-  /* position: fixed; */
-  /* width: 100%; */
-  /* z-index: 1000; */
-  /* top: 0px; */
-  /* left: 0px; */
+  position: fixed;
+  width: 100%;
+  z-index: 1000;
+  top: 0px;
+  left: 0px;
 
   height: 30px;
 }
 #center {
 
   position: relative;
-  height: calc(100vh - 30px);
+  margin-top: 30px;
+  /* height: calc(100vh - 30px); */
 
   #graph {
     background-color: #ddd;
