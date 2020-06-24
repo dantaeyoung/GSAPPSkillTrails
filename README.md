@@ -1,4 +1,4 @@
-# GSAPPSkillTreeV3
+# GSAPP Skill Trails
 
 This is Version 3 of the GSAPP Skill Tree. UNDER DEVELOPMENT
 
