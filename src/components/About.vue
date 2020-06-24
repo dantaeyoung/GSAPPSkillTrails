@@ -2,15 +2,12 @@
   <div class="about">
     <h1>This is an about page</h1>
 
-    <router-link to="/about">|About</router-link>
-    <router-link to="/forcegraph">|ForceGraph</router-link>
-            def<router-view></router-view>
-            abc
   </div>
 </template>
 
 <script>
-module.exports = {
+export default {
+  name: "About",
   components: {},
   computed: {
     //        ...Vuex.mapState(["works"])
@@ -19,4 +16,8 @@ module.exports = {
   }
 };
 </script>
-<style scoped></style>
+<style scoped lang="scss">
+  .about {
+    min-height: 100vh;
+  }
+</style>

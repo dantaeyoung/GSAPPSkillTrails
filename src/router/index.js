@@ -3,6 +3,7 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 
+import ComingSoon from "@/components/ComingSoon.vue";
 import About from "@/components/About.vue";
 import ViewWaypoint from "@/components/ViewWaypoint.vue";
 import SkillTreeGraph from "@/components/SkillTreeGraph.vue";
@@ -14,13 +15,13 @@ Vue.use(VueRouter);
 const routes = [
   {
     path: "/",
-    redirect: "/map"
+    redirect: "/comingsoon"
   },
   {
     path: "/map/:wpid?/:slug?",
     name: "MapView",
     components: {
-      map: SkillTreeGraph,
+      view: SkillTreeGraph,
       content: ViewWaypoint
     }
   },
@@ -28,7 +29,7 @@ const routes = [
     path: "/list/:wpid?/:slug?",
     name: "ListView",
     components: {
-      map: ListView,
+      view: ListView,
       content: ViewWaypoint
     }
   },
@@ -36,11 +37,15 @@ const routes = [
     path: "/about",
     name: "About",
     components: {
-      content: About
+      view: About
     },
-    children: [
-      { path: 'list', component: ListView }
-    ]
+  },
+  {
+    path: "/comingsoon",
+    name: "Coming Soon",
+    components: {
+      view: ComingSoon 
+    },
   },
 ];
 

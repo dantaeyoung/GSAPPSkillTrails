@@ -7,7 +7,7 @@
     <section id="center">
       <section id="view">
         <!-- <SkillTreeGraph /> -->
-        <router-view name="map" />
+        <router-view name="view" />
       </section>
       <section id="content">
         <router-view name="content" />
