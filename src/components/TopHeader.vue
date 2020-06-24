@@ -8,8 +8,8 @@
     </div>
 
     <div class="rightlinks">
-      <router-link class="navlink"  to="/list">List View</router-link>
-      <router-link class="navlink"  to="/map">Map View</router-link>
+      <router-link class="navlink" :to="{ name: 'ListView', params: paramsForRoute }">List View</router-link>
+      <router-link class="navlink" :to="{ name: 'MapView', params: paramsForRoute }">Map View</router-link>
       <router-link class="navlink" to="/about">
         <font-awesome-icon icon="question" />
         About</router-link
@@ -35,6 +35,12 @@ export default {
     FontAwesomeIcon
   },
   computed: {
+    paramsForRoute() {
+      return {
+        "wpid": this.$route.params.wpid,
+        "slug": this.$route.params.slug,
+      } 
+    },
     currentRouteName() {
       return this.$route.name;
     }

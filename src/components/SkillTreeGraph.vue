@@ -83,7 +83,7 @@ export default {
       return this.$store.state.cursorMode;
     },
     currentlyViewingWaypoint() {
-      return this.$store.state.currentlyViewingWaypoint;
+      return this.$store.state.route.params.wpid;
     },
     trailStatusesToShow() {
       return this.$store.state.trailStatusesToShow;
@@ -104,8 +104,7 @@ export default {
     },
     unclickWaypoints() {
       if (this.currentlyViewingWaypoint) {
-        this.$router.push("Graph").catch(err => {});
-        this.$store.commit("currentlyViewingWaypoint", { id: null });
+        this.$router.push("/map").catch(err => {});
       }
     },
     initPanZoom() {

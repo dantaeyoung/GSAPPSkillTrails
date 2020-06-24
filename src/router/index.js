@@ -17,15 +17,15 @@ const routes = [
     redirect: "/map"
   },
   {
-    path: "/map/:id?/:slug?",
-    name: "Map",
+    path: "/map/:wpid?/:slug?",
+    name: "MapView",
     components: {
       map: SkillTreeGraph,
       content: ViewWaypoint
     }
   },
   {
-    path: "/list/:id?/:slug?",
+    path: "/list/:wpid?/:slug?",
     name: "ListView",
     components: {
       map: ListView,

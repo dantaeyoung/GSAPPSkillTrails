@@ -69,10 +69,12 @@ function mapToRange(val, min, max) {
   return val * (max - min) + min;
 }
 
+import { slug } from "@/mixins/slug.js";
 import seedrandom from "seedrandom";
 
 export default {
   name: "WaypointIcon",
+  mixins: [slug],
   data() {
     return {
       polygonvalues: [],
@@ -81,13 +83,13 @@ export default {
       imBeingHovered: false
     };
   },
-  props: ["waypointdata", "zoomscale"],
+  props: ["waypointdata"],
   computed: {
     svgStyle() {
-      return `width: ${this.radius * 2}; height: ${this.radius * 2};`
+      return `width: ${this.radius * 2}; height: ${this.radius * 2};`;
     },
     radius() {
-      return this.maxRadius
+      return this.maxRadius;
     },
     zoomScale() {
       return this.$store.state.zoomScale;
@@ -105,7 +107,7 @@ export default {
       return this.$store.state.hoveringWaypoints;
     },
     currentlyViewingWaypoint() {
-      return this.$store.state.currentlyViewingWaypoint;
+      return this.$store.state.route.params.wpid;
     },
     waypointsDraggable() {
       return this.$store.state.waypointsDraggable;
@@ -143,7 +145,6 @@ export default {
         return self.imBeingHovered ? 0.95 : mapToRange(myrng(), 0.5, 0.95);
       });
       let allpts = [].concat.apply([], Array(chunkcount).fill(symchunk));
-
 
       return allpts;
 
@@ -193,13 +194,13 @@ export default {
     },
     onClickViewWaypoint() {
       var self = this;
-      this.$store.commit("currentlyViewingWaypoint", {
-        id: self.waypointdata.id
-      });
       self.$router
         .push({
-          name: "Map",
-          params: { id: self.waypointdata.id }
+          name: "MapView",
+          params: {
+            wpid: self.waypointdata.id,
+            slug: self.convertToSlug(self.waypointdata.fields.Name),
+          }
         })
         .catch(err => {});
     },
@@ -270,14 +271,14 @@ g.shape {
   border: 1px solid blue;
   stroke: black;
   stroke-width: 5;
-  fill: #EEE;
+  fill: #eee;
 
   .myTrailHovered & {
     stroke-width: 10;
   }
 
   .imBeingViewed & {
-    stroke: #FC0452;
+    stroke: #fc0452;
   }
 
   .imBeingHovered & {

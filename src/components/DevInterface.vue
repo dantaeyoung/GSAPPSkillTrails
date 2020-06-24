@@ -54,7 +54,6 @@ export default {
   },
   components: {},
   created() {
-    console.log(this.$route.params);
   },
   computed: {
     waypoints() {

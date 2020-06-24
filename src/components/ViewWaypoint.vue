@@ -62,12 +62,12 @@ export default {
   components: {
     VideoEmbed
   },
-  created() {
-    console.log(this.$route.params);
+  mounted() {
+    var self = this;
   },
   computed: {
     currentlyViewingWaypoint() {
-      return this.$store.state.currentlyViewingWaypoint;
+      return this.$store.state.route.params.wpid;
     },
     waypointdata() {
       return this.$store.getters.waypoints[this.thisid];
@@ -79,7 +79,7 @@ export default {
       return this.$store.state.trails;
     },
     thisid() {
-      return this.$route.params.id;
+      return this.$route.params.wpid;
     },
     coverImageThumbnail() {
       try {

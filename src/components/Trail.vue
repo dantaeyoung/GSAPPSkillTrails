@@ -40,7 +40,7 @@ export default {
       return this.$store.state.hoveringWaypoints;
     },
     currentlyViewingWaypoint() {
-      return this.$store.state.currentlyViewingWaypoint;
+      return this.$store.state.route.params.wpid;
     },
     myWaypointHovered() {
       var self = this;

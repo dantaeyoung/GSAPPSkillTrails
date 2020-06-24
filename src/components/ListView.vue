@@ -5,7 +5,8 @@
 
         <ul>
           <li v-for="waypointid in trail.fields.Waypoints" :key="waypointid">
-            <router-link class="navlink" :to="'/list/' + waypointid + '/' + convertToSlug(waypoints[waypointid].fields.Name)" >
+          <WaypointIcon :waypointdata="waypoints[waypointid]"/>
+            <router-link class="navlink waypointlink" :to="{ name: 'ListView', params: { wpid: waypointid, slug: convertToSlug(waypoints[waypointid].fields.Name) }}" >
               {{ waypoints[waypointid].fields.Name }}
             </router-link>
           </li>
@@ -17,6 +18,8 @@
 <script>
 /* eslint-disable */
 
+import WaypointIcon from "@/components/WaypointIcon.vue";
+
 import { slug } from '@/mixins/slug.js';
 
 export default {
@@ -25,7 +28,9 @@ export default {
   data() {
     return {};
   },
-  components: {},
+  components: {
+    WaypointIcon
+  },
   props: {},
   created() {},
   computed: {
@@ -50,19 +55,34 @@ ul {
   padding: 0;
 }
 li {
-  margin: 0 10px;
+  margin: 2px 8px;
+  display: flex;
+  align-items: center;
 }
 a {
   color: #42b983;
 }
 
-.maingraph {
-  position: relative;
-}
-
 .trailname {
   font-size: 1.2em;
   font-weight: bold;
-  color: #2da6bd;
+  color: darken(#2da6bd, 10%);
 }
+
+svg.waypoint {
+  height:30px;
+  margin-right: 5px;
+}
+
+.waypointlink {
+  font-size: 0.9em;
+  font-weight: bold;
+  line-height: 1.2em;
+
+  color: black;
+}
+
+
+
+
 </style>
