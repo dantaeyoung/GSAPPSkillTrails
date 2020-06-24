@@ -43,6 +43,15 @@
           <br />
         </div>
       </foreignObject>
+      <foreignObject
+        x="0%"
+        y="0%"
+        width="100px"
+        height="100px"
+        class="check"
+      >
+        <img src="@/assets/check-icon.svg" />
+      </foreignObject>
     </g>
   </svg>
 </template>
@@ -224,8 +233,34 @@ foreignObject {
   pointer-events: auto;
 }
 
+.check {
+  pointer-events: none;
+  img {
+    position: absolute;
+    right: 5%;
+    width: 30%;
+    top: 5%;
+    opacity: 0;
+
+    .imMarkedDone & {
+      opacity: 1;
+    }
+
+
+  }
+
+}
+
+.done {
+  position: absolute;
+  text-align: center;
+  width: 100%;
+  font-weight: bold;
+  text-transform: uppercase;
+  transform: rotate(-20deg) skew(-20deg);
+}
+
 img {
-  opacity: 0.5;
   position: absolute;
 }
 
@@ -244,7 +279,8 @@ img {
   text-align: center;
   width: 100%;
   overflow-wrap: break-word;
-  color: black;
+  color: #111;
+  line-height: 1.2em;
 }
 
 .colorfilter {
@@ -286,7 +322,9 @@ g.shape {
   }
 
   .imMarkedDone & {
-    stroke: orange;
+    fill: #70C0D8;
+    stroke: #70C0D8;
+
   }
 }
 

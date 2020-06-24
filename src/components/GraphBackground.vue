@@ -1,6 +1,9 @@
 <template>
   <div class="graphbackground" :style="widthheightstyle">
     <svg height="100%" width="100%">
+      <foreignObject x="0%" y="0%" width="100%" height="100%">
+        <h1 style="font-size: 30em; opacity: 0.3; color: red; transform: rotate(-30deg)">DRAFT</h1>
+      </foreignObject>
       <circle
         class="radiusCircle"
         v-for="cr in circleRadiuses"
@@ -41,7 +44,7 @@ export default {
     },
     circleRadiuses() {
       var res = [];
-      for(let x = 1; x < 5; x++) {
+      for (let x = 1; x < 5; x++) {
         res.push(x * 200);
       }
       return res;
@@ -64,7 +67,6 @@ export default {
     rgba(33, 236, 241, 0.7007003484987745) 0%,
     rgba(255, 2, 2, 0) 6%
   );
-
 
   /*background: rgb(231,231,231);*/
   /*background: radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 42%, rgba(206,148,233,0) 63%); */

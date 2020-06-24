@@ -1,7 +1,7 @@
 <template>
     <div class="listview">
       <div v-for="(trail, id) in trails" :key="id">
-        <div class="trailname">{{ trail.fields.Name }}</div>
+        <div class="trailname"><img class="waypointicon" src="@/assets/trail-icon.svg" />{{ trail.fields.Name }}</div>
 
         <ul>
           <li v-for="waypointid in trail.fields.Waypoints" :key="waypointid">
@@ -49,6 +49,7 @@ export default {
 .listview {
   text-align: left;
   margin-left: 100px;
+  padding-top: 30px;
 }
 ul {
   list-style-type: none;
@@ -64,9 +65,16 @@ a {
 }
 
 .trailname {
+  display: flex;
+  align-items: center; 
   font-size: 1.2em;
   font-weight: bold;
   color: darken(#2da6bd, 10%);
+
+  img {
+    height:20px;
+    margin-right: 5px;
+  }
 }
 
 svg.waypoint {

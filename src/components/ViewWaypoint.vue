@@ -102,7 +102,7 @@ export default {
 }
 
 .vwContent {
-  position: relative;
+  position: fixed;
 
   width: 360px;
   /*height: 80vh;*/

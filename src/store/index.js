@@ -38,7 +38,7 @@ export default new Vuex.Store({
         }
 
         const stateFilter = Object.assign({}, persistedState)
-        const blackList = ['hoveringTrails', 'hoveringWaypoints', 'zoomScale']
+        const blackList = ['hoveringTrails', 'hoveringWaypoints', 'zoomScale', 'route']
 
         blackList.forEach((item) => {
           delete stateFilter[item]
