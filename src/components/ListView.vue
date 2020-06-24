@@ -7,8 +7,9 @@
           <li v-for="waypointid in trail.fields.Waypoints" :key="waypointid">
           <WaypointIcon :waypointdata="waypoints[waypointid]"/>
             <router-link class="navlink waypointlink" :to="{ name: 'ListView', params: { wpid: waypointid, slug: convertToSlug(waypoints[waypointid].fields.Name) }}" >
-              {{ waypoints[waypointid].fields.Name }}
+              <div class="name">{{ waypoints[waypointid].fields.Name }}</div>
             </router-link>
+              <div class="author-name">{{ waypoints[waypointid].fields['Author Name'] }}</div>
           </li>
         </ul>
       </div>
@@ -49,7 +50,7 @@ export default {
 .listview {
   text-align: left;
   margin-left: 100px;
-  padding-top: 30px;
+  padding: 30px 0px;
 }
 ul {
   list-style-type: none;
@@ -94,6 +95,10 @@ svg.waypoint {
 }
 
 
+.author-name {
+  font-size: 0.8em;
+  margin-left: 20px;
+}
 
 
 </style>

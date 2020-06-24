@@ -5,7 +5,7 @@
     </section>
 
     <section id="center">
-      <section id="graph">
+      <section id="view">
         <!-- <SkillTreeGraph /> -->
         <router-view name="map" />
       </section>
@@ -76,10 +76,9 @@ html {
   margin-top: 30px;
   /* height: calc(100vh - 30px); */
 
-  #graph {
+  #view {
     background-color: #ddd;
     flex-grow: 1;
-    height: 100%;
     overflow: hidden;
   }
 

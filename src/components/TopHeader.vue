@@ -79,7 +79,7 @@ export default {
 }
 
 .navlink {
-  font-size: calc(0.2em + 2vh);
+  font-size: 0.8em;
   background-color: white;
   color: #fc0452;
   font-weight: bold;

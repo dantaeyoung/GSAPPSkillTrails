@@ -1,7 +1,7 @@
 <template>
   <div>
     <div id="DevInterface">
-      <div>DevInterface</div>
+      <div>Debug Interface (ignore me)</div>
       <button @click="toggleDraggable">
         draggable: {{ waypointsDraggable }}
       </button>
@@ -9,6 +9,7 @@
         toggle coordinate dialog
       </button>
       <button @click="toggleFilter">filter: {{ isFiltered }}</button>
+      <button @click="toggleGC">display graphcommons: {{ displayGraphCommons }}</button>
       <button @click="clearState">clear vuex state</button>
     </div>
     <div class="showcoordinates" v-if="showCoordinates">
@@ -65,6 +66,9 @@ export default {
     sidelength() {
       return this.$store.state.sidelength;
     },
+    displayGraphCommons() {
+      return this.$store.state.displayGraphCommons;
+    },
     urlsortedWaypoints() {
       return Object.values(this.waypoints).sort((a, b) => {
         return ("" + a.fields.URL).localeCompare(b.fields.URL);
@@ -115,6 +119,9 @@ export default {
         return { x: 0, y: 0 };
       }
     },
+    toggleGC() {
+      this.$store.commit("setDisplayGraphCommons", !this.displayGraphCommons);
+    },
     toggleDraggable() {
       this.$store.commit("setWaypointsDraggable", !this.waypointsDraggable);
     }
@@ -142,5 +149,7 @@ button {
   font-size: 0.6em;
   text-align: left;
   background-color: #ffffffc7;
+  overflow: auto;
+  max-height: 80vh;
 }
 </style>

@@ -38,7 +38,7 @@ export default new Vuex.Store({
         }
 
         const stateFilter = Object.assign({}, persistedState)
-        const blackList = ['hoveringTrails', 'hoveringWaypoints', 'zoomScale', 'route']
+        const blackList = ['hasLoaded', 'hoveringTrails', 'hoveringWaypoints', 'zoomScale', 'route', 'unfilteredWaypoints', 'unfilteredTrails', 'waypoints', 'trails']
 
         blackList.forEach((item) => {
           delete stateFilter[item]
@@ -67,6 +67,8 @@ export default new Vuex.Store({
     waypointStatusesToShow: ["Published"],
     trailStatusesToShow: ["Published"],
 
+    displayGraphCommons: false,
+
     zoomScale: 1,
 
     cursorMode: {
@@ -91,6 +93,9 @@ export default new Vuex.Store({
     }
   },
   mutations: {
+    setDisplayGraphCommons(state, payload) {
+      state.displayGraphCommons = payload;
+    },
     clearPersistedState(state) {
       state.clearState = true;
     },
@@ -336,6 +341,7 @@ export default new Vuex.Store({
             return [trid, trdata];
           })
       );
+
 
       commit("setWaypoints", result.waypoints);
       commit("setTrails", result.trails);

@@ -188,6 +188,7 @@ a {
 
 #graphframe {
   width: 100%;
+    height: calc(100vh - 30px);
 
   &.markasdone {
     background-color: blue;
