@@ -1,7 +1,7 @@
 <template>
     <div class="listview">
       <div v-for="(trail, id) in trails" :key="id">
-        <div class="trailname"><img class="waypointicon" src="@/assets/trail-icon.svg" />{{ trail.fields.Name }}</div>
+        <div class="trailname"><img class="trailicon" src="@/assets/trail-icon.svg" />{{ trail.fields.Name }}</div>
 
         <ul>
           <li v-for="waypointid in trail.fields.Waypoints" :key="waypointid">

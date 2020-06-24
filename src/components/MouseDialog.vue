@@ -2,7 +2,10 @@
   <div id="MouseDialog" :style="positionStyle" v-if="!isTouchDevice">
     <div class="waypointInfo" v-if="cursorMode.navigate == true">
       <div class="hoverTrail" v-for="tid in hoveringTrails" v-bind:key="tid">
-        <span class="trailName">{{ trails[tid].fields.Name }}</span>
+        <div class="trailIconName">
+          <img class="trailicon" src="@/assets/trail-icon.svg" />
+          <div class="trailName">{{ trails[tid].fields.Name }}</div>
+        </div>
       </div>
 
       <div
@@ -11,23 +14,29 @@
         v-bind:key="wid"
       >
         <span class="wpName">{{ waypoints[wid].fields.Name }}</span
-        >, part of
+        ><span>, part of</span>
         <div class="trailNames">
           <div
-            class="trailName"
+            class="trailIconName"
             v-for="tid in trailsOfHoveringWaypoints"
             v-bind:key="tid"
           >
-            {{ trails[tid].fields.Name }}
+            <img class="trailicon" src="@/assets/trail-icon.svg" />
+            <div class="trailName">
+              {{ trails[tid].fields.Name }}
+            </div>
           </div>
         </div>
       </div>
     </div>
+
     <div
       class="markModeInfo"
       v-if="cursorMode.markasdone == true && hoveringWaypoints.length > 0"
     >
-      Mark
+      <div class="markasdone">
+        Mark as done:
+      </div>
       <div
         class="hoverMarkWaypoint"
         v-for="wid in hoveringWaypoints"
@@ -35,7 +44,6 @@
       >
         <span class="wpName">{{ waypoints[wid].fields.Name }}</span>
       </div>
-      As Done
     </div>
   </div>
 </template>
@@ -119,41 +127,63 @@ $waypointred: #fc0452;
   margin: 15px;
 }
 
-.hoverTrail {
-  .trailName {
-    background-color: $trailblue;
-    color: white;
-    font-weight: bold;
-    padding: 5px 10px;
-  }
+.trailName {
+  background-color: $trailblue;
+  color: white;
+  font-weight: bold;
+  padding: 5px 10px;
+  border-radius: 20px;
+}
+
+.trailIconName {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.trailicon {
+  height: 20px;
+}
+
+.wpName {
+  color: white;
+  font-weight: bold;
+  padding: 5px 10px;
+  border-radius: 20px;
 }
 
 .hoverWaypoint {
   .wpName {
     background-color: $waypointred;
-    color: white;
-    font-weight: bold;
-    padding: 5px 10px;
   }
   .trailNames {
   }
   .trailName {
     display: inline-block;
-    background-color: $trailblue;
-    color: white;
-    font-weight: bold;
-    padding: 5px 10px;
     float: left;
     clear: left;
   }
 }
 
+.markasdone {
+  display: inline-block;
+  color: white;
+  font-weight: bold;
+  padding: 5px 10px;
+  border-radius: 20px;
+  background-color: #111;
+}
 .hoverMarkWaypoint {
   .wpName {
-    background-color: orange;
-    color: white;
-    font-weight: bold;
-    padding: 5px 10px;
+    background-color: $waypointred;
   }
+}
+
+.skew {
+  display: inline-block;
+  text-transform: uppercase;
+  transform: rotate(-25deg) skew(-25deg);
+  font-weight: bold;
+  line-height: 1em;
 }
 </style>

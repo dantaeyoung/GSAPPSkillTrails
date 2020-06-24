@@ -246,6 +246,9 @@ foreignObject {
       opacity: 1;
     }
 
+    .markasdone .imBeingHovered & {
+      opacity: 0.5;
+    }
 
   }
 
@@ -320,6 +323,7 @@ g.shape {
   .imBeingHovered & {
     stroke-width: 7;
   }
+
 
   .imMarkedDone & {
     fill: #70C0D8;
