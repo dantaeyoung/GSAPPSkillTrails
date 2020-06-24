@@ -15,7 +15,8 @@ Vue.use(VueRouter);
 const routes = [
   {
     path: "/",
-    redirect: "/comingsoon"
+/*    redirect: "/comingsoon", */
+    redirect: "/map",
   },
   {
     path: "/map/:wpid?/:slug?",
