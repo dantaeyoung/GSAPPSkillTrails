@@ -10,7 +10,7 @@
 <script>
 /* eslint-disable */
 
-import Conrec from "@/scripts/conrec.js";
+//import Conrec from "@/scripts/conrec.js";
 
 // FIGURE OUT HOW TO IMPOT
 
