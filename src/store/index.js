@@ -31,12 +31,19 @@ export default new Vuex.Store({
   plugins: [
     createPersistedState({
       key: "vuex",
-      reducer(val) {
-        if (val.clearState === true) {
+      reducer(persistedState) {
+        if (persistedState.clearState === true) {
           // return empty state when user logged out
           return {};
         }
-        return val;
+
+        const stateFilter = Object.assign({}, persistedState)
+        const blackList = ['hoveringTrails', 'hoveringWaypoints', 'zoomScale']
+
+        blackList.forEach((item) => {
+          delete stateFilter[item]
+        })
+        return stateFilter;
       }
     })
   ],
