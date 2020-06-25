@@ -18,6 +18,7 @@
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import {
+  faHandPaper,
   faMousePointer,
   faCheckSquare,
   faSearch,
@@ -25,11 +26,12 @@ import {
   faExclamationTriangle
 } from "@fortawesome/free-solid-svg-icons";
 
-library.add(faMousePointer);
-library.add(faCheckSquare);
-library.add(faSearch);
-library.add(faHiking);
-library.add(faExclamationTriangle);
+library.add(  faHandPaper,
+  faMousePointer,
+  faCheckSquare,
+  faSearch,
+  faHiking,
+  faExclamationTriangle);
 
 export default {
   name: "ToolbarButton",

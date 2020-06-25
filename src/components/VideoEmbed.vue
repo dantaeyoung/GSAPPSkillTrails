@@ -36,7 +36,6 @@ export default {
   },
   props: ["url"],
   created() {
-    console.log(this.$route.params);
   },
   computed: {
     isVimeo() {

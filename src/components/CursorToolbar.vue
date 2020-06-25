@@ -2,6 +2,7 @@
   <div>
     <div id="CursorToolbar">
 
+    <!-- <ToolbarButton mode="hand" alt="Hand Tool" icon="hand&#45;paper" /> -->
     <ToolbarButton mode="navigate" alt="Navigate" icon="mouse-pointer" />
     <ToolbarButton mode="markasdone" alt="Mark as done" icon="check-square" />
     <ToolbarButton mode="zoom" alt="Zoom" icon="search" />

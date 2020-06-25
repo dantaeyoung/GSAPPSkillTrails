@@ -5,8 +5,20 @@
       <CursorToolbar />
     </div>
     <MouseDialog mouseeventid="graphframe" />
-    <div id="graphwindow" :class="{ shiftPressed: shiftPressed, altPressed: altPressed }">
-      <div id="graphcontents" @click="onClick">
+    <div
+      id="graphwindow"
+      :class="{
+        shiftPressed: shiftPressed,
+        altPressed: altPressed,
+        isDragging: isDragging
+      }"
+    >
+      <div
+        id="graphcontents"
+        @click="onClick"
+        @mousedown="onMouseDown"
+        @mouseup="onMouseUp"
+      >
         <DraggableWaypoint
           v-for="(waypoint, id) in waypoints"
           :key="id"
@@ -45,7 +57,7 @@
 <script>
 /* eslint-disable */
 
-import Panzoom from "@panzoom/panzoom";
+import panzoom from "panzoom";
 
 import MouseDialog from "@/components/MouseDialog.vue";
 import DevInterface from "@/components/DevInterface.vue";
@@ -62,6 +74,7 @@ export default {
       panzoom: null,
       shiftPressed: false,
       altPressed: false,
+      isDragging: false
     };
   },
   components: {
@@ -99,19 +112,36 @@ export default {
     }
   },
   methods: {
+    onMouseDown(e) {
+      this.isDragging = true;
+    },
+    onMouseUp(e) {
+      this.isDragging = false;
+    },
     onClick(e) {
-      if(this.cursorMode.navigate) { 
+      if (this.cursorMode.navigate) {
         if (e.target === e.currentTarget) {
           // this presumes that graphbackground isn't clickable. if we want it to be then we can handle that later.
           this.unclickWaypoints();
         }
       }
-      if(this.cursorMode.zoom) { 
+      if (this.cursorMode.zoom) {
+        let transforms = this.panzoom.getTransform();
+        console.log(e)
+        console.log(transforms);
+        let origin = this.panzoom.getTransformOrigin(); // {x: 0.5, y: 0.5}
+        console.log(origin);
+//        this.panzoom.setTransformOrigin({ x: e.layerX, y: e.layerY }); // now it is topLeft
+        //      instance.setTransformOrigin(null); // remove transform origink
+        var scalediff = 1.1;
         if (this.shiftPressed || this.altPressed) {
-          this.panzoom.zoomOut();
-        } else {
-          this.panzoom.zoomIn();
+          scalediff = 1/ scalediff;
         }
+        this.panzoom.smoothZoomAbs(
+          transforms.x,
+          transforms.y,
+          transforms.scale * scalediff
+        ); 
       }
     },
     unclickWaypoints() {
@@ -126,10 +156,9 @@ export default {
         try {
           self.shiftPressed = event.shiftKey;
           self.altPressed = event.altKey;
-        } catch {
-        }
+        } catch {}
       };
-      
+
       window.addEventListener("keydown", keyHandler, false);
       window.addEventListener("keyup", keyHandler, false);
     },
@@ -139,32 +168,57 @@ export default {
       const elemw = document.getElementById("graphwindow");
       const elem = document.getElementById("graphcontents");
 
-      self.panzoom = Panzoom(elem, {
-        maxScale: 2,
-        minScale: 0.1,
-        startX: -400,
-        startY: -400,
-        startScale: 1
+      self.panzoom = panzoom(elem, {
+        maxZoom: 2,
+        minZoom: 0.1,
+        bounds: true,
+        boundsPadding: 0.2,
+          zoomDoubleClickSpeed: 1, 
+        beforeWheel: e => {
+          if (e.ctrlKey) {
+            return false;
+          }
+          const { x, y } = self.panzoom.getTransform();
+          const { deltaX, deltaY } = e;
+          self.panzoom.moveTo(x - deltaX, y - deltaY);
+          e.preventDefault();
+          return true;
+        },
+        filterKey: () => true
       });
-
+      /*
+      self.panzoom = panzoom(elem, {
+        maxZoom: 2,
+        minZoom: 0.1,
+        beforeWheel: function(e) {
+          // allow wheel-zoom only if altKey is down. Otherwise - ignore
+          var shouldIgnore = !e.altKey;
+          return shouldIgnore;
+        }
+      });
+      self.panzoom.zoomAbs(
+        300, // initial x position
+        500, // initial y position
+        1 // initial zoom
+      );
+*/
+      /*
       elem.parentElement.addEventListener("wheel", function(e) {
         e.preventDefault();
         if (e.ctrlKey) {
-          self.panzoom.zoomWithWheel(e, { step: 0.15 });
+          const transforms = self.panzoom.getTransform();
+          console.log(transforms);
+          console.log(e);
+          self.panzoom.zoomTo(transforms.x, transforms.y, transforms.scale - (e.deltaY/50));
         } else {
-          self.panzoom.pan(
-            -e.deltaX / self.panzoom.getScale(),
-            -e.deltaY / self.panzoom.getScale(),
-            { relative: true }
-          );
+          const transforms = self.panzoom.getTransform();
+          self.panzoom.moveTo(transforms.x - e.deltaX, transforms.y - e.deltaY);
         }
-      });
+      });*/
 
-      window.pz = self.panzoom;
-
-      elem.addEventListener("panzoomzoom", function(event) {
-        self.$store.commit("setZoomScale", { zoomScale: event.detail.scale });
-      });
+      // elem.addEventListener("panzoomzoom", function(event) {
+      //   self.$store.commit("setZoomScale", { zoomScale: event.detail.scale });
+      // });
     }
   }
 };
@@ -188,13 +242,11 @@ a {
 
 #graphframe {
   width: 100%;
-    height: calc(100vh - 30px);
+  height: calc(100vh - 30px);
 
   &.markasdone {
     background-color: blue;
   }
-
-
 }
 
 #graphnav {
@@ -219,16 +271,23 @@ a {
   width: 2000px;
   height: 2000px;
 
+  .isDragging  &{
+    cursor: grabbing;
+  }
+
   .markasdone & {
     cursor: cell !important;
   }
   .zoom & {
     cursor: zoom-in !important;
   }
-  .zoom .shiftPressed &, .zoom .altPressed & {
+  .zoom .shiftPressed &,
+  .zoom .altPressed & {
     cursor: zoom-out !important;
   }
 }
+
+
 
 svg#trails {
   height: 2000px;

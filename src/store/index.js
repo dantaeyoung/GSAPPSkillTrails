@@ -79,7 +79,8 @@ export default new Vuex.Store({
       navigate: true,
       markasdone: false,
       zoom: false,
-      hiking: false
+      hiking: false,
+      hand: false,
     },
 
     waypointsMarkedDone: [],
