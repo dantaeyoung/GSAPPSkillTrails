@@ -52,7 +52,7 @@ export default new Vuex.Store({
         }
 
         const stateFilter = Object.assign({}, persistedState)
-        const blackList = ['hasLoaded', 'hoveringTrails', 'hoveringWaypoints', 'zoomScale', 'route', 'unfilteredWaypoints', 'unfilteredTrails', 'waypoints', 'trails']
+        const blackList = ['hasLoaded', 'hoveringTrails', 'hoveringWaypoints', 'route', 'unfilteredWaypoints', 'unfilteredTrails', 'waypoints', 'trails']
 
         blackList.forEach((item) => {
           delete stateFilter[item]
@@ -88,7 +88,6 @@ export default new Vuex.Store({
     displayGraphCommons: false,
     displayHowTo: true,
 
-    zoomScale: 1,
 
     cursorMode: {
       navigate: true,
@@ -124,9 +123,6 @@ export default new Vuex.Store({
     },
     setTouchDevice(state, payload) {
       state.isTouchDevice = payload;
-    },
-    setZoomScale(state, payload) {
-      state.zoomScale = payload.zoomScale;
     },
     setCursorMode(state, payload) {
       if (payload.mode in state.cursorMode) {
