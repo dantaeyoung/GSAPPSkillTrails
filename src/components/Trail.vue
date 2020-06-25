@@ -21,6 +21,20 @@
 
 import { CurveInterpolator } from "curve-interpolator";
 
+var strokeSettings = {
+  normal: `stroke-dasharray: 8;`,
+  amBeingHovered: `stroke-dasharray: none;`,
+  myWaypointHovered: `stroke-dasharray: none;`,
+  myWaypointBeingViewed: `stroke-dasharray: none; stroke: #70c0d8;`
+};
+
+var strokeWidths = {
+  normal: 4,
+  amBeingHovered: 20,
+  myWaypointHovered: 20,
+  myWaypointBeingViewed: 40
+};
+
 export default {
   name: "Trail",
   data() {
@@ -34,14 +48,24 @@ export default {
   created() {},
   computed: {
     svgtrailStyle() {
-      let s = ""
-      //s += "fill: red;"
-      //s += `opacity: ${this.zoomscale / 3};`
-      s += `stroke-width: ${30 - (this.zoomscale * 10)};`
+      var s = strokeSettings["normal"];
+      s += `stroke-width: ${strokeWidths["normal"]}`;
+      if (this.amBeingHovered) {
+        s = strokeSettings["amBeingHovered"];
+        s += `stroke-width: ${strokeWidths["amBeingHovered"]}`;
+      }
+      if (this.myWaypointHovered) {
+        s = strokeSettings["myWaypointHovered"];
+        s += `stroke-width: ${strokeWidths["myWaypointHovered"]}`;
+      }
+      if (this.myWaypointBeingViewed) {
+        s = strokeSettings["myWaypointBeingViewed"];
+        s += `stroke-width: ${strokeWidths["myWaypointBeingViewed"] / this.zoomscale }`;
+      }
       return s;
     },
     isLoadedWaypoints() {
-      return (Object.keys(this.waypoints).length > 0)
+      return Object.keys(this.waypoints).length > 0;
     },
     waypoints() {
       return this.$store.getters.waypoints;
@@ -76,7 +100,7 @@ export default {
             self.waypoints[wpid].fields.coordinateY
           ];
         });
-      } catch(e) {
+      } catch (e) {
         console.log("i was caught");
         return "";
       }
@@ -95,8 +119,7 @@ export default {
     }
   },
   methods: {
-    onClick() {
-    },
+    onClick() {},
     mouseEnter() {
       this.amBeingHovered = true;
       this.$store.commit("addHoveringTrails", {
@@ -120,34 +143,14 @@ export default {
 
 .svgtrail {
   fill: none;
-  stroke: #43aed0;
-  stroke-width: 4;
   stroke-linecap: round;
   stroke-linejoin: round;
   cursor: pointer;
-  stroke-dasharray: 8;
-
-  .amBeingHovered & {
-    stroke-width: 20;
-    stroke-dasharray: none;
-  }
-
-  .myWaypointHovered & {
-    stroke-width: 20;
-    stroke-dasharray: none;
-  }
-
-  .myWaypointBeingViewed & {
-    stroke-width: 40;
-    stroke-dasharray: none;
-    stroke: #70c0d8;
-  }
-
+  stroke: #43aed0;
 }
 
-
 #svgtrailarrow path {
-  fill:  white;
+  fill: white;
   opacity: 0.6;
 }
 .svgtrail-arrows {
@@ -155,9 +158,9 @@ export default {
   fill: none;
   stroke: #43aed0;
 
-   marker-start:url(#svgtrailarrow);
-  marker-mid:url(#svgtrailarrow);
-  marker-end:url(#svgtrailarrow);
+  marker-start: url(#svgtrailarrow);
+  marker-mid: url(#svgtrailarrow);
+  marker-end: url(#svgtrailarrow);
 
   .myWaypointBeingViewed & {
     display: block;
@@ -166,6 +169,4 @@ export default {
     stroke: none;
   }
 }
-
-
 </style>
