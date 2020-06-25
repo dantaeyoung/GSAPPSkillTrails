@@ -126,11 +126,14 @@ export default {
 </script>
 
 <style lang="scss">
+
+$wpdim: 75px;
+
 .draggablewaypoint {
-  width: 100px;
-  height: 100px;
-  margin-left: -50px;
-  margin-top: -50px;
+  width: $wpdim;
+  height: $wpdim;
+  margin-left: calc(#{$wpdim} / -2);
+  margin-top: calc(#{$wpdim} / -2);
   pointer-events: none;
 }
 

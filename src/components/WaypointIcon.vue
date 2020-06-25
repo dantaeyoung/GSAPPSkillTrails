@@ -29,10 +29,10 @@
       <foreignObject
         @mouseover="mouseEnter()"
         @mouseleave="mouseLeave()"
-        x="0%"
-        y="0%"
-        width="100%"
-        height="100%"
+        x="5%"
+        y="5%"
+        width="90%"
+        height="90%"
         :clip-path="'url(#polygonMask-' + waypointdata.id + ')'"
       >
         <div class="circle colorfilter">
@@ -46,8 +46,8 @@
       <foreignObject
         x="0%"
         y="0%"
-        width="100px"
-        height="100px"
+        width="100%"
+        height="100%"
         class="check"
       >
         <img src="@/assets/check-icon.svg" />
@@ -278,7 +278,7 @@ img {
 .text {
   z-index: 100;
   font-weight: bold;
-  font-size: 0.8em;
+  font-size: 0.65em;
   text-align: center;
   width: 100%;
   overflow-wrap: break-word;
