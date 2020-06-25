@@ -1,7 +1,7 @@
 <template>
   <div id="graphframe" :class="cursorMode">
     <div id="graphnav">
-      <DevInterface />
+      <!-- <DevInterface /> -->
       <CursorToolbar />
     </div>
     <MouseDialog mouseeventid="graphframe" />
