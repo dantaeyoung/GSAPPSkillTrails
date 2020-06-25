@@ -12,7 +12,7 @@
     v-if="isLoadedWaypoints"
   >
     <path class="svgtrail" :d="svgTrailPath" :style="svgtrailStyle" />
-    <path class="svgtrail-arrows" :d="svgTrailPath" />
+    <path class="svgtrail-arrows" :d="svgTrailPath" :style="svgtrailarrowStrokeWidth" />
   </g>
 </template>
 
@@ -34,6 +34,10 @@ var strokeWidths = {
   myWaypointHovered: 20,
   myWaypointBeingViewed: 40
 };
+
+var arrowStrokeWidths = {
+  myWaypointBeingViewed: 3
+}
 
 export default {
   name: "Trail",
@@ -62,6 +66,11 @@ export default {
         s = strokeSettings["myWaypointBeingViewed"];
         s += `stroke-width: ${strokeWidths["myWaypointBeingViewed"] / this.zoomscale }`;
       }
+      return s;
+    },
+    svgtrailarrowStrokeWidth() {
+      var s = ""
+      s += `stroke-width: ${arrowStrokeWidths["myWaypointBeingViewed"] / this.zoomscale }`;
       return s;
     },
     isLoadedWaypoints() {
