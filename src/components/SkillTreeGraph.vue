@@ -12,10 +12,10 @@
         altPressed: altPressed,
         isDragging: isDragging
       }"
+        @click="onClick"
     >
       <div
         id="graphcontents"
-        @click="onClick"
         @mousedown="onMouseDown"
         @mouseup="onMouseUp"
       >
@@ -127,21 +127,37 @@ export default {
       }
       if (this.cursorMode.zoom) {
         let transforms = this.panzoom.getTransform();
-        console.log(e)
-        console.log(transforms);
+        console.log(e);
+        console.log(e.currentTarget);
+
+
+        // e.clientX, e.clientY are relative to bounding #graphwindow
+         var rect = document.getElementById("graphcontents").getBoundingClientRect(); // gives us relative to bounding #graphwindow
+
+         var x = e.clientX - rect.left; //x position within the element.
+         var y = e.clientY - rect.top;
+          console.log("client x,y", e.clientX, e.clientY);
+          console.log("hopeful x,y", x, y);
+          console.log("x,y relative to graphcontents", x / transforms.scale, y / transforms.scale);
+        //
+
+
+        // console.log(document.getElementById("graphcontents").getBoundingClientRect());
+        // console.log(transforms);
         let origin = this.panzoom.getTransformOrigin(); // {x: 0.5, y: 0.5}
-        console.log(origin);
-//        this.panzoom.setTransformOrigin({ x: e.layerX, y: e.layerY }); // now it is topLeft
+        // console.log(origin);
+        //        this.panzoom.setTransformOrigin({ x: e.layerX, y: e.layerY }); // now it is topLeft
         //      instance.setTransformOrigin(null); // remove transform origink
         var scalediff = 1.1;
         if (this.shiftPressed || this.altPressed) {
-          scalediff = 1/ scalediff;
+          scalediff = 1 / scalediff;
         }
         this.panzoom.smoothZoomAbs(
-          transforms.x,
-          transforms.y,
+          e.clientX,
+          e.clientY,
           transforms.scale * scalediff
-        ); 
+        );
+        console.log("totransforms", transforms.x, transforms.y, transforms.scale * scalediff);
       }
     },
     unclickWaypoints() {
@@ -173,7 +189,7 @@ export default {
         minZoom: 0.1,
         bounds: true,
         boundsPadding: 0.2,
-          zoomDoubleClickSpeed: 1, 
+        zoomDoubleClickSpeed: 1,
         beforeWheel: e => {
           if (e.ctrlKey) {
             return false;
@@ -267,11 +283,13 @@ a {
   width: 100%;
 }
 
+
 #graphcontents {
+border: 10px solid blue !important;
   width: 2000px;
   height: 2000px;
 
-  .isDragging  &{
+  .isDragging & {
     cursor: grabbing;
   }
 
@@ -286,8 +304,6 @@ a {
     cursor: zoom-out !important;
   }
 }
-
-
 
 svg#trails {
   height: 2000px;
