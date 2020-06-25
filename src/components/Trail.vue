@@ -11,10 +11,8 @@
     @click="onClick"
     v-if="isLoadedWaypoints"
   >
-    <path class="svgtrail" :d="svgTrailPath" />
+    <path class="svgtrail" :d="svgTrailPath" :style="svgtrailStyle" />
     <path class="svgtrail-arrows" :d="svgTrailPath" />
-    {{ traildata.id + "-" + traildata.fields.Waypoints.length }}
-    {{ currentlyViewingWaypoint }}
   </g>
 </template>
 
@@ -32,9 +30,16 @@ export default {
       amBeingHovered: false
     };
   },
-  props: ["traildata"],
+  props: ["traildata", "zoomscale"],
   created() {},
   computed: {
+    svgtrailStyle() {
+      let s = ""
+      //s += "fill: red;"
+      //s += `opacity: ${this.zoomscale / 3};`
+      //s += `stroke-width: ${30 - (this.zoomscale * 10)};`
+      return s;
+    },
     isLoadedWaypoints() {
       return (Object.keys(this.waypoints).length > 0)
     },

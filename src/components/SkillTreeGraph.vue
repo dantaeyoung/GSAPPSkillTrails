@@ -42,6 +42,7 @@
             v-for="(trail, id) in trails"
             :key="id"
             :traildata="trail"
+            :zoomscale="zoomscale"
             class="panzoom-exclude"
           />
         </svg>
