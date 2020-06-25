@@ -84,18 +84,19 @@ export default {
 }
 
 .rightlinks, .leftlinks {
-  display: flex;
 }
 
 .navlink {
-  display: block;
+  position: relative;
+  height: 22px;
+  display: inline-block;
   font-size: 0.8em;
   background-color: white;
   color: #fc0452;
   font-weight: bold;
   padding: 2px 4px;
   margin-right: 5px;
-  margin-top: 20px;
+  margin-top: 10px;
   border-radius: 5px;
   text-decoration: none;
   user-select: none;
@@ -115,9 +116,10 @@ button {
 
 .router-link-active, .active {
   pointer-events: none;
-  background-color: #BBB;
-  box-shadow: none;
-  margin-top: 15px;
-  color: darken(#fc0452, 20%);
+  background-color: darken(#fc0452, 30%);
+  color: white;
+  box-shadow: 0px -3px gray inset;
+  top: -6px;
+  padding-top: 0px;
 }
 </style>
