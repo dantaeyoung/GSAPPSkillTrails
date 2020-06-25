@@ -59,7 +59,7 @@ export default {
     },
     currentPosition() {
       return {
-        x: this.waypointdata.fields.coordinateX + this.dragCoords.x,
+        x: this.waypointdata.fields.coordinateX + this.dragCoords.x ,
         y: this.waypointdata.fields.coordinateY + this.dragCoords.y
       };
     }

@@ -15,8 +15,8 @@
     <div class="showcoordinates" v-if="showCoordinates">
       <button @click="tableclip()">copy table{{ copytablestatus }}</button>
       <table style="width:100%" id="coordinatestable">
-        <tr v-for="wp in urlsortedWaypoints" :key="wp.id">
-          <th>{{ wp.fields.URL }}</th>
+        <tr v-for="wp in nameSortedWaypoints" :key="wp.id">
+          <th>{{ wp.fields.Name }}</th>
           <th>
             {{
               coordinateDetransform(
@@ -69,7 +69,12 @@ export default {
     displayGraphCommons() {
       return this.$store.state.displayGraphCommons;
     },
-    urlsortedWaypoints() {
+    nameSortedWaypoints() {
+      return Object.values(this.waypoints).sort((a, b) => {
+        return ("" + a.fields.Name).localeCompare(b.fields.Name);
+      });
+    },
+    urlSortedWaypoints() {
       return Object.values(this.waypoints).sort((a, b) => {
         return ("" + a.fields.URL).localeCompare(b.fields.URL);
       });

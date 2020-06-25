@@ -198,6 +198,7 @@ export default {
         } else {
           this.onClickViewWaypoint();
         }
+        event.stopPropagation();
       }
     },
     onClickViewWaypoint() {

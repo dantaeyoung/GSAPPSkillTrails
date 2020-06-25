@@ -1,6 +1,6 @@
 <template>
   <div id="MouseDialog" :style="positionStyle" v-if="!isTouchDevice">
-    <div class="waypointInfo" v-if="cursorMode.navigate == true">
+    <div class="waypointInfo" v-if="cursorMode.navigate || cursorMode.zoom">
       <div class="hoverTrail" v-for="tid in hoveringTrails" v-bind:key="tid">
         <div class="trailIconName">
           <img class="trailicon" src="@/assets/trail-icon.svg" />

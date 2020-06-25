@@ -1,7 +1,7 @@
 <template>
   <div id="graphframe" :class="cursorMode">
     <div id="graphnav">
-      <!-- <DevInterface /> -->
+      <DevInterface />
       <CursorToolbar />
     </div>
     <MouseDialog mouseeventid="graphframe" />
@@ -73,7 +73,7 @@ export default {
       shiftPressed: false,
       altPressed: false,
       isDragging: false,
-      recentMouseDeltas: []
+      zoomScale: 1,
     };
   },
   components: {
@@ -91,9 +91,6 @@ export default {
   },
   created() {},
   computed: {
-    zoomScale() {
-      return this.$store.state.zoomScale;
-    },
     cursorMode() {
       return this.$store.state.cursorMode;
     },
@@ -190,6 +187,10 @@ export default {
           return true;
         },
         filterKey: () => true
+      });
+
+      self.panzoom.on("zoom", function(e) {
+        self.zoomScale = self.panzoom.getTransform().scale;
       });
     },
     logAndDetectScroll(e) {
