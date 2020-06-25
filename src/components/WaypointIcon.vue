@@ -100,9 +100,6 @@ export default {
     radius() {
       return this.maxRadius;
     },
-    zoomScale() {
-      return this.$store.state.zoomScale;
-    },
     cursorMode() {
       return this.$store.state.cursorMode;
     },

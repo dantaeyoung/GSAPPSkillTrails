@@ -21,8 +21,8 @@
           v-for="(waypoint, id) in waypoints"
           :key="id"
           :waypointdata="waypoint"
-          :zoomscale="zoomScale"
           :id="'waypoint-' + id"
+          :zoomscale="zoomscale"
           class="panzoom-exclude"
         />
 
@@ -73,7 +73,7 @@ export default {
       shiftPressed: false,
       altPressed: false,
       isDragging: false,
-      zoomScale: 1,
+      zoomscale: 1,
     };
   },
   components: {
@@ -190,7 +190,7 @@ export default {
       });
 
       self.panzoom.on("zoom", function(e) {
-        self.zoomScale = self.panzoom.getTransform().scale;
+        self.zoomscale = self.panzoom.getTransform().scale;
       });
     },
     logAndDetectScroll(e) {

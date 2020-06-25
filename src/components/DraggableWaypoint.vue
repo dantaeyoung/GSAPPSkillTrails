@@ -8,7 +8,6 @@
     <WaypointIcon
       :key="id"
       :waypointdata="waypointdata"
-      :zoomscale="zoomscale"
       :id="id"
       class="panzoom-exclude"
     />
@@ -37,7 +36,7 @@ export default {
   components: {
     WaypointIcon
   },
-  props: ["waypointdata", "zoomscale", "id"],
+  props: ["waypointdata", "id", "zoomscale"],
   mounted() {
     var self = this;
     this.initShiftDetect();

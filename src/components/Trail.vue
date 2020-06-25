@@ -8,6 +8,7 @@
       myWaypointHovered: myWaypointHovered,
       myWaypointBeingViewed: myWaypointBeingViewed
     }"
+    @click="onClick"
     v-if="isLoadedWaypoints"
   >
     <path class="svgtrail" :d="svgTrailPath" />
@@ -89,6 +90,8 @@ export default {
     }
   },
   methods: {
+    onClick() {
+    },
     mouseEnter() {
       this.amBeingHovered = true;
       this.$store.commit("addHoveringTrails", {
