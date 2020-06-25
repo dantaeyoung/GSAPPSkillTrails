@@ -123,7 +123,7 @@ export default {
     },
     onClick(e) {
       if (this.cursorMode.navigate) {
-        if (e.target === e.currentTarget) {
+        if (e.target.id === "graphcontents") { // this is hacky but works
           // this presumes that graphbackground isn't clickable. if we want it to be then we can handle that later.
           this.unclickWaypoints();
         }

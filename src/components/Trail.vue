@@ -37,7 +37,7 @@ export default {
       let s = ""
       //s += "fill: red;"
       //s += `opacity: ${this.zoomscale / 3};`
-      //s += `stroke-width: ${30 - (this.zoomscale * 10)};`
+      s += `stroke-width: ${30 - (this.zoomscale * 10)};`
       return s;
     },
     isLoadedWaypoints() {
