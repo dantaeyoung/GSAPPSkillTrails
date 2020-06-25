@@ -142,25 +142,4 @@ export default {
   font-weight: bold;
   color: darken(#fc0452, 5%);
 }
-.floatingimage {
-  position: absolute;
-  max-width: 300px;
-  max-height: 300px;
-  animation: mymove 20000ms ease-in-out infinite;
-}
-
-@keyframes mymove {
-  0% {
-    transform: translate(0px, 80%);
-    opacity: 0.5;
-  }
-  50% {
-    transform: translate(80%, 0px);
-    opacity: 1;
-  }
-  100% {
-    transform: translate(0px, 80%);
-    opacity: 0.5;
-  }
-}
 </style>

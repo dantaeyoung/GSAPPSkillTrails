@@ -24,6 +24,7 @@
     "deep-copy": "^1.4.2",
     "m-class-list": "^1.1.9",
     "node-sass": "^4.14.1",
+    "panzoom": "^9.2.5",
     "plain-draggable": "^2.5.12",
     "pointer-event": "^1.0.0",
     "vue": "^2.6.11",

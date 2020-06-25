@@ -1,21 +1,24 @@
 <template>
   <div class="about">
-    <div
-      class="floatingimagecontainer"
-      v-for="imurl in imagesOf('abouttext')"
-      :key="imurl"
-      :style="
-        `animation-delay: -${randomAnimDelay()}s;
-  animation-duration: ${randomAnimDuration()}s`
-      "
-    >
-      <img class="floatingimage" :src="imurl"/>
-    </div>
-
+  <div class="abouttexts">
+    <vue-markdown
+      class="abouttext"
+      :source="texts['credits'].fields.Markdown"
+    ></vue-markdown>
     <vue-markdown
       class="abouttext"
       :source="texts['philosophy'].fields.Markdown"
     ></vue-markdown>
+    </div>
+  <div class="floatingimagecontainer">
+      <div
+        class="floatingimageY"
+        v-for="imurl in imagesOf('philosophy')"
+        :key="imurl"
+        :style="animationStyle()">
+        <img class="floatingimageX" :src="imurl" :style="animationStyle()" />
+      </div>
+      </div>
 
   </div>
 </template>
@@ -33,14 +36,18 @@ export default {
     VueMarkdown
   },
   computed: {
-    ...mapState(["texts"])
+    ...mapState(["texts"]),
   },
   methods: {
+    animationStyle() {
+      return `animation-delay: ${this.randomAnimDelay()}s;
+      animation-duration: ${this.randomAnimDuration()}s`;
+    },
     randomAnimDelay() {
-      return Math.random() * 10;
+      return (1 + Math.random()) * -30;
     },
     randomAnimDuration() {
-      return 10 + Math.random() * 50;
+      return (1 + Math.random()) * 30;
     },
     imagesOf(field) {
       try {
@@ -56,40 +63,73 @@ export default {
 </script>
 <style scoped lang="scss">
 .about {
-  min-height: 100vh;
   display: flex;
-  align-items: center;
-  flex-direction: column;
-  justify-content: center;
+  min-height: 100vh;
+  align-items: stretch;
+  flex-direction: row;
+  margin: 10vh 10vw;
 }
 
-.abouttext {
+.abouttexts {
   text-align: left;
   width: 50vw;
   max-width: 600px;
   padding: 20px;
   background-color: white;
+  border-radius: 10px;
 }
 
-.floatingimage {
+.abouttext {
+  padding-bottom: 20px;
+  margin-bottom: 40px;
+  
+}
+
+.floatingimagecontainer {
+  position: relative;
+  background-color: pink;
+  pointer-events: none;
+}
+
+.floatingimageY { 
   position: absolute;
-  max-width: 300px;
-  max-height: 300px;
-  animation: mymove 20000ms ease-in-out infinite;
+    mix-blend-mode: multiply;
+  animation-name: mymoveY;
+  animation-timing-function: ease;
+  animation-iteration-count: infinite;
+  height: 100%;
+}
+.floatingimageX {
+  max-width: 250px;
+  max-height: 250px;
+  animation: mymoveX;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  border-radius: 10px;
 }
 
-@keyframes mymove {
+@keyframes mymoveY {
   0% {
-    transform: translate(0px, 80%);
-    opacity: 0.5;
+    transform: translateY(0%);
   }
   50% {
-    transform: translate(80%, 0px);
-    opacity: 1;
+    transform: translateY(90%);
   }
   100% {
-    transform: translate(0px, 80%);
-    opacity: 0.5;
+    transform: translateY(0%);
   }
 }
+
+@keyframes mymoveX {
+  0% {
+    transform: translateX(0%);
+  }
+  50% {
+    transform: translateX(calc(50%));
+  }
+  100% {
+    transform: translateX(0%);
+  }
+}
+
 </style>

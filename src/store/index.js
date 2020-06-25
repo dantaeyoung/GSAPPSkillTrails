@@ -71,7 +71,7 @@ export default new Vuex.Store({
     trailStatusesToShow: ["Published"],
 
     displayGraphCommons: false,
-    displayHowTo: false,
+    displayHowTo: true,
 
     zoomScale: 1,
 

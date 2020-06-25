@@ -190,9 +190,10 @@ export default {
 
 .link {
   font-size: 0.9em;
-  margin-top: 20px;
+  margin: 20px 0px;
   display: flex;
   align-items: center;
+  line-height: 1em;
 
   .linkto { margin-right: 5px; }
 

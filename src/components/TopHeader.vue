@@ -1,8 +1,8 @@
 <template>
   <div id="topheader">
     <div class="leftlinks">
-      <router-link class="navlink" :to="{ name: 'ListView', params: paramsForRoute }">List View</router-link>
       <router-link class="navlink" :to="{ name: 'MapView', params: paramsForRoute }">Map View</router-link>
+      <router-link class="navlink" :to="{ name: 'ListView', params: paramsForRoute }">List View</router-link>
     </div>
 
     <div class="centerlogo">
