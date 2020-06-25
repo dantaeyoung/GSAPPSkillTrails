@@ -5,9 +5,11 @@ import VueRouter from "vue-router";
 
 import ComingSoon from "@/components/ComingSoon.vue";
 import About from "@/components/About.vue";
-import ViewWaypoint from "@/components/ViewWaypoint.vue";
 import SkillTreeGraph from "@/components/SkillTreeGraph.vue";
 import ListView from "@/components/ListView.vue";
+
+import ViewWaypoint from "@/components/ViewWaypoint.vue";
+import ViewTrail from "@/components/ViewTrail.vue";
 
 import store from '@/store'
 
@@ -27,6 +29,14 @@ const routes = [
     components: {
       view: SkillTreeGraph,
       content: ViewWaypoint
+    }
+  },
+  {
+    path: "/map/:trid?/:slug?",
+    name: "MapViewTrail",
+    components: {
+      view: SkillTreeGraph,
+      content: ViewTrail
     }
   },
   {

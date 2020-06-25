@@ -67,6 +67,7 @@ export default new Vuex.Store({
     hasLoaded: false,
 
     currentlyViewingWaypoint: null,
+    currentlyViewingTrail: null,
     waypointsDraggable: false,
 
     waypoints: {},
@@ -137,6 +138,9 @@ export default new Vuex.Store({
     },
     currentlyViewingWaypoint(state, payload) {
       state.currentlyViewingWaypoint = payload.id;
+    },
+    setCurrentlyViewingTrail(state, payload) {
+      state.currentlyViewingTrail = payload.id;
     },
     addHoveringWaypoint(state, payload) {
       if (!state.hoveringWaypoints.includes(payload.id)) {

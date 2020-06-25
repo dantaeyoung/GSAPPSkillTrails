@@ -20,6 +20,7 @@
 /* eslint-disable */
 
 import { CurveInterpolator } from "curve-interpolator";
+import { slug } from "@/mixins/slug.js";
 
 var strokeSettings = {
   normal: `stroke-dasharray: 8;`,
@@ -41,6 +42,7 @@ var arrowStrokeWidths = {
 
 export default {
   name: "Trail",
+  mixins: [slug],
   data() {
     return {
       radius: 50,
@@ -81,6 +83,9 @@ export default {
     },
     hoveringWaypoints() {
       return this.$store.state.hoveringWaypoints;
+    },
+    currentlyViewingTrail() {
+      return this.$store.state.currentlyViewingTrail;
     },
     currentlyViewingWaypoint() {
       return this.$store.state.route.params.wpid;
@@ -128,7 +133,23 @@ export default {
     }
   },
   methods: {
-    onClick() {},
+    onClick() {
+//      this.$store.commit("setCurrentlyViewingTrail", { id: this.traildata.id});
+//      console.log("ya clicked me trail", this.traildata);
+      this.onClickViewTrail()
+    },
+    onClickViewTrail() {
+      var self = this;
+      self.$router
+        .push({
+          name: "MapViewTrail",
+          params: {
+            trid: self.traildata.id,
+            slug: self.convertToSlug(self.traildata.fields.Name),
+          }
+        })
+        .catch(err => {});
+    },
     mouseEnter() {
       this.amBeingHovered = true;
       this.$store.commit("addHoveringTrails", {
