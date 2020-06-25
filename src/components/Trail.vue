@@ -8,6 +8,7 @@
       myWaypointHovered: myWaypointHovered,
       myWaypointBeingViewed: myWaypointBeingViewed
     }"
+    v-if="isLoadedWaypoints"
   >
     <path class="svgtrail" :d="svgTrailPath" />
     <path class="svgtrail-arrows" :d="svgTrailPath" />
@@ -33,6 +34,9 @@ export default {
   props: ["traildata"],
   created() {},
   computed: {
+    isLoadedWaypoints() {
+      return (Object.keys(this.waypoints).length > 0)
+    },
     waypoints() {
       return this.$store.getters.waypoints;
     },
@@ -113,7 +117,7 @@ export default {
   stroke-linecap: round;
   stroke-linejoin: round;
   cursor: pointer;
-  stroke-dasharray: 10, 12;
+  stroke-dasharray: 8;
 
   .amBeingHovered & {
     stroke-width: 20;

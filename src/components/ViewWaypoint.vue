@@ -34,15 +34,14 @@
           <div class="partof skew">
             In trails:
           </div>
-          <div class="trails">
+          <div class="trails" v-if="isLoadedTrails">
             <div
               class="trail"
               v-for="tid in waypoints[thisid].fields.Trails"
               :key="tid"
             >
-              <img class="trailicon" src="@/assets/trail-icon.svg" />{{
-                trails[tid].fields.Name
-              }}
+              <img class="trailicon" src="@/assets/trail-icon.svg" />
+              {{  trails[tid].fields.Name   }}
             </div>
           </div>
         </div>
@@ -91,6 +90,9 @@ export default {
     var self = this;
   },
   computed: {
+    isLoadedTrails() {
+      return this.trails.length > 0
+    },
     currentlyViewingWaypoint() {
       return this.$store.state.route.params.wpid;
     },

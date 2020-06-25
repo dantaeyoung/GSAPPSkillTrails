@@ -31,12 +31,10 @@ function coordinateTransform(val, sidelength) {
 }*/
 
 function getAirtableRecords(apiurl, callback) {
-  console.log( "I WAS CALLEd");
     var xhr1 = new XMLHttpRequest();
     xhr1.open("GET", apiurl);
     xhr1.onload = function() {
       var records= JSON.parse(xhr1.responseText).records;
-      console.log(records);
       callback(records)
     };
     xhr1.send();
@@ -266,7 +264,6 @@ export default new Vuex.Store({
           obj[item.id] = item;
           return obj;
         }, {});
-        console.log(softwares);
         context.commit("setSoftwares", softwares);
       });
       getAirtableRecords(topicsApiUrl, function(records) {
