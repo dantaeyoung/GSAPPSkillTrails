@@ -9,8 +9,11 @@ import ViewWaypoint from "@/components/ViewWaypoint.vue";
 import SkillTreeGraph from "@/components/SkillTreeGraph.vue";
 import ListView from "@/components/ListView.vue";
 
+import store from '@/store'
 
 Vue.use(VueRouter);
+
+var siteName = "GSAPP Skill Trails"
 
 const routes = [
   {
@@ -53,6 +56,17 @@ const routes = [
 const router = new VueRouter({
   base: process.env.BASE_URL,
   routes
+});
+
+router.beforeEach((to, from, next) => {
+  let title = "";
+  try {
+    title += store.state.waypoints[to.params.wpid].fields.Name + " - " ;
+  } catch { 
+  }
+  title += siteName;
+  document.title = title;
+  next();
 });
 
 export default router;

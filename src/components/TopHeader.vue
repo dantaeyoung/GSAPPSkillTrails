@@ -6,7 +6,9 @@
     </div>
 
     <div class="centerlogo">
+      <router-link class="logolink" :to="{ name: 'MapView' }">
       <img class="svglogo" src="@/assets/logo.svg" alt="GSAPP SKILL TRAILS" />
+      </router-link>
     </div>
 
     <div class="rightlinks">
@@ -121,5 +123,9 @@ button {
   box-shadow: 0px -3px gray inset;
   top: -6px;
   padding-top: 0px;
+}
+
+.logolink {
+  pointer-events: auto !important;
 }
 </style>
