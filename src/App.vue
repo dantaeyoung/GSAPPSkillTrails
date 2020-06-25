@@ -1,5 +1,8 @@
 <template>
   <div id="app" :class="{ mobile: isTouchDevice }">
+
+    <HowTo />
+
     <section id="header">
       <TopHeader />
     </section>
@@ -19,13 +22,14 @@
 <script>
 /* eslint-disable */
 
+import HowTo from "@/components/HowTo.vue";
 import TopHeader from "@/components/TopHeader.vue";
 import SkillTreeGraph from "@/components/SkillTreeGraph.vue";
 
 import { is_touch_device } from "@/scripts/detectDevice.js"
 
 export default {
-  components: { TopHeader, SkillTreeGraph },
+  components: { TopHeader, SkillTreeGraph, HowTo },
   created() {
     this.$store.dispatch("fetch");
     this.$store.commit("setTouchDevice", this.isTouchDevice);
@@ -42,6 +46,9 @@ export default {
 </script>
 
 <style lang="scss">
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap');
+
+
 body,
 html {
   margin: 0;
@@ -50,7 +57,8 @@ html {
 
 
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-family: 'Lato', Arial, sans-serif;
+  line-height: 1.5em;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
@@ -74,6 +82,7 @@ html {
 
   position: relative;
   margin-top: 30px;
+  overflow-y: scroll;
   /* height: calc(100vh - 30px); */
 
   #view {

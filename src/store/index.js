@@ -5,6 +5,7 @@ const apikey = "keyoQpvlH7D3w9kIB"; //normally this should NEVER be exposed. How
 const tableview = "Grid%20view";
 const waypointApiUrl = `https://api.airtable.com/v0/${tableID}/Waypoint?api_key=${apikey}&view=${tableview}`;
 const trailsApiUrl = `https://api.airtable.com/v0/${tableID}/Trails?api_key=${apikey}&view=${tableview}`;
+const textApiUrl = `https://api.airtable.com/v0/${tableID}/Text?api_key=${apikey}&view=${tableview}`;
 
 import Vue from "vue";
 import Vuex from "vuex";
@@ -64,10 +65,13 @@ export default new Vuex.Store({
     hoveringTrails: [],
     hoveringWaypoints: [],
 
+    texts: {},
+
     waypointStatusesToShow: ["Published"],
     trailStatusesToShow: ["Published"],
 
     displayGraphCommons: false,
+    displayHowTo: false,
 
     zoomScale: 1,
 
@@ -82,7 +86,7 @@ export default new Vuex.Store({
 
     isTouchDevice: false,
 
-    clearState: false
+    clearState: false,
   },
   getters: {
     trails(state) {
@@ -95,6 +99,9 @@ export default new Vuex.Store({
   mutations: {
     setDisplayGraphCommons(state, payload) {
       state.displayGraphCommons = payload;
+    },
+    setDisplayHowTo(state, payload) {
+      state.displayHowTo = payload;
     },
     clearPersistedState(state) {
       state.clearState = true;
@@ -146,6 +153,9 @@ export default new Vuex.Store({
       } else {
         state.waypointsDraggable = false;
       }
+    },
+    setTexts(state, t) {
+      state.texts = t;
     },
     setUnfilteredWaypoints(state, wp) {
       state.unfilteredWaypoints = wp;
@@ -203,6 +213,25 @@ export default new Vuex.Store({
       if (!context.state.hasLoaded) {
         context.dispatch("fetchWaypointsAndTrails");
       }
+      context.dispatch("fetchText");
+    },
+    fetchText(context) {
+
+      var xhr1 = new XMLHttpRequest();
+      xhr1.open("GET", textApiUrl);
+      xhr1.onload = function() {
+        var texts = JSON.parse(xhr1.responseText).records.filter(
+          w => w.fields["Name"]
+        )
+          .reduce(function(obj, item) {
+            obj[item.fields.Name] = item;
+            return obj;
+          }, {});
+
+        context.commit("setTexts", texts);
+      };
+      xhr1.send();
+
     },
     fetchWaypointsAndTrails(context) {
       var successcount = 0;

@@ -11,9 +11,11 @@
       ></iframe>
     </div>
     <div class="video-youtube" v-if="isYoutube">
+      <img v-if="!loadYT" class="preview" @click="loadYT=true" :src="'https://img.youtube.com/vi/' + videoid + '/maxresdefault.jpg'" />
       <iframe
-        width="100%"
-        height="100%"
+        v-if="loadYT"
+        width="600"
+        height="400"
         :src="'https://www.youtube-nocookie.com/embed/' + videoid"
         frameborder="0"
         allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
@@ -27,6 +29,11 @@
 export default {
   name: "VideoEmbed",
   components: {},
+  data() {
+    return {
+      loadYT: false,
+    };
+  },
   props: ["url"],
   created() {
     console.log(this.$route.params);
@@ -49,9 +56,17 @@ export default {
       if (youtubematch !== null && youtubematch.length >= 2) {
         return youtubematch[1];
       }
+      console.log("S");
+      let youtubematch2 = this.url.match(/youtu\.be\/(\w+)/);
+      if (youtubematch2 !== null && youtubematch2.length >= 2) {
+        console.log(youtubematch2);
+        return youtubematch2[1];
+      }
       return "";
     }
-  }
+  },
+  methods: {
+  },
 };
 </script>
 
@@ -74,4 +89,15 @@ iframe {
   height: auto !important; */
   border: none;
 }
+
+.video-youtube {
+  width: 100%;
+
+  & .preview {
+    width: 100%;
+    height: auto;
+    cursor: pointer;
+  }
+}
+
 </style>

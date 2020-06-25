@@ -18,7 +18,7 @@
           }}</a>
         </div>
         <!--  -->
-        <!-- <VideoEmbed :url="waypointdata.filds.URL" /> -->
+        <VideoEmbed :url="waypointdata.fields.URL" />
 
         <div class="coverimage" v-if="coverImageThumbnail">
           <img :src="coverImageThumbnail" />
@@ -83,9 +83,8 @@ export default {
     },
     coverImageThumbnail() {
       try {
-        return this.waypointdata.fields["Cover Image"][0]["thumbnails"][
-          "large"
-        ]["url"];
+        return this.waypointdata.fields["Cover Image"][0]["url"];
+        // return this.waypointdata.fields["Cover Image"][0]["thumbnails"]["large"]["url"];
       } catch (e) {
         return null;
       }

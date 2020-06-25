@@ -10,10 +10,8 @@
     </div>
 
     <div class="rightlinks">
-      <router-link class="navlink" to="/about">
-        <font-awesome-icon icon="question" />
-        About</router-link
-      >
+      <router-link class="navlink" to="/about"><font-awesome-icon icon="question" />About</router-link>
+      <div class="navlink" @click="howtoToggle" :class="{ active: displayHowTo }"><font-awesome-icon icon="question" />How To</div>
     </div>
   </div>
 </template>
@@ -29,12 +27,16 @@ export default {
   name: "TopHeader",
   data() {
     return {
+
     };
   },
   components: {
     FontAwesomeIcon
   },
   computed: {
+    displayHowTo() {
+      return this.$store.state.displayHowTo;
+    },
     paramsForRoute() {
       return {
         "wpid": this.$route.params.wpid,
@@ -46,6 +48,12 @@ export default {
     }
   },
   methods: {
+    howtoToggle() {
+      console.log(this.displayHowTo
+      );
+      var self = this;
+      this.$store.commit("setDisplayHowTo", !self.displayHowTo);
+    }
   }
 };
 </script>
@@ -60,6 +68,7 @@ export default {
   flex-direction: row;
   justify-content: space-between;
   align-content: center;
+  padding: 0px 10px;
 }
 
 .centerlogo {
@@ -74,19 +83,23 @@ export default {
   height: 25px;
 }
 
-.rightlinks {
+.rightlinks, .leftlinks {
   display: flex;
 }
 
 .navlink {
+  display: block;
   font-size: 0.8em;
   background-color: white;
   color: #fc0452;
   font-weight: bold;
-  padding: 3px 5px;
-  margin: 0px 5px;
+  padding: 2px 4px;
+  margin-right: 5px;
+  margin-top: 20px;
   border-radius: 5px;
   text-decoration: none;
+  user-select: none;
+  box-shadow: 0px -5px gray;
 }
 
 button {
@@ -100,8 +113,11 @@ button {
 }
 
 
-.router-link-active {
-  opacity: 0.6;
+.router-link-active, .active {
   pointer-events: none;
+  background-color: #BBB;
+  box-shadow: none;
+  margin-top: 15px;
+  color: darken(#fc0452, 20%);
 }
 </style>

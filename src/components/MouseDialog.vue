@@ -83,8 +83,7 @@ export default {
     },
     positionStyle() {
       return `position: absolute;
-      top: ${this.posY}px;
-      left: ${this.posX}px;`;
+      transform: translate(${this.posX}px, ${this.posY}px);`;
     },
     trailsOfHoveringWaypoints() {
       var self = this;
