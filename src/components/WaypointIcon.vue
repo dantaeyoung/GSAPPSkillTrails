@@ -193,11 +193,10 @@ export default {
     },
     onClick(event) {
       if (this.waypointsDraggable == false) {
-        if (this.cursorMode["navigate"] == true) {
-          this.onClickViewWaypoint();
-        }
         if (this.cursorMode["markasdone"] == true) {
           this.onClickToggleWaypointAsDone();
+        } else {
+          this.onClickViewWaypoint();
         }
       }
     },

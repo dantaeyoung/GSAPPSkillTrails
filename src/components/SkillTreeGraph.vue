@@ -12,13 +12,11 @@
         altPressed: altPressed,
         isDragging: isDragging
       }"
-        @click="onClick"
+      @click="onClick"
+      @mousedown="onMouseDown"
+      @mouseup="onMouseUp"
     >
-      <div
-        id="graphcontents"
-        @mousedown="onMouseDown"
-        @mouseup="onMouseUp"
-      >
+      <div id="graphcontents">
         <DraggableWaypoint
           v-for="(waypoint, id) in waypoints"
           :key="id"
@@ -74,7 +72,8 @@ export default {
       panzoom: null,
       shiftPressed: false,
       altPressed: false,
-      isDragging: false
+      isDragging: false,
+      recentMouseDeltas: []
     };
   },
   components: {
@@ -113,10 +112,16 @@ export default {
   },
   methods: {
     onMouseDown(e) {
-      this.isDragging = true;
+      var self = this;
+      setTimeout(() => {
+        self.isDragging = true;
+      }, 100);
     },
     onMouseUp(e) {
-      this.isDragging = false;
+      var self = this;
+      setTimeout(() => {
+        self.isDragging = false;
+      }, 100);
     },
     onClick(e) {
       if (this.cursorMode.navigate) {
@@ -126,38 +131,20 @@ export default {
         }
       }
       if (this.cursorMode.zoom) {
-        let transforms = this.panzoom.getTransform();
-        console.log(e);
-        console.log(e.currentTarget);
+        if (!this.isDragging) {
+          let transforms = this.panzoom.getTransform();
 
+          var scalediff = 2;
 
-        // e.clientX, e.clientY are relative to bounding #graphwindow
-         var rect = document.getElementById("graphcontents").getBoundingClientRect(); // gives us relative to bounding #graphwindow
-
-         var x = e.clientX - rect.left; //x position within the element.
-         var y = e.clientY - rect.top;
-          console.log("client x,y", e.clientX, e.clientY);
-          console.log("hopeful x,y", x, y);
-          console.log("x,y relative to graphcontents", x / transforms.scale, y / transforms.scale);
-        //
-
-
-        // console.log(document.getElementById("graphcontents").getBoundingClientRect());
-        // console.log(transforms);
-        let origin = this.panzoom.getTransformOrigin(); // {x: 0.5, y: 0.5}
-        // console.log(origin);
-        //        this.panzoom.setTransformOrigin({ x: e.layerX, y: e.layerY }); // now it is topLeft
-        //      instance.setTransformOrigin(null); // remove transform origink
-        var scalediff = 1.1;
-        if (this.shiftPressed || this.altPressed) {
-          scalediff = 1 / scalediff;
+          if (this.shiftPressed || this.altPressed) {
+            scalediff = 1 / scalediff;
+          }
+          this.panzoom.smoothZoomAbs(
+            e.clientX,
+            e.clientY,
+            transforms.scale * scalediff
+          );
         }
-        this.panzoom.smoothZoomAbs(
-          e.clientX,
-          e.clientY,
-          transforms.scale * scalediff
-        );
-        console.log("totransforms", transforms.x, transforms.y, transforms.scale * scalediff);
       }
     },
     unclickWaypoints() {
@@ -188,12 +175,14 @@ export default {
         maxZoom: 2,
         minZoom: 0.1,
         bounds: true,
-        boundsPadding: 0.2,
+        boundsPadding: 0.4,
         zoomDoubleClickSpeed: 1,
         beforeWheel: e => {
+          // return false for normal behavior
           if (e.ctrlKey) {
             return false;
           }
+
           const { x, y } = self.panzoom.getTransform();
           const { deltaX, deltaY } = e;
           self.panzoom.moveTo(x - deltaX, y - deltaY);
@@ -202,39 +191,23 @@ export default {
         },
         filterKey: () => true
       });
-      /*
-      self.panzoom = panzoom(elem, {
-        maxZoom: 2,
-        minZoom: 0.1,
-        beforeWheel: function(e) {
-          // allow wheel-zoom only if altKey is down. Otherwise - ignore
-          var shouldIgnore = !e.altKey;
-          return shouldIgnore;
-        }
-      });
-      self.panzoom.zoomAbs(
-        300, // initial x position
-        500, // initial y position
-        1 // initial zoom
-      );
-*/
-      /*
-      elem.parentElement.addEventListener("wheel", function(e) {
-        e.preventDefault();
-        if (e.ctrlKey) {
-          const transforms = self.panzoom.getTransform();
-          console.log(transforms);
-          console.log(e);
-          self.panzoom.zoomTo(transforms.x, transforms.y, transforms.scale - (e.deltaY/50));
-        } else {
-          const transforms = self.panzoom.getTransform();
-          self.panzoom.moveTo(transforms.x - e.deltaX, transforms.y - e.deltaY);
-        }
-      });*/
-
-      // elem.addEventListener("panzoomzoom", function(event) {
-      //   self.$store.commit("setZoomScale", { zoomScale: event.detail.scale });
-      // });
+    },
+    logAndDetectScroll(e) {
+      if (e.ctrlKey) {
+        return "trackpadPinch";
+      }
+      this.recentMouseDeltas.push({ deltaX: e.deltaX, deltaY: e.deltaY });
+      if (this.recentMouseDeltas.length > 3) {
+        this.recentMouseDeltas.shift();
+      }
+      var totX = this.recentMouseDeltas.reduce((tot, item) => {
+        return tot + Math.abs(item.deltaX);
+      }, 0);
+      if (totX == 0) {
+        // chances are this is a mouse SCroll
+        return "maybeMouseScrollWheel";
+      }
+      return "trackpadPan";
     }
   }
 };
@@ -283,26 +256,26 @@ a {
   width: 100%;
 }
 
-
-#graphcontents {
-border: 10px solid blue !important;
-  width: 2000px;
-  height: 2000px;
-
-  .isDragging & {
+#graphframe {
+  &.zoom {
+    cursor: zoom-in !important;
+  }
+  &.zoom .shiftPressed,
+  &.zoom .altPressed {
+    cursor: zoom-out !important;
+  }
+  & .isDragging {
     cursor: grabbing;
   }
 
-  .markasdone & {
+  &.markasdone {
     cursor: cell !important;
   }
-  .zoom & {
-    cursor: zoom-in !important;
-  }
-  .zoom .shiftPressed &,
-  .zoom .altPressed & {
-    cursor: zoom-out !important;
-  }
+}
+
+#graphcontents {
+  width: 2000px;
+  height: 2000px;
 }
 
 svg#trails {
