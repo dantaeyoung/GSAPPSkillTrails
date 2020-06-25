@@ -66,7 +66,7 @@ export default {
             self.waypoints[wpid].fields.coordinateY
           ];
         });
-      } catch {
+      } catch(e) {
         console.log("i was caught");
         return "";
       }

@@ -47,6 +47,10 @@
           </div>
         </div>
         <!--     <iframe :src="waypointdata.fields.URL" />  -->
+
+            {{ waypoints[thisid].fields.Softwares }}
+            {{ waypoints[thisid].fields['Related Topics']}}
+
       </div>
     </div>
   </div>
