@@ -170,7 +170,7 @@ export default {
 
       self.panzoom = panzoom(elem, {
         maxZoom: 2,
-        minZoom: 0.1,
+        minZoom: 0.4,
         bounds: true,
         boundsPadding: 0.4,
         zoomDoubleClickSpeed: 1,

@@ -48,9 +48,28 @@
         </div>
         <!--     <iframe :src="waypointdata.fields.URL" />  -->
 
-            {{ waypoints[thisid].fields.Softwares }}
-            {{ waypoints[thisid].fields['Related Topics']}}
-
+        <div class="softwarestopics">
+          <div class="softwares" v-if="waypoints[thisid].fields.Softwares">
+            <div class="label skew">Softwares:</div>
+            <div
+              class="software"
+              v-for="s in waypoints[thisid].fields.Softwares"
+              :key="s"
+            >
+              {{ softwares[s].fields.Name }}
+            </div>
+          </div>
+          <div class="topics" v-if="waypoints[thisid].fields.Topics">
+            <div class="label skew">Topics:</div>
+            <div
+              class="topic"
+              v-for="t in waypoints[thisid].fields.Topics"
+              :key="t"
+            >
+              {{ topics[t].fields.Name }}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -60,6 +79,8 @@
 /* eslint-disable */
 
 import VideoEmbed from "@/components/VideoEmbed.vue";
+
+import { mapState } from "vuex";
 
 export default {
   name: "ViewWaypoint",
@@ -76,12 +97,7 @@ export default {
     waypointdata() {
       return this.$store.getters.waypoints[this.thisid];
     },
-    waypoints() {
-      return this.$store.state.waypoints;
-    },
-    trails() {
-      return this.$store.state.trails;
-    },
+    ...mapState(["waypoints", "trails", "softwares", "topics", "texts"]),
     thisid() {
       return this.$route.params.wpid;
     },
@@ -99,7 +115,6 @@ export default {
 
 <style scoped lang="scss">
 .vwFrame {
-
   position: relative;
   overflow-x: hidden;
 }
@@ -199,7 +214,9 @@ export default {
   align-items: center;
   line-height: 1em;
 
-  .linkto { margin-right: 5px; }
+  .linkto {
+    margin-right: 5px;
+  }
 
   a {
     color: darken(#fc0452, 10%);
@@ -215,5 +232,31 @@ iframe {
   width: auto !important;
   height: auto !important;
   border: none;
+}
+
+.softwarestopics {
+  font-size: 0.8em;
+}
+
+.softwares, .topics {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  & .label {
+    font-size: 0.9em;
+  }
+}
+
+.software,
+.topic {
+  display: inline-block;
+  font-weight: bold;
+    background-color: lighten(#fc0452, 30%);
+  padding: 0px 3px;
+  border-radius: 2px;
+  margin-right: 5px;
+  margin-top: 5px;
+  font-size: 0.9em;
 }
 </style>

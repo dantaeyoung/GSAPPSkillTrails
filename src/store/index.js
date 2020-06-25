@@ -5,7 +5,9 @@ const apikey = "keyoQpvlH7D3w9kIB"; //normally this should NEVER be exposed. How
 const tableview = "Grid%20view";
 const waypointApiUrl = `https://api.airtable.com/v0/${tableID}/Waypoint?api_key=${apikey}&view=${tableview}`;
 const trailsApiUrl = `https://api.airtable.com/v0/${tableID}/Trails?api_key=${apikey}&view=${tableview}`;
-const textApiUrl = `https://api.airtable.com/v0/${tableID}/Text?api_key=${apikey}&view=${tableview}`;
+const textApiUrl = `https://api.airtable.com/v0/${tableID}/Texts?api_key=${apikey}&view=${tableview}`;
+const softwaresApiUrl = `https://api.airtable.com/v0/${tableID}/Softwares?api_key=${apikey}&view=${tableview}`;
+const topicsApiUrl = `https://api.airtable.com/v0/${tableID}/Topics?api_key=${apikey}&view=${tableview}`;
 
 import Vue from "vue";
 import Vuex from "vuex";
@@ -27,6 +29,19 @@ function coordinateTransform(val, sidelength) {
 /*function coordinateDetransform(pxval, sidelength) {
   return (pxval * 2) / sidelength - 1;
 }*/
+
+function getAirtableRecords(apiurl, callback) {
+  console.log( "I WAS CALLEd");
+    var xhr1 = new XMLHttpRequest();
+    xhr1.open("GET", apiurl);
+    xhr1.onload = function() {
+      var records= JSON.parse(xhr1.responseText).records;
+      console.log(records);
+      callback(records)
+    };
+    xhr1.send();
+}
+
 
 export default new Vuex.Store({
   plugins: [
@@ -58,6 +73,8 @@ export default new Vuex.Store({
 
     waypoints: {},
     trails: [],
+    softwares: {},
+    topics: {},
 
     unfilteredWaypoints: {},
     unfilteredTrails: [],
@@ -180,6 +197,12 @@ export default new Vuex.Store({
     setTrails(state, tr) {
       state.trails = tr;
     },
+    setTopics(state, r) {
+      state.topics = r;
+    },
+    setSoftwares(state, r) {
+      state.softwares = r;
+    },
     setWaypointStatusesToShow(state, wsts) {
       state.waypointStatusesToShow = wsts;
     },
@@ -215,6 +238,7 @@ export default new Vuex.Store({
         context.dispatch("fetchWaypointsAndTrails");
       }
       context.dispatch("fetchText");
+      context.dispatch("fetchSoftwaresAndTopics");
     },
     fetchText(context) {
 
@@ -233,6 +257,27 @@ export default new Vuex.Store({
       };
       xhr1.send();
 
+    },
+    fetchSoftwaresAndTopics(context) {
+      getAirtableRecords(softwaresApiUrl, function(records) {
+        var softwares = records.filter(
+          w => w.fields["Name"]
+        ).reduce(function(obj, item) {
+          obj[item.id] = item;
+          return obj;
+        }, {});
+        console.log(softwares);
+        context.commit("setSoftwares", softwares);
+      });
+      getAirtableRecords(topicsApiUrl, function(records) {
+        var topics = records.filter(
+          w => w.fields["Name"]
+        ).reduce(function(obj, item) {
+          obj[item.id] = item;
+          return obj;
+        }, {});
+        context.commit("setTopics", topics);
+      });
     },
     fetchWaypointsAndTrails(context) {
       var successcount = 0;
