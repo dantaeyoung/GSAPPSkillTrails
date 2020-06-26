@@ -93,7 +93,8 @@ export default new Vuex.Store({
     cursorMode: {
       navigate: true,
       markasdone: false,
-      zoom: false,
+      zoomin: false,
+      zoomout: false,
       hiking: false,
       hand: false,
     },

@@ -21,15 +21,17 @@ import {
   faHandPaper,
   faMousePointer,
   faCheckSquare,
-  faSearch,
   faHiking,
-  faExclamationTriangle
+  faExclamationTriangle,
+  faSearchPlus,
+  faSearchMinus
 } from "@fortawesome/free-solid-svg-icons";
 
 library.add(  faHandPaper,
   faMousePointer,
   faCheckSquare,
-  faSearch,
+  faSearchPlus,
+  faSearchMinus,
   faHiking,
   faExclamationTriangle);
 

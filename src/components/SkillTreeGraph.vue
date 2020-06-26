@@ -174,6 +174,7 @@ export default {
       }, 100);
     },
     onClick(e) {
+        if (this.isDragging) { return }
       if (this.cursorMode.navigate) {
         if (e.target.id === "graphcontents") {
           // this is hacky but works
@@ -181,11 +182,12 @@ export default {
           this.unclickWaypoints();
         }
       }
-      if (this.cursorMode.zoom) {
-        if (!this.isDragging) {
+      if (this.cursorMode.zoomin || this.cursorMode.zoomout) {
           let transforms = this.panzoom.getTransform();
 
           var scalediff = 2;
+
+          if(this.cursorMode.zoomout) { scalediff = 1 / scalediff;  }
 
           if (this.shiftPressed || this.altPressed) {
             scalediff = 1 / scalediff;
@@ -195,7 +197,6 @@ export default {
             e.clientY,
             transforms.scale * scalediff
           );
-        }
       }
     },
     unclickWaypoints() {
@@ -204,7 +205,6 @@ export default {
           name: "MapViewBoth"
         })
         .catch(err => {
-          console.log(err);
         });
     },
     initKeyHandler() {
@@ -251,7 +251,6 @@ export default {
         this.zoomToWaypoint(this.currentlyViewingWaypoint);
       } else {
         let xycoords = self.coordinateForCenterPanzoomXY(1000, 1000)
-        console.log(xycoords);
         self.panzoom.moveBy(xycoords.x, xycoords.y, 0);
       }
 
@@ -325,12 +324,19 @@ a {
 }
 
 #graphframe {
-  &.zoom {
+  &.zoomin {
     cursor: zoom-in !important;
   }
-  &.zoom .shiftPressed,
-  &.zoom .altPressed {
+  &.zoomin .shiftPressed,
+  &.zoomin .altPressed {
     cursor: zoom-out !important;
+  }
+  &.zoomout {
+    cursor: zoom-out !important;
+  }
+  &.zoomout .shiftPressed,
+  &.zoomout .altPressed {
+    cursor: zoom-in !important;
   }
   & .isDragging {
     cursor: grabbing;
