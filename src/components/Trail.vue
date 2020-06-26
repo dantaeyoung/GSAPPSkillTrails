@@ -7,11 +7,13 @@
       amBeingHovered: amBeingHovered,
       myWaypointHovered: myWaypointHovered,
       myWaypointBeingViewed: myWaypointBeingViewed,
-      myTrailBeingViewed: myTrailBeingViewed
+      myTrailBeingViewed: myTrailBeingViewed,
+      myTrailCompleted: myTrailCompleted,
     }"
     @click="onClick"
     v-if="isLoadedWaypoints"
   >
+    {{ myTrailCompletedPercentage }}
     <path class="svgtrail" :d="svgTrailPath" :style="svgtrailStyle" />
     <path
       class="svgtrail-arrows"
@@ -33,13 +35,16 @@
 
 import { CurveInterpolator } from "curve-interpolator";
 import { slug } from "@/mixins/slug.js";
+import { mapState } from "vuex";
 
 var strokeSettings = {
   normal: `stroke-dasharray: 8;`,
   amBeingHovered: `stroke-dasharray: none;`,
   myWaypointHovered: `stroke-dasharray: none;`,
   myWaypointBeingViewed: `stroke-dasharray: none; stroke: #70c0d8;`,
-  myTrailBeingViewed: `stroke-dasharray: none; stroke: #70c0d8;`
+  myTrailBeingViewed: `stroke-dasharray: none; stroke: #70c0d8;`,
+  myTrailCompleted: `stroke-dasharray: none; stroke: #70c0d8;`,
+
 };
 
 var strokeWidths = {
@@ -47,7 +52,8 @@ var strokeWidths = {
   amBeingHovered: 20,
   myWaypointHovered: 20,
   myWaypointBeingViewed: 40,
-  myTrailBeingViewed: 40
+  myTrailBeingViewed: 40,
+  myTrailCompleted: 8 
 };
 
 var arrowStrokeWidths = {
@@ -70,25 +76,31 @@ export default {
   computed: {
     svgtrailStyle() {
       var s = strokeSettings["normal"];
-      s += `stroke-width: ${strokeWidths["normal"] / this.zoomscale }`;
+      s += `stroke-width: ${strokeWidths["normal"] / this.zoomscale };`;
       if (this.amBeingHovered) {
         s = strokeSettings["amBeingHovered"];
-        s += `stroke-width: ${strokeWidths["amBeingHovered"]}`;
+        s += `stroke-width: ${strokeWidths["amBeingHovered"]};`;
       }
       if (this.myWaypointHovered) {
         s = strokeSettings["myWaypointHovered"];
-        s += `stroke-width: ${strokeWidths["myWaypointHovered"]}`;
+        s += `stroke-width: ${strokeWidths["myWaypointHovered"]};`;
       }
       if (this.myWaypointBeingViewed) {
         s = strokeSettings["myWaypointBeingViewed"];
         s += `stroke-width: ${strokeWidths["myWaypointBeingViewed"] /
-          this.zoomscale}`;
+          this.zoomscale};`;
       }
       if (this.myTrailBeingViewed) {
         s = strokeSettings["myTrailBeingViewed"];
         s += `stroke-width: ${strokeWidths["myTrailBeingViewed"] /
-          this.zoomscale}`;
+          this.zoomscale};`;
       }
+      if (this.myTrailCompleted) {
+        s = strokeSettings["myTrailCompleted"];
+        s += `stroke-width: ${strokeWidths["myTrailCompleted"] /
+          this.zoomscale};`;
+      }
+      s+= ` stroke: ${this.myTrailCompletedColor};`
       return s;
     },
     svgtrailarrowStrokeWidth() {
@@ -109,9 +121,7 @@ export default {
     waypoints() {
       return this.$store.getters.waypoints;
     },
-    hoveringWaypoints() {
-      return this.$store.state.hoveringWaypoints;
-    },
+    ...mapState(["hoveringWaypoints", "waypointsMarkedDone"]),
     currentlyViewingTrail() {
       return this.$store.state.route.params.id;
     },
@@ -134,6 +144,19 @@ export default {
     },
     myTrailBeingViewed() {
       return this.traildata.id === this.currentlyViewingTrail;
+    },
+    myTrailCompletedPercentage() {
+      var self = this;
+      var result = self.traildata.fields.Waypoints.filter(function(n) {
+        return self.waypointsMarkedDone.includes(n);
+      });
+      return result.length / self.traildata.fields.Waypoints.length
+    },
+    myTrailCompleted() {
+      return this.myTrailCompletedPercentage === 1;
+    },
+    myTrailCompletedColor() {
+      return this.mixColors("EED100", "2da6bd", Math.pow(this.myTrailCompletedPercentage, 2) * 100);
     },
     svgTrailDotPoints() {
       var self = this;
@@ -213,6 +236,9 @@ export default {
 </script>
 
 <style lang="scss">
+
+@import '@/mixins/variables.scss';
+
 .gtrail {
   pointer-events: auto;
 }
@@ -222,7 +248,7 @@ export default {
   stroke-linecap: round;
   stroke-linejoin: round;
   cursor: pointer;
-  stroke: #43aed0;
+  stroke: $trailcolor;
 }
 
 #svgtrailarrow path {
@@ -232,7 +258,7 @@ export default {
 .svgtrail-arrows {
   display: none;
   fill: none;
-  stroke: #43aed0;
+  stroke: $trailcolor;
 
   marker-start: url(#svgtrailarrow);
   marker-mid: url(#svgtrailarrow);
@@ -247,9 +273,9 @@ export default {
 }
 
 .wpdot {
-  fill: darken(#43aed0, 15%);
+  fill: darken($trailcolor, 15%);
     &.currentlyBeingViewed {
-    fill: darken(#fc0452, 5%);
+    fill: darken($waypointcolor, 5%);
   }
 }
 
