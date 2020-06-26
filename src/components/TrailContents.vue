@@ -1,7 +1,8 @@
 <template>
   <div class="trailcontents" v-if="isLoadedTrails">
     <div class="trailheader">
-      <img class="trailicon" src="@/assets/trail-icon.svg" />
+      <img class="trailicon" src="@/assets/trail-icon-done.svg" v-if="myTrailCompleted"/>
+      <img class="trailicon" src="@/assets/trail-icon.svg" v-if="!myTrailCompleted"/>
       <div class="trailnameauthor">
         <div class="trailname">{{ traildata.fields.Name }}</div>
         <div class="trailauthor" v-if="traildata.fields.Author">
@@ -60,6 +61,16 @@ export default {
     var self = this;
   },
   computed: {
+    myTrailCompletedPercentage() {
+      var self = this;
+      var result = self.traildata.fields.Waypoints.filter(function(n) {
+        return self.waypointsMarkedDone.includes(n);
+      });
+      return result.length / self.traildata.fields.Waypoints.length
+    },
+    myTrailCompleted() {
+      return this.myTrailCompletedPercentage === 1;
+    },
     routeName() {
       return this.$route.name;
     },
@@ -75,7 +86,7 @@ export default {
     waypointdata() {
       return this.$store.getters.waypoints[this.thisid];
     },
-    ...mapState(["waypoints", "trails", "softwares", "topics", "texts"]),
+    ...mapState(["waypoints", "trails", "softwares", "topics", "texts", "waypointsMarkedDone"]),
     thisid() {
       return this.$route.params.wpid;
     },
