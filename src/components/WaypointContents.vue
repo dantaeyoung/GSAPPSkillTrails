@@ -39,7 +39,23 @@
           :key="tid"
         >
           <img class="trailicon" src="@/assets/trail-icon.svg" />
+
+        <router-link
+          :to="{
+            name: routeName,
+            params: {
+              wportrail: 'trail',
+              id: tid,
+              slug: convertToSlug(trails[tid].fields.Name)
+            }
+          }"
+        >
+
           {{ trails[tid].fields.Name }}
+
+          </router-link>
+
+
         </div>
       </div>
     </div>
@@ -90,6 +106,9 @@ export default {
   },
   computed: {
     ...mapState(["waypoints", "trails", "softwares", "topics", "texts"]),
+    routeName() {
+      return this.$route.name;
+    },
     isLoadedWaypoints() {
       return Object.keys(this.waypoints).length > 0;
     },
@@ -186,6 +205,10 @@ export default {
     font-weight: bold;
     padding: 3px 5px;
     border-radius: 8px;
+
+    a {
+      color: #2da6bd;
+    }
 
     .trailicon {
       height: 15px;

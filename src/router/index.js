@@ -25,7 +25,7 @@ const routes = [
     redirect: "/map",
   },
   {
-    path: "/map/:wportrail?/:id?/:slug?",
+    path: "/mapboth/:wportrail?/:id?/:slug?",
     name: "MapViewBoth",
     components: {
       view: SkillTreeGraph,

@@ -1,12 +1,12 @@
 <template>
   <div id="topheader">
     <div class="leftlinks">
-      <router-link class="navlink" :to="{ name: 'MapView', params: paramsForRoute }">Map View</router-link>
+      <router-link class="navlink" :to="{ name: 'MapViewBoth', params: paramsForRoute }">Map View</router-link>
       <router-link class="navlink" :to="{ name: 'ListView', params: paramsForRoute }">List View</router-link>
     </div>
 
     <div class="centerlogo">
-      <router-link class="logolink" :to="{ name: 'MapView' }">
+      <router-link class="logolink" :to="{ name: 'MapViewBoth' }">
       <img class="svglogo" src="@/assets/logo.svg" alt="GSAPP SKILL TRAILS" />
       </router-link>
     </div>
@@ -41,6 +41,8 @@ export default {
     },
     paramsForRoute() {
       return {
+        "wportrail": this.$route.params.wportrail,
+        "id": this.$route.params.id,
         "wpid": this.$route.params.wpid,
         "slug": this.$route.params.slug,
       } 

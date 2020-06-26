@@ -113,7 +113,7 @@ export default {
       return this.$store.state.hoveringWaypoints;
     },
     currentlyViewingWaypoint() {
-      return this.$store.state.route.params.wpid;
+      return this.$store.state.route.params.id;
     },
     waypointsDraggable() {
       return this.$store.state.waypointsDraggable;

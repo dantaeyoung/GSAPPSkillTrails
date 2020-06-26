@@ -18,7 +18,8 @@
           :to="{
             name: routeName,
             params: {
-              wpid: waypointid,
+              wportrail: 'waypoint',
+              id: waypointid,
               slug: convertToSlug(waypoints[waypointid].fields.Name)
             }
           }"
