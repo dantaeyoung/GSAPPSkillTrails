@@ -18,20 +18,6 @@
       </div>
     </div>
 
-    <div class="description">{{ waypointdata.fields.Description }}</div>
-
-    <div class="link">
-      <a :href="waypointdata.fields.URL" target="_blank">{{
-        waypointdata.fields.URL
-      }}</a>
-    </div>
-    <!--  -->
-    <VideoEmbed :url="waypointdata.fields.URL" />
-
-    <div class="coverimage" v-if="coverImageThumbnail">
-      <img :src="coverImageThumbnail" />
-    </div>
-
     <div
       class="trailsPartOf"
       v-if="
@@ -57,7 +43,34 @@
         </div>
       </div>
     </div>
+    <div class="description">{{ waypointdata.fields.Description }}</div>
+
+    <div class="link">
+      <a :href="waypointdata.fields.URL" target="_blank">{{
+        waypointdata.fields.URL
+      }}</a>
+    </div>
+    <!--  -->
+    <VideoEmbed :url="waypointdata.fields.URL" />
+
+    <div class="coverimage" v-if="coverImageThumbnail">
+      <img :src="coverImageThumbnail" />
+    </div>
+
     <!--     <iframe :src="waypointdata.fields.URL" />  -->
+
+    <div class="markasdone" :class="{ isdone: isWaypointDone }">
+      <div class="checkicon">
+      <img
+        src="@/assets/check-icon.svg"
+        @click="toggleWaypointDone"
+      />
+      </div>
+      <div class="wpisdone" v-if="isWaypointDone">Done!!</div>
+      <div class="wpisdone" v-if="!isWaypointDone">
+        Mark this Waypoint as done
+      </div>
+    </div>
 
     <div class="softwarestopics">
       <div class="softwares" v-if="waypointdata.fields.Softwares">
@@ -115,7 +128,10 @@ export default {
       return this.$store.state.route.params.wpid;
     },
     thisid() {
-      return this.$route.params.wpid;
+      return this.waypointdata.id;
+    },
+    isWaypointDone() {
+      return this.$store.state.waypointsMarkedDone.includes(this.thisid);
     },
     coverImageThumbnail() {
       try {
@@ -125,11 +141,20 @@ export default {
         return null;
       }
     }
+  },
+  methods: {
+    toggleWaypointDone() {
+      this.$store.dispatch("toggleWaypointDone", { id: this.thisid });
+    }
   }
 };
 </script>
 
 <style scoped lang="scss">
+
+@import '@/mixins/variables.scss';
+
+
 .vwFrame {
   position: relative;
   overflow-x: hidden;
@@ -173,11 +198,10 @@ export default {
 }
 
 .title {
-
   font-size: 1.1em;
   font-weight: bold;
   width: 100%;
-  color: darken(#fc0452, 5%);
+  color: darken($waypointcolor, 5%);
   margin-bottom: 5px;
 }
 
@@ -188,8 +212,9 @@ export default {
 
 .trailsPartOf {
   display: flex;
+  text-align: right;
   align-items: center;
-  margin: 15px 0px;
+  margin-top: 5px ;
 
   .partof {
     font-size: 0.8em;
@@ -199,10 +224,10 @@ export default {
   .trail {
     display: flex;
     align-items: center;
-    font-size: 0.95em;
-    color: #2da6bd;
+    font-size: 0.9em;
+    color: $trailcolor;
     font-weight: bold;
-    padding: 3px 5px;
+    padding: 1px 3px;
     border-radius: 8px;
 
     a {
@@ -242,7 +267,7 @@ export default {
   }
 
   a {
-    background-color: darken(#fc0452, 0%);
+    background-color: darken($waypointcolor, 0%);
     font-size: 0.9em;
     font-weight: bold;
     display: inline-block;
@@ -258,6 +283,44 @@ iframe {
   width: auto !important;
   height: auto !important;
   border: none;
+}
+
+.markasdone {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+  .wpisdone {
+    margin-left: 10px;
+    font-weight: bold;
+    font-size: 0.9em;
+
+  }
+
+
+.checkicon {
+  background-color: lighten($donecolor, 30%);
+  height: 20px;
+  width: 20px;
+  padding: 5px;
+  border-radius: 3px;
+  .isdone & {
+  background-color: lighten($donecolor, 0%);
+  }
+}
+
+.checkicon img {
+  opacity: 0.25;
+
+  &:hover {
+    opacity: 0.6 !important;
+  }
+
+  .isdone & {
+    opacity: 1;
+  }
 }
 
 .softwarestopics {
@@ -288,7 +351,7 @@ iframe {
 .topic {
   display: inline-block;
   font-weight: bold;
-  color: lighten(#fc0452, 20%);
+  color: lighten($waypointcolor, 20%);
   padding: 0px 3px;
   border-radius: 2px;
   margin-right: 5px;

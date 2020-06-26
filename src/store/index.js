@@ -226,6 +226,7 @@ export default new Vuex.Store({
       location.reload();
     },
     toggleWaypointDone({ state, commit }, payload) {
+      console.log("storetogglin", payload.id);
       if (state.waypointsMarkedDone.includes(payload.id)) {
         commit("removeWaypointMarkedDone", { id: payload.id });
       } else {

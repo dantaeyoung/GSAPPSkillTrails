@@ -225,6 +225,8 @@ export default {
 </script>
 
 <style scoped lang="scss">
+@import '@/mixins/variables.scss';
+
 svg.waypoint {
   /*  width: 100px;
   height: 100px; */
@@ -308,7 +310,6 @@ g.shape {
 }
 
 .polygonBorder {
-  border: 1px solid blue;
   stroke: black;
   stroke-width: 5;
   fill: #eee;
@@ -318,7 +319,7 @@ g.shape {
   }
 
   .imBeingViewed & {
-    stroke: #fc0452 !important;
+    stroke: $waypointcolor !important;
   }
 
   .imBeingHovered & {
@@ -326,8 +327,8 @@ g.shape {
   }
 
   .imMarkedDone & {
-    fill: #70C0D8;
-    stroke: #70C0D8;
+    fill: $donecolor;
+    stroke: $donecolor;
 
   }
 }
