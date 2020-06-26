@@ -1,6 +1,17 @@
 <template>
     <div class="listview">
-      <TrailContents v-for="(traildata, id) in trails" :key="id" :traildata="traildata" />
+      <div v-for="(traildata, id) in trails" :key="id">
+      <TrailContents :traildata="traildata" />
+
+      <TrailSVGWrapper :traildata="traildata">
+          <Trail
+            :traildata="traildata"
+            :zoomscale="1"
+          />
+      </TrailSVGWrapper>
+    </div>
+
+
     </div>
 </template>
 
@@ -8,6 +19,8 @@
 /* eslint-disable */
 
 import TrailContents from "@/components/TrailContents.vue";
+import TrailSVGWrapper from "@/components/TrailSVGWrapper.vue";
+import Trail from "@/components/Trail.vue";
 
 import { slug } from '@/mixins/slug.js';
 
@@ -18,7 +31,9 @@ export default {
     return {};
   },
   components: {
-    TrailContents
+    TrailContents, 
+    Trail,
+    TrailSVGWrapper,
   },
   props: {},
   created() {},

@@ -13,8 +13,7 @@
         v-for="wid in hoveringWaypoints"
         v-bind:key="wid"
       >
-        <span class="wpName">{{ waypoints[wid].fields.Name }}</span
-        ><span>, part of</span>
+        <span class="wpName">{{ waypoints[wid].fields.Name }}</span>
         <div class="trailNames">
           <div
             class="trailIconName"
@@ -35,7 +34,7 @@
       v-if="cursorMode.markasdone == true && hoveringWaypoints.length > 0"
     >
       <div class="markasdone">
-        Mark as done:
+        Mark/unmark as done:
       </div>
       <div
         class="hoverMarkWaypoint"

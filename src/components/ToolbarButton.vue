@@ -91,5 +91,8 @@ button {
 .explanation {
   margin-left: 10px;
   font-weight: bold;
+  background-color: white;
+  padding: 3px 5px;
+  border-radius: 5px;
 }
 </style>

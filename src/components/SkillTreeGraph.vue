@@ -241,7 +241,7 @@ a {
   height: calc(100vh - 30px);
 
   &.markasdone {
-    background-color: blue;
+    background-color: #3a3dff;
   }
 }
 

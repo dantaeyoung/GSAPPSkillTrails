@@ -74,7 +74,7 @@ export default {
   text-align: left;
   width: 50vw;
   max-width: 600px;
-  padding: 20px;
+  padding: 2.5em;
   background-color: white;
   border-radius: 10px;
 }

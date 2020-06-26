@@ -1,5 +1,5 @@
 <template>
-  <div class="sidebarFrame" :class="{ isViewing: true }">
+  <div class="sidebarFrame" :class="{ isViewing: true, isTrail: wportrail=='trail', isWaypoint: wportrail=='waypoint' }">
     <div class="vwContent" v-if="wportrail=='trail'">
       <TrailContents :traildata="traildata" />
     </div>
@@ -52,8 +52,8 @@ export default {
   top: 0px;
   height: 100vh;
   right: 0px;
-  width: 50vw;
-  max-width: 500px;
+  width: 40vw;
+  max-width: 400px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -79,7 +79,12 @@ export default {
   overflow-y: auto;
 margin: 50px 0px;
 
-border-left: 5px solid lighten(#fc0452, 15%);
+  .isWaypoint &  {
+  border-left: 5px solid lighten(#fc0452, 15%);
+  }
+  .isTrail &  {
+  border-left: 5px solid lighten(#43aed0, 15%);
+  }
 
 }
 </style>
