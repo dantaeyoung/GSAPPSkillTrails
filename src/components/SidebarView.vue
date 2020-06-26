@@ -1,5 +1,5 @@
 <template>
-  <div class="sidebarFrame" :class="{ isViewing: true, isTrail: wportrail=='trail', isWaypoint: wportrail=='waypoint' }">
+  <div id="sidebarFrame" class="sidebarFrame" :class="{ isViewing: true, isTrail: wportrail=='trail', isWaypoint: wportrail=='waypoint' }">
     <div class="vwContent" v-if="wportrail=='trail'">
       <TrailContents :traildata="traildata" />
     </div>

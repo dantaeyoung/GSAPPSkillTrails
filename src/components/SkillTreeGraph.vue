@@ -1,8 +1,8 @@
 <template>
   <div id="graphframe" :class="cursorMode">
     <div id="graphnav">
-      <DevInterface > 
-     {{ currentlyViewingWaypoint }}
+      <DevInterface>
+        {{ currentlyViewingWaypoint }}
       </DevInterface>
       <CursorToolbar />
     </div>
@@ -98,14 +98,14 @@ export default {
       return this.$store.state.cursorMode;
     },
     currentlyViewingWaypoint() {
-      if( this.$store.state.route.params.wportrail === 'waypoint') {
+      if (this.$store.state.route.params.wportrail === "waypoint") {
         return this.$store.state.route.params.id;
-      } 
+      }
     },
     currentlyViewingTrail() {
-      if( this.$store.state.route.params.wportrail === 'trail') {
+      if (this.$store.state.route.params.wportrail === "trail") {
         return this.$store.state.route.params.id;
-      } 
+      }
     },
     trailStatusesToShow() {
       return this.$store.state.trailStatusesToShow;
@@ -119,12 +119,21 @@ export default {
   },
   watch: {
     currentlyViewingWaypoint: function(wpid) {
-      this.zoomToWaypoint(wpid)
+      this.zoomToWaypoint(wpid);
     }
   },
   methods: {
     zoomToWaypoint(wpid) {
-      console.log("zoomToWPID", wpid)
+      if (wpid == null) return;
+      let x = this.waypoints[wpid].fields.coordinateX;
+      let y = this.waypoints[wpid].fields.coordinateY;
+      let transforms = this.panzoom.getTransform();
+      const gfelem = document.getElementById("graphframe");
+      const sfelem = document.getElementById("sidebarFrame");
+      //this.panzoom.moveTo(-x * transforms.scale + ((gfelem.clientWidth - sfelem.clientWidth) / 2), -y * transforms.scale + (gfelem.clientHeight / 2))
+      let desiredX = -x * transforms.scale + ((gfelem.clientWidth - sfelem.clientWidth) / 2)
+      let desiredY = -y * transforms.scale + (gfelem.clientHeight / 2)
+      this.panzoom.moveBy( desiredX - transforms.x, desiredY - transforms.y, 1)
     },
     onMouseDown(e) {
       var self = this;
