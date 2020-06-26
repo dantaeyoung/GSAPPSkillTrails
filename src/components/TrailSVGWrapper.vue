@@ -1,5 +1,6 @@
 <template>
   <svg class="svgtrailwrapper" 
+  v-if="isLoadedWaypoints"
   :viewBox="viewBox" xmlns="http://www.w3.org/2000/svg"
   :style="svgStyle">
     <slot></slot>
@@ -14,7 +15,7 @@ export default {
   data() {
     return {
       boundsPadding: 40,
-      svgScale: 0.5,
+      svgScale: 0.8,
     };
   },
   props: ["traildata"],
@@ -59,7 +60,10 @@ export default {
         yMax : Math.max(...wpcoords.map(o => o.y)),
       }
       return bounds;
-    }
+    },
+    isLoadedWaypoints() {
+      return Object.keys(this.waypoints).length > 0;
+    },
   },
   methods: {
   }

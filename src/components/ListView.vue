@@ -1,18 +1,13 @@
 <template>
-    <div class="listview">
-      <div v-for="(traildata, id) in trails" :key="id">
+  <div class="listview">
+    <div class="trail" v-for="(traildata, id) in trails" :key="id">
       <TrailContents :traildata="traildata" />
 
-      <TrailSVGWrapper :traildata="traildata">
-          <Trail
-            :traildata="traildata"
-            :zoomscale="1"
-          />
+      <TrailSVGWrapper class="wrapper" :traildata="traildata">
+        <Trail :traildata="traildata" :zoomscale="1" disableclick="true" />
       </TrailSVGWrapper>
     </div>
-
-
-    </div>
+  </div>
 </template>
 
 <script>
@@ -22,7 +17,7 @@ import TrailContents from "@/components/TrailContents.vue";
 import TrailSVGWrapper from "@/components/TrailSVGWrapper.vue";
 import Trail from "@/components/Trail.vue";
 
-import { slug } from '@/mixins/slug.js';
+import { slug } from "@/mixins/slug.js";
 
 export default {
   name: "ListView",
@@ -31,9 +26,9 @@ export default {
     return {};
   },
   components: {
-    TrailContents, 
+    TrailContents,
     Trail,
-    TrailSVGWrapper,
+    TrailSVGWrapper
   },
   props: {},
   created() {},
@@ -50,6 +45,13 @@ export default {
 </script>
 
 <style scoped lang="scss">
+
+.trail {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  position: relative;
+}
 .listview {
   text-align: left;
   margin-left: 100px;
@@ -57,5 +59,21 @@ export default {
   width: 70vw;
   max-width: 600px;
 }
+
+.wrapper {
+    position: absolute;
+    right: 0px;
+    pointer-events: none !important;
+    mix-blend-mode: darken;
+
+    & .gtrail {
+      opacity: 0.3;
+
+      &.myWaypointBeingViewed {
+        opacity: 0.6;
+      }
+    }
+}
+
 
 </style>

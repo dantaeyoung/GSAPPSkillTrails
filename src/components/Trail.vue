@@ -18,6 +18,13 @@
       :d="svgTrailPath"
       :style="svgtrailarrowStrokeWidth"
     />
+    <g class="wpdots">
+      <circle 
+      class="wpdot"
+      :class="{ currentlyBeingViewed: currentlyViewingWaypoint === d.id }"
+      v-for="d in svgTrailDotPoints" :key="d.id"
+      :cx="d.x" :cy="d.y" r="7" />
+    </g>
   </g>
 </template>
 
@@ -58,7 +65,7 @@ export default {
       amBeingHovered: false
     };
   },
-  props: ["traildata", "zoomscale"],
+  props: [ "traildata", "zoomscale", "disableclick"],
   created() {},
   computed: {
     svgtrailStyle() {
@@ -128,6 +135,22 @@ export default {
     myTrailBeingViewed() {
       return this.traildata.id === this.currentlyViewingTrail;
     },
+    svgTrailDotPoints() {
+      var self = this;
+      try {
+        var wpcoords = self.traildata.fields.Waypoints.map(wpid => {
+          return {
+            id: wpid,
+          x: self.waypoints[wpid].fields.coordinateX,
+          y: self.waypoints[wpid].fields.coordinateY,
+          }
+        });
+      } catch (e) {
+        console.log("i was caught");
+        return [];
+      }
+      return wpcoords;
+    },
     svgTrailPath() {
       var self = this;
 
@@ -158,9 +181,7 @@ export default {
   },
   methods: {
     onClick() {
-      //      this.$store.commit("setCurrentlyViewingTrail", { id: this.traildata.id});
-      //      console.log("ya clicked me trail", this.traildata);
-      this.onClickViewTrail();
+      if(!this.disableclick) { this.onClickViewTrail(); }
     },
     onClickViewTrail() {
       var self = this;
@@ -224,4 +245,12 @@ export default {
     stroke: none;
   }
 }
+
+.wpdot {
+  fill: darken(#43aed0, 15%);
+    &.currentlyBeingViewed {
+    fill: darken(#fc0452, 5%);
+  }
+}
+
 </style>
