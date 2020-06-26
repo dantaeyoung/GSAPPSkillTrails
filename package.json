@@ -28,6 +28,7 @@
     "plain-draggable": "^2.5.12",
     "pointer-event": "^1.0.0",
     "vue": "^2.6.11",
+    "vue-gtag": "^1.7.0",
     "vue-markdown": "^2.2.4",
     "vue-mobile-detection": "^1.0.0",
     "vue-network-d3": "^0.1.2",
