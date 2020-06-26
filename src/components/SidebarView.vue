@@ -53,7 +53,7 @@ export default {
   height: 100vh;
   right: 0px;
   width: 40vw;
-  max-width: 400px;
+  max-width: 600px;
   display: flex;
   flex-direction: column;
   justify-content: center;

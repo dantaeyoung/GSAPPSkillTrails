@@ -1,16 +1,26 @@
 <template>
   <div class="waypointcontents" v-if="isLoadedWaypoints">
-    <div class="title">
-      <img class="waypointicon" src="@/assets/waypoint-icon.svg" />
-      {{ waypointdata.fields.Name }}
+    <div class="header">
+      <WaypointIcon
+        class="waypointicon"
+        :waypointdata="waypointdata"
+        hidetext="true"
+        disableclick="true"
+      />
+
+      <div class="titleauthor">
+        <div class="title">
+          {{ waypointdata.fields.Name }}
+        </div>
+        <div class="author" v-if="waypointdata.fields['Author Name']">
+          By <span class="name"> {{ waypointdata.fields["Author Name"] }}</span>
+        </div>
+      </div>
     </div>
-    <div class="author" v-if="waypointdata.fields['Author Name']">
-      By <span class="name"> {{ waypointdata.fields["Author Name"] }}</span>
-    </div>
+
     <div class="description">{{ waypointdata.fields.Description }}</div>
 
     <div class="link">
-      <div class="linkto skew">Link:</div>
       <a :href="waypointdata.fields.URL" target="_blank">{{
         waypointdata.fields.URL
       }}</a>
@@ -28,9 +38,6 @@
         'Trails' in waypointdata.fields && waypointdata.fields.Trails.length > 0
       "
     >
-      <div class="partof skew">
-        In trails:
-      </div>
       <div class="trails" v-if="isLoadedTrails">
         <div class="trail" v-for="tid in waypointdata.fields.Trails" :key="tid">
           <img class="trailicon" src="@/assets/trail-icon.svg" />
@@ -77,6 +84,7 @@
 /* eslint-disable */
 
 import VideoEmbed from "@/components/VideoEmbed.vue";
+import WaypointIcon from "@/components/WaypointIcon.vue";
 
 import { mapState } from "vuex";
 import { slug } from "@/mixins/slug.js";
@@ -84,7 +92,8 @@ import { slug } from "@/mixins/slug.js";
 export default {
   name: "WaypointContents",
   components: {
-    VideoEmbed
+    VideoEmbed,
+    WaypointIcon
   },
   mixins: [slug],
   props: ["waypointdata"],
@@ -153,18 +162,21 @@ export default {
   line-height: 1em;
 }
 
-.title {
+.header {
   display: flex;
   flex-direction: row;
   align-items: center;
+}
+.waypointicon {
+  max-width: 60px;
+  margin-right: 10px;
+}
 
-  .waypointicon {
-    height: 20px;
-    margin-right: 5px;
-  }
-  font-size: 1.2em;
+.title {
+
+  font-size: 1.1em;
   font-weight: bold;
-  width: 80%;
+  width: 100%;
   color: darken(#fc0452, 5%);
   margin-bottom: 5px;
 }
@@ -210,7 +222,6 @@ export default {
   .name {
     text-style: italic;
   }
-  margin-bottom: 15px;
 }
 
 .description {
@@ -224,7 +235,7 @@ export default {
   margin: 20px 0px;
   display: flex;
   align-items: center;
-  line-height: 1em;
+  line-height: 1.2em;
 
   .linkto {
     margin-right: 5px;
@@ -236,7 +247,7 @@ export default {
     font-weight: bold;
     display: inline-block;
     color: white;
-    padding: 5px 10px;
+    padding: 6px 10px;
     border-radius: 8px;
   }
 }
@@ -261,7 +272,16 @@ iframe {
 
   & .label {
     font-size: 0.9em;
+    width: 80px;
+    text-align: right;
+    background-color: #ddd;
+    padding: 3px 5px;
+    border-radius: 5px;
   }
+}
+
+.topics {
+  margin-bottom: 50px;
 }
 
 .software,

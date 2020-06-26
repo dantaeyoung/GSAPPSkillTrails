@@ -37,7 +37,7 @@
       >
         <div class="circle colorfilter">
           <img :src="ThumbUrl" />
-          <div class="text">
+          <div class="text" v-if="!hidetext">
             {{ waypointdata.fields.Name }}
           </div>
           <br />
@@ -92,7 +92,7 @@ export default {
       imBeingHovered: false
     };
   },
-  props: ["waypointdata"],
+  props: ["waypointdata", "disableclick", "hidetext"],
   computed: {
     svgStyle() {
       return `width: ${this.radius * 2}; height: ${this.radius * 2};`;
@@ -175,6 +175,7 @@ export default {
   },
   methods: {
     mouseEnter() {
+      if(this.disableclick) { return; }
       var self = this;
       this.imBeingHovered = true;
       this.$store.commit("addHoveringWaypoint", {
@@ -182,6 +183,7 @@ export default {
       });
     },
     mouseLeave() {
+      if(this.disableclick) { return; }
       var self = this;
       this.imBeingHovered = false;
       this.$store.commit("removeHoveringWaypoint", {
@@ -189,6 +191,7 @@ export default {
       });
     },
     onClick(event) {
+      if(this.disableclick) { return; }
       if (this.waypointsDraggable == false) {
         if (this.cursorMode["markasdone"] == true) {
           this.onClickToggleWaypointAsDone();

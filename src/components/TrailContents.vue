@@ -4,30 +4,34 @@
       <img class="trailicon" src="@/assets/trail-icon.svg" />
       <div class="trailnameauthor">
         <div class="trailname">{{ traildata.fields.Name }}</div>
-        <div class="trailauthor" v-if="traildata.fields.Author" >By {{ traildata.fields.Author }}</div>
+        <div class="trailauthor" v-if="traildata.fields.Author">
+          By {{ traildata.fields.Author }}
+        </div>
       </div>
     </div>
 
     <div class="traildescription">{{ traildata.fields.Description }}</div>
 
     <ul v-if="isLoadedWaypoints">
-      <li v-for="waypointid in traildata.fields.Waypoints" :key="waypointid">
-        <WaypointIcon :waypointdata="waypoints[waypointid]" />
-        <router-link
-          class="navlink waypointlink"
-          :to="{
-            name: routeName,
-            params: {
-              wportrail: 'waypoint',
-              id: waypointid,
-              slug: convertToSlug(waypoints[waypointid].fields.Name)
-            }
-          }"
-        >
-          <div class="name">{{ waypoints[waypointid].fields.Name }}</div>
-        </router-link>
-        <div class="author-name">
-          {{ waypoints[waypointid].fields["Author Name"] }}
+      <li class="awaypoint" v-for="waypointid in traildata.fields.Waypoints" :key="waypointid">
+        <div class="waypointicon"><WaypointIcon :waypointdata="waypoints[waypointid]" /></div>
+        <div class="titleauthor">
+          <router-link
+            class="navlink waypointlink"
+            :to="{
+              name: routeName,
+              params: {
+                wportrail: 'waypoint',
+                id: waypointid,
+                slug: convertToSlug(waypoints[waypointid].fields.Name)
+              }
+            }"
+          >
+            <div class="name">{{ waypoints[waypointid].fields.Name }}</div>
+          </router-link>
+          <div class="author-name">
+            {{ waypoints[waypointid].fields["Author Name"] }}
+          </div>
         </div>
       </li>
     </ul>
@@ -138,9 +142,20 @@ a {
   line-height: 1.5em;
 }
 
+.awaypoint {
+  margin-bottom: 5px;
+}
+
+.waypointicon {
+  margin-right: 15px;
+}
 svg.waypoint {
-  height: 30px;
-  margin-right: 5px;
+  width: 40px;
+}
+
+.titleauthor {
+  display: flex;
+  flex-direction: column;
 }
 
 .waypointlink {
@@ -156,6 +171,5 @@ svg.waypoint {
 
 .author-name {
   font-size: 0.8em;
-  margin-left: 20px;
 }
 </style>
