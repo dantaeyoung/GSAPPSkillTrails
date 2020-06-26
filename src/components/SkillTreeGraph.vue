@@ -126,7 +126,6 @@ export default {
         if (e.target.id === "graphcontents") {
           // this is hacky but works
           // this presumes that graphbackground isn't clickable. if we want it to be then we can handle that later.
-          console.log("unclick");
           this.unclickWaypoints();
         }
       }
