@@ -76,8 +76,10 @@ export default {
   border-bottom-left-radius: 20px;
   background-color: white;
 
-  overflow-y: scroll;
+  overflow-y: auto;
 margin: 50px 0px;
+
+border-left: 5px solid lighten(#fc0452, 15%);
 
 }
 </style>

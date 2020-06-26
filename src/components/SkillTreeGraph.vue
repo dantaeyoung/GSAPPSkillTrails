@@ -74,7 +74,7 @@ export default {
       shiftPressed: false,
       altPressed: false,
       isDragging: false,
-      zoomscale: 1,
+      zoomscale: 1
     };
   },
   components: {
@@ -123,8 +123,10 @@ export default {
     },
     onClick(e) {
       if (this.cursorMode.navigate) {
-        if (e.target.id === "graphcontents") { // this is hacky but works
+        if (e.target.id === "graphcontents") {
+          // this is hacky but works
           // this presumes that graphbackground isn't clickable. if we want it to be then we can handle that later.
+          console.log("unclick");
           this.unclickWaypoints();
         }
       }
@@ -146,9 +148,13 @@ export default {
       }
     },
     unclickWaypoints() {
-      if (this.currentlyViewingWaypoint) {
-        this.$router.push("/map").catch(err => {});
-      }
+      this.$router
+        .push({
+          name: "MapViewBoth"
+        })
+        .catch(err => {
+          console.log(err);
+        });
     },
     initKeyHandler() {
       var self = this;

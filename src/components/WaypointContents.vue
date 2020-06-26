@@ -25,37 +25,28 @@
     <div
       class="trailsPartOf"
       v-if="
-        'Trails' in waypointdata.fields &&
-          waypointdata.fields.Trails.length > 0
+        'Trails' in waypointdata.fields && waypointdata.fields.Trails.length > 0
       "
     >
       <div class="partof skew">
         In trails:
       </div>
       <div class="trails" v-if="isLoadedTrails">
-        <div
-          class="trail"
-          v-for="tid in waypointdata.fields.Trails"
-          :key="tid"
-        >
+        <div class="trail" v-for="tid in waypointdata.fields.Trails" :key="tid">
           <img class="trailicon" src="@/assets/trail-icon.svg" />
 
-        <router-link
-          :to="{
-            name: routeName,
-            params: {
-              wportrail: 'trail',
-              id: tid,
-              slug: convertToSlug(trails[tid].fields.Name)
-            }
-          }"
-        >
-
-          {{ trails[tid].fields.Name }}
-
+          <router-link
+            :to="{
+              name: routeName,
+              params: {
+                wportrail: 'trail',
+                id: tid,
+                slug: convertToSlug(trails[tid].fields.Name)
+              }
+            }"
+          >
+            {{ trails[tid].fields.Name }}
           </router-link>
-
-
         </div>
       </div>
     </div>
@@ -74,11 +65,7 @@
       </div>
       <div class="topics" v-if="waypointdata.fields.Topics">
         <div class="label skew">Topics:</div>
-        <div
-          class="topic"
-          v-for="t in waypointdata.fields.Topics"
-          :key="t"
-        >
+        <div class="topic" v-for="t in waypointdata.fields.Topics" :key="t">
           {{ topics[t].fields.Name }}
         </div>
       </div>
@@ -244,10 +231,13 @@ export default {
   }
 
   a {
-    color: darken(#fc0452, 10%);
-    font-size: 0.8em;
+    background-color: darken(#fc0452, 0%);
+    font-size: 0.9em;
     font-weight: bold;
     display: inline-block;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 8px;
   }
 }
 
@@ -278,7 +268,7 @@ iframe {
 .topic {
   display: inline-block;
   font-weight: bold;
-  background-color: lighten(#fc0452, 30%);
+  color: lighten(#fc0452, 20%);
   padding: 0px 3px;
   border-radius: 2px;
   margin-right: 5px;
