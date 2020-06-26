@@ -53,6 +53,7 @@ function getAirtableRecords(table, callback) {
 	var apiurl = proxyApiUrls[table];  //uncomment to use proxy
 
 	var xhr1 = new XMLHttpRequest();
+	xhr1.overrideMimeType("application/json");
 	xhr1.open("GET", apiurl);
 	xhr1.onload = function() {
 		var res = JSON.parse(xhr1.responseText);
