@@ -92,7 +92,8 @@ export default {
     this.initPanZoom();
     this.initKeyHandler();
   },
-  created() {},
+  created() {
+    },
   computed: {
     cursorMode() {
       return this.$store.state.cursorMode;
@@ -120,20 +121,45 @@ export default {
   watch: {
     currentlyViewingWaypoint: function(wpid) {
       this.zoomToWaypoint(wpid);
+    },
+    currentlyViewingTrail: function(trid) {
+      this.zoomToTrail(trid);
     }
   },
   methods: {
+    zoomToTrail(trid) {
+      var self = this;
+      if (trid == null) return;
+      let allwpxy = self.trails[trid].fields.Waypoints.map(wpid => {
+        return self.waypointToPanzoomXY(wpid);
+      });
+      let totwpxy = allwpxy.reduce(
+        (tot, item) => {
+          return { x: tot.x + item.x, y: tot.y + item.y };
+        },
+        { x: 0, y: 0 }
+      );
+      this.panzoom.moveBy( totwpxy.x / allwpxy.length, totwpxy.y / allwpxy.length, 1)
+    },
     zoomToWaypoint(wpid) {
+      if (wpid == null) return;
+      let desiredxy = this.waypointToPanzoomXY(wpid);
+      this.panzoom.moveBy(desiredxy.x, desiredxy.y, 1);
+    },
+    waypointToPanzoomXY(wpid) {
       if (wpid == null) return;
       let x = this.waypoints[wpid].fields.coordinateX;
       let y = this.waypoints[wpid].fields.coordinateY;
+      return this.coordinateForCenterPanzoomXY(x, y)
+    },
+    coordinateForCenterPanzoomXY(x, y) {
       let transforms = this.panzoom.getTransform();
       const gfelem = document.getElementById("graphframe");
       const sfelem = document.getElementById("sidebarFrame");
-      //this.panzoom.moveTo(-x * transforms.scale + ((gfelem.clientWidth - sfelem.clientWidth) / 2), -y * transforms.scale + (gfelem.clientHeight / 2))
-      let desiredX = -x * transforms.scale + ((gfelem.clientWidth - sfelem.clientWidth) / 2)
-      let desiredY = -y * transforms.scale + (gfelem.clientHeight / 2)
-      this.panzoom.moveBy( desiredX - transforms.x, desiredY - transforms.y, 1)
+      let desiredX =
+        -x * transforms.scale + (gfelem.clientWidth - sfelem.clientWidth) / 2;
+      let desiredY = -y * transforms.scale + gfelem.clientHeight / 2;
+      return { x: desiredX - transforms.x, y: desiredY - transforms.y };
     },
     onMouseDown(e) {
       var self = this;
@@ -220,6 +246,15 @@ export default {
         },
         filterKey: () => true
       });
+
+      if(this.currentlyViewingWaypoint) {
+        this.zoomToWaypoint(this.currentlyViewingWaypoint);
+      } else {
+        let xycoords = self.coordinateForCenterPanzoomXY(1000, 1000)
+        console.log(xycoords);
+        self.panzoom.moveBy(xycoords.x, xycoords.y, 0);
+      }
+
 
       self.panzoom.on("zoom", function(e) {
         self.zoomscale = self.panzoom.getTransform().scale;
