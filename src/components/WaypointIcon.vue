@@ -4,7 +4,8 @@
     :class="{
       myTrailHovered: myTrailHovered,
       imBeingViewed: imBeingViewed,
-      imMarkedDone: imMarkedDone
+      imMarkedDone: imMarkedDone,
+      mySoftwareOrTopicHovered: mySoftwareOrTopicHovered,
     }"
     xmlns="http://www.w3.org/2000/svg"
     xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -80,6 +81,7 @@ function mapToRange(val, min, max) {
 
 import { slug } from "@/mixins/slug.js";
 import seedrandom from "seedrandom";
+import { mapState } from "vuex";
 
 export default {
   name: "WaypointIcon",
@@ -100,23 +102,9 @@ export default {
     radius() {
       return this.maxRadius;
     },
-    cursorMode() {
-      return this.$store.state.cursorMode;
-    },
-    waypointsMarkedDone() {
-      return this.$store.state.waypointsMarkedDone;
-    },
-    hoveringTrails() {
-      return this.$store.state.hoveringTrails;
-    },
-    hoveringWaypoints() {
-      return this.$store.state.hoveringWaypoints;
-    },
+    ...mapState(["waypoints", "cursorMode", "waypointsMarkedDone", "hoveringTrails", "hoveringWaypoints", "waypointsDraggable", "hoveringSoftware", "hoveringTopic"]),
     currentlyViewingWaypoint() {
       return this.$store.state.route.params.id;
-    },
-    waypointsDraggable() {
-      return this.$store.state.waypointsDraggable;
     },
     imBeingViewed() {
       return this.currentlyViewingWaypoint === this.waypointdata.id;
@@ -131,6 +119,16 @@ export default {
           return self.waypointdata.fields.Trails.indexOf(t) > -1;
         }).length > 0
       );
+    },
+    mySoftwareOrTopicHovered() {
+      var result = false;
+      if(this.waypointdata.fields.Topics) {
+        result = result || this.waypointdata.fields.Topics.includes(this.hoveringTopic) ;
+      }
+      if(this.waypointdata.fields.Softwares) {
+        result = result || this.waypointdata.fields.Softwares.includes(this.hoveringSoftware);
+      }
+      return result;
     },
     ThumbUrl() {
       try {
@@ -329,7 +327,10 @@ g.shape {
   .imMarkedDone & {
     fill: $donecolor;
     stroke: $donecolor;
+  }
 
+  .mySoftwareOrTopicHovered & {
+    stroke: $waypointcolor;
   }
 }
 

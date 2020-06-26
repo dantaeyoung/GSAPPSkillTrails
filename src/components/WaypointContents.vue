@@ -77,15 +77,22 @@
         <div class="label skew">Softwares:</div>
         <div
           class="software"
+          :class="{ isHovering: hoveringSoftware === s }"
           v-for="s in waypointdata.fields.Softwares"
           :key="s"
+          @mouseover="setHoveringSoftware(s)"
+          @mouseleave="setHoveringSoftware(null)"
         >
           {{ softwares[s].fields.Name }}
         </div>
       </div>
       <div class="topics" v-if="waypointdata.fields.Topics">
         <div class="label skew">Topics:</div>
-        <div class="topic" v-for="t in waypointdata.fields.Topics" :key="t">
+        <div class="topic" v-for="t in waypointdata.fields.Topics" :key="t"
+          :class="{ isHovering: hoveringTopic === t }"
+          @mouseover="setHoveringTopic(t)"
+          @mouseleave="setHoveringTopic(null)"
+        >
           {{ topics[t].fields.Name }}
         </div>
       </div>
@@ -114,7 +121,7 @@ export default {
     var self = this;
   },
   computed: {
-    ...mapState(["waypoints", "trails", "softwares", "topics", "texts"]),
+    ...mapState(["waypoints", "trails", "softwares", "topics", "texts", "hoveringSoftware", "hoveringTopic"]),
     routeName() {
       return this.$route.name;
     },
@@ -145,6 +152,12 @@ export default {
   methods: {
     toggleWaypointDone() {
       this.$store.dispatch("toggleWaypointDone", { id: this.thisid });
+    },
+    setHoveringSoftware(id) {
+      this.$store.commit("setHoveringSoftware", { id: id });
+    },
+    setHoveringTopic(id) {
+      this.$store.commit("setHoveringTopic", { id: id});
     }
   }
 };
@@ -351,11 +364,18 @@ iframe {
 .topic {
   display: inline-block;
   font-weight: bold;
-  color: lighten($waypointcolor, 20%);
+  color: lighten($waypointcolor, 10%);
   padding: 0px 3px;
   border-radius: 2px;
   margin-right: 5px;
   margin-top: 5px;
   font-size: 0.9em;
+  line-height: 1.1em;
+
+  &.isHovering {
+    background-color: lighten($waypointcolor, 20%);
+    color: white;
+
+  }
 }
 </style>

@@ -129,7 +129,7 @@ export default {
   methods: {
     zoomToTrail(trid) {
       var self = this;
-      if (trid == null) return;
+      if (trid == null || !(self.trails)) return;
       let allwpxy = self.trails[trid].fields.Waypoints.map(wpid => {
         return self.waypointToPanzoomXY(wpid);
       });
@@ -142,7 +142,7 @@ export default {
       this.panzoom.moveBy( totwpxy.x / allwpxy.length, totwpxy.y / allwpxy.length, 1)
     },
     zoomToWaypoint(wpid) {
-      if (wpid == null) return;
+      if (wpid == null || !(wpid in this.waypoints)) return;
       let desiredxy = this.waypointToPanzoomXY(wpid);
       this.panzoom.moveBy(desiredxy.x, desiredxy.y, 1);
     },

@@ -80,6 +80,8 @@ export default new Vuex.Store({
 
     hoveringTrails: [],
     hoveringWaypoints: [],
+    hoveringSoftware: null,
+    hoveringTopic: null,
 
     texts: {},
 
@@ -114,6 +116,12 @@ export default new Vuex.Store({
     }
   },
   mutations: {
+    setHoveringSoftware(state, payload) {
+      state.hoveringSoftware = payload.id;
+    },
+    setHoveringTopic(state, payload) {
+      state.hoveringTopic = payload.id;
+    },
     setDisplayGraphCommons(state, payload) {
       state.displayGraphCommons = payload;
     },
