@@ -49,8 +49,8 @@ function coordinateTransform(val, sidelength) {
 
 function getAirtableRecords(table, callback) {
 
-//	var apiurl = airtableApiUrls[table]; 
-	var apiurl = proxyApiUrls[table];  //uncomment to use proxy
+	var apiurl = airtableApiUrls[table]; 
+//	var apiurl = proxyApiUrls[table];  //uncomment to use proxy
 
 	var xhr1 = new XMLHttpRequest();
 	xhr1.overrideMimeType("application/json");

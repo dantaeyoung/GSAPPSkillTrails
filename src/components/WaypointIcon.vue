@@ -6,6 +6,7 @@
       imBeingViewed: imBeingViewed,
       imMarkedDone: imMarkedDone,
       mySoftwareOrTopicHovered: mySoftwareOrTopicHovered,
+      isStartingWaypoint: isStartingWaypoint
     }"
     xmlns="http://www.w3.org/2000/svg"
     xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -102,7 +103,7 @@ export default {
     radius() {
       return this.maxRadius;
     },
-    ...mapState(["waypoints", "cursorMode", "waypointsMarkedDone", "hoveringTrails", "hoveringWaypoints", "waypointsDraggable", "hoveringSoftware", "hoveringTopic"]),
+    ...mapState(["waypoints", "trails", "cursorMode", "waypointsMarkedDone", "hoveringTrails", "hoveringWaypoints", "waypointsDraggable", "hoveringSoftware", "hoveringTopic"]),
     currentlyViewingWaypoint() {
       return this.$store.state.route.params.id;
     },
@@ -130,6 +131,16 @@ export default {
       }
       return result;
     },
+		isStartingWaypoint() {
+      try {
+        let mytrails = this.waypointdata.fields.Trails.map(tid => this.trails[tid]);
+        let myPosInTrails = mytrails.map(mt => mt.fields.Waypoints.indexOf(this.waypointdata.id));
+        return myPosInTrails.reduce((tot, p) => { return tot * p; }, 1) == 0;
+      } catch {
+        return false;
+      }
+
+		},
     ThumbUrl() {
       try {
         return this.waypointdata.image.thumb.url;
@@ -331,6 +342,10 @@ g.shape {
 
   .mySoftwareOrTopicHovered & {
     stroke: $waypointcolor;
+  }
+
+  .isStartingWaypoint & {
+    stroke: $startingwp;
   }
 }
 

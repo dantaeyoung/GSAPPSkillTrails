@@ -76,7 +76,7 @@ export default {
   computed: {
     svgtrailStyle() {
       var s = strokeSettings["normal"];
-      s += `stroke-width: ${strokeWidths["normal"] / this.zoomscale };`;
+      s += `stroke-width: ${strokeWidths["normal"]  };`;
       if (this.amBeingHovered) {
         s = strokeSettings["amBeingHovered"];
         s += `stroke-width: ${strokeWidths["amBeingHovered"]};`;

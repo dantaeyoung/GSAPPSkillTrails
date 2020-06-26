@@ -3,8 +3,8 @@
     <div class="video-vimeo" v-if="isVimeo">
       <iframe
         :src="'https://player.vimeo.com/video/' + videoid"
-        width="100%"
-        height="100%"
+        width="600"
+        height="400"
         frameborder="0"
         allow="autoplay; fullscreen"
         allowfullscreen
@@ -81,8 +81,8 @@ export default {
 
 iframe {
   flex-grow: 1;
-  width: 100%;
-  height: auto;
+width: 100%;
+height: auto;
   /*max-width: 100% !important;
   width: auto !important;
   height: auto !important; */
