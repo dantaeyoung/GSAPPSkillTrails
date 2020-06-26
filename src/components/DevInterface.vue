@@ -2,6 +2,7 @@
   <div>
     <div id="DevInterface">
       <div>Debug Interface (ignore me)</div>
+      <div><slot></slot></div>
       <button @click="toggleDraggable">
         draggable: {{ waypointsDraggable }}
       </button>

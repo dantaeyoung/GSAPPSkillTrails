@@ -1,7 +1,9 @@
 <template>
   <div id="graphframe" :class="cursorMode">
     <div id="graphnav">
-      <DevInterface />
+      <DevInterface > 
+     {{ currentlyViewingWaypoint }}
+      </DevInterface>
       <CursorToolbar />
     </div>
     <MouseDialog mouseeventid="graphframe" />
@@ -96,7 +98,14 @@ export default {
       return this.$store.state.cursorMode;
     },
     currentlyViewingWaypoint() {
-      return this.$store.state.route.params.wpid;
+      if( this.$store.state.route.params.wportrail === 'waypoint') {
+        return this.$store.state.route.params.id;
+      } 
+    },
+    currentlyViewingTrail() {
+      if( this.$store.state.route.params.wportrail === 'trail') {
+        return this.$store.state.route.params.id;
+      } 
     },
     trailStatusesToShow() {
       return this.$store.state.trailStatusesToShow;
@@ -108,7 +117,15 @@ export default {
       return this.$store.getters.trails;
     }
   },
+  watch: {
+    currentlyViewingWaypoint: function(wpid) {
+      this.zoomToWaypoint(wpid)
+    }
+  },
   methods: {
+    zoomToWaypoint(wpid) {
+      console.log("zoomToWPID", wpid)
+    },
     onMouseDown(e) {
       var self = this;
       setTimeout(() => {

@@ -1,21 +1,11 @@
 <template>
   <div class="graphbackground" :style="widthheightstyle">
-    <svg height="100%" width="100%">
-      <circle
-        class="radiusCircle"
-        v-for="cr in circleRadiuses"
-        :key="cr"
-        :cx="sidelength / 2"
-        :cy="sidelength / 2"
-        :r="cr"
-      />
-    </svg>
     <!--<img src="http://discovery.urlibraries.org/wordpress/wp-content/uploads/2014/11/topo-chunk.jpg"> -->
     <!--      <ContourMap /> -->
     <div v-if="displayGraphCommons">
      <iframe class="graphcommons" src="https://graphcommons.com/graphs/79a352f7-b77a-4395-ae02-63c59251aaf6/embed?topbar=false&fitgraph=true" frameborder="0" style="overflow:hidden;" width="100%" height="100%" allowfullscreen></iframe>  
      </div>
-    <!--<img src="https://i.imgur.com/mCcxGUH.jpg">  -->
+    <img src="@/assets/background-pattern.svg">
   </div>
 </template>
 
