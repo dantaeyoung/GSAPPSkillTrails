@@ -39,6 +39,8 @@ export default {
   text-align: left;
   margin-left: 100px;
   padding: 30px 0px;
+  width: 70vw;
+  max-width: 600px;
 }
 
 </style>

@@ -8,8 +8,9 @@ import About from "@/components/About.vue";
 import SkillTreeGraph from "@/components/SkillTreeGraph.vue";
 import ListView from "@/components/ListView.vue";
 
-import ViewWaypoint from "@/components/ViewWaypoint.vue";
-import ViewTrail from "@/components/ViewTrail.vue";
+import SidebarView from "@/components/SidebarView.vue";
+// import ViewWaypoint from "@/components/ViewWaypoint.vue";
+// import ViewTrail from "@/components/ViewTrail.vue";
 
 import store from '@/store'
 
@@ -23,7 +24,7 @@ const routes = [
 /*    redirect: "/comingsoon", */
     redirect: "/map",
   },
-  {
+/*  {
     path: "/map/:wpid?/:slug?",
     name: "MapView",
     components: {
@@ -36,7 +37,15 @@ const routes = [
     name: "MapViewTrail",
     components: {
       view: SkillTreeGraph,
-      content: ViewTrail
+      content:  SidebarView
+    }
+  }, */
+  {
+    path: "/map/:wportrail?/:id?/:slug?",
+    name: "MapViewBoth",
+    components: {
+      view: SkillTreeGraph,
+      content:  SidebarView
     }
   },
   {

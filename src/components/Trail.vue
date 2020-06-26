@@ -142,9 +142,10 @@ export default {
       var self = this;
       self.$router
         .push({
-          name: "MapViewTrail",
+          name: "MapViewBoth",
           params: {
-            trid: self.traildata.id,
+            wportrail: 'trail',
+            id: self.traildata.id,
             slug: self.convertToSlug(self.traildata.fields.Name),
           }
         })

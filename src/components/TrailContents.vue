@@ -1,10 +1,14 @@
 <template>
   <div class="trailcontents">
-    <div class="trailname">
-      <img class="trailicon" src="@/assets/trail-icon.svg" />{{
-        traildata.fields.Name
-      }}
+    <div class="trailheader">
+      <img class="trailicon" src="@/assets/trail-icon.svg" />
+      <div class="trailnameauthor">
+        <div class="trailname">{{ traildata.fields.Name }}</div>
+        <div class="trailauthor" v-if="traildata.fields.Author" >By {{ traildata.fields.Author }}</div>
+      </div>
     </div>
+
+    <div class="traildescription">{{ traildata.fields.Description }}</div>
 
     <ul v-if="isLoadedWaypoints">
       <li v-for="waypointid in traildata.fields.Waypoints" :key="waypointid">
@@ -12,7 +16,7 @@
         <router-link
           class="navlink waypointlink"
           :to="{
-            name: 'ListView',
+            name: routeName,
             params: {
               wpid: waypointid,
               slug: convertToSlug(waypoints[waypointid].fields.Name)
@@ -35,15 +39,15 @@
 import { mapState } from "vuex";
 
 import WaypointIcon from "@/components/WaypointIcon.vue";
-import { slug } from '@/mixins/slug.js';
+import { slug } from "@/mixins/slug.js";
 
 export default {
   name: "TrailContents",
   components: {
-    WaypointIcon,
+    WaypointIcon
   },
   mixins: [slug],
-  props: ['traildata'],
+  props: ["traildata"],
   data() {
     return {};
   },
@@ -51,6 +55,9 @@ export default {
     var self = this;
   },
   computed: {
+    routeName() {
+      return this.$route.name;
+    },
     isLoadedWaypoints() {
       return Object.keys(this.waypoints).length > 0;
     },
@@ -79,11 +86,11 @@ export default {
 };
 </script>
 
-
 <style scoped lang="scss">
 ul {
   list-style-type: none;
   padding: 0;
+  margin: 0px;
 }
 li {
   margin: 2px 8px;
@@ -94,21 +101,44 @@ a {
   color: #42b983;
 }
 
-.trailname {
+.trailcontents {
+  margin-bottom: 35px;
+}
+
+.trailheader {
   display: flex;
-  align-items: center; 
-  font-size: 1.2em;
-  font-weight: bold;
-  color: darken(#2da6bd, 10%);
+  align-items: center;
 
   img {
-    height:20px;
-    margin-right: 5px;
+    height: 30px;
+    margin-right: 10px;
   }
 }
 
+.trailnameauthor {
+  display: flex;
+  flex-direction: column;
+
+  .trailauthor {
+    font-weight: bold;
+    font-size: 0.95em;
+  }
+
+  .trailname {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: darken(#2da6bd, 10%);
+  }
+}
+
+.traildescription {
+  margin: 10px 0px;
+  font-size: 0.9em;
+  line-height: 1.5em;
+}
+
 svg.waypoint {
-  height:30px;
+  height: 30px;
   margin-right: 5px;
 }
 
@@ -123,12 +153,8 @@ svg.waypoint {
   }
 }
 
-
 .author-name {
   font-size: 0.8em;
   margin-left: 20px;
 }
-
-
 </style>
-

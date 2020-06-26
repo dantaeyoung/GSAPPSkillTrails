@@ -207,6 +207,7 @@ export default {
 .description {
   font-size: 0.85em;
   margin-top: 15px;
+  line-height: 1.5em;
 }
 
 .link {

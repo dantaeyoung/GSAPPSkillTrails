@@ -202,9 +202,10 @@ export default {
       var self = this;
       self.$router
         .push({
-          name: "MapView",
+          name: "MapViewBoth",
           params: {
-            wpid: self.waypointdata.id,
+            wportrail: 'waypoint',
+            id: self.waypointdata.id,
             slug: self.convertToSlug(self.waypointdata.fields.Name),
           }
         })
