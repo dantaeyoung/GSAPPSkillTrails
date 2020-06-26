@@ -1,5 +1,5 @@
 <template>
-  <div class="trailcontents">
+  <div class="trailcontents" v-if="isLoadedTrails">
     <div class="trailheader">
       <img class="trailicon" src="@/assets/trail-icon.svg" />
       <div class="trailnameauthor">

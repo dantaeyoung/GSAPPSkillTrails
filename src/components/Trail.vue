@@ -6,13 +6,18 @@
     :class="{
       amBeingHovered: amBeingHovered,
       myWaypointHovered: myWaypointHovered,
-      myWaypointBeingViewed: myWaypointBeingViewed
+      myWaypointBeingViewed: myWaypointBeingViewed,
+      myTrailBeingViewed: myTrailBeingViewed
     }"
     @click="onClick"
     v-if="isLoadedWaypoints"
   >
     <path class="svgtrail" :d="svgTrailPath" :style="svgtrailStyle" />
-    <path class="svgtrail-arrows" :d="svgTrailPath" :style="svgtrailarrowStrokeWidth" />
+    <path
+      class="svgtrail-arrows"
+      :d="svgTrailPath"
+      :style="svgtrailarrowStrokeWidth"
+    />
   </g>
 </template>
 
@@ -26,19 +31,22 @@ var strokeSettings = {
   normal: `stroke-dasharray: 8;`,
   amBeingHovered: `stroke-dasharray: none;`,
   myWaypointHovered: `stroke-dasharray: none;`,
-  myWaypointBeingViewed: `stroke-dasharray: none; stroke: #70c0d8;`
+  myWaypointBeingViewed: `stroke-dasharray: none; stroke: #70c0d8;`,
+  myTrailBeingViewed: `stroke-dasharray: none; stroke: #70c0d8;`
 };
 
 var strokeWidths = {
   normal: 4,
   amBeingHovered: 20,
   myWaypointHovered: 20,
-  myWaypointBeingViewed: 40
+  myWaypointBeingViewed: 40,
+  myTrailBeingViewed: 40
 };
 
 var arrowStrokeWidths = {
-  myWaypointBeingViewed: 3
-}
+  myWaypointBeingViewed: 3,
+  myTrailBeingViewed: 3
+};
 
 export default {
   name: "Trail",
@@ -66,13 +74,26 @@ export default {
       }
       if (this.myWaypointBeingViewed) {
         s = strokeSettings["myWaypointBeingViewed"];
-        s += `stroke-width: ${strokeWidths["myWaypointBeingViewed"] / this.zoomscale }`;
+        s += `stroke-width: ${strokeWidths["myWaypointBeingViewed"] /
+          this.zoomscale}`;
+      }
+      if (this.myTrailBeingViewed) {
+        s = strokeSettings["myTrailBeingViewed"];
+        s += `stroke-width: ${strokeWidths["myTrailBeingViewed"] /
+          this.zoomscale}`;
       }
       return s;
     },
     svgtrailarrowStrokeWidth() {
-      var s = ""
-      s += `stroke-width: ${arrowStrokeWidths["myWaypointBeingViewed"] / this.zoomscale }`;
+      var s = "";
+      if (this.myWaypointBeingViewed) {
+        s += `stroke-width: ${arrowStrokeWidths["myWaypointBeingViewed"] /
+          this.zoomscale}`;
+      }
+      if (this.myTrailBeingViewed) {
+        s += `stroke-width: ${arrowStrokeWidths["myTrailBeingViewed"] /
+          this.zoomscale}`;
+      }
       return s;
     },
     isLoadedWaypoints() {
@@ -85,10 +106,10 @@ export default {
       return this.$store.state.hoveringWaypoints;
     },
     currentlyViewingTrail() {
-      return this.$store.state.currentlyViewingTrail;
+      return this.$store.state.route.params.id;
     },
     currentlyViewingWaypoint() {
-      return this.$store.state.route.params.wpid;
+      return this.$store.state.route.params.id;
     },
     myWaypointHovered() {
       var self = this;
@@ -103,6 +124,9 @@ export default {
       return self.traildata.fields.Waypoints.includes(
         self.currentlyViewingWaypoint
       );
+    },
+    myTrailBeingViewed() {
+      return this.traildata.id === this.currentlyViewingTrail;
     },
     svgTrailPath() {
       var self = this;
@@ -134,9 +158,9 @@ export default {
   },
   methods: {
     onClick() {
-//      this.$store.commit("setCurrentlyViewingTrail", { id: this.traildata.id});
-//      console.log("ya clicked me trail", this.traildata);
-      this.onClickViewTrail()
+      //      this.$store.commit("setCurrentlyViewingTrail", { id: this.traildata.id});
+      //      console.log("ya clicked me trail", this.traildata);
+      this.onClickViewTrail();
     },
     onClickViewTrail() {
       var self = this;
@@ -144,9 +168,9 @@ export default {
         .push({
           name: "MapViewBoth",
           params: {
-            wportrail: 'trail',
+            wportrail: "trail",
             id: self.traildata.id,
-            slug: self.convertToSlug(self.traildata.fields.Name),
+            slug: self.convertToSlug(self.traildata.fields.Name)
           }
         })
         .catch(err => {});
@@ -193,7 +217,7 @@ export default {
   marker-mid: url(#svgtrailarrow);
   marker-end: url(#svgtrailarrow);
 
-  .myWaypointBeingViewed & {
+  .myWaypointBeingViewed &, .myTrailBeingViewed & {
     display: block;
     stroke-width: 4;
     stroke-dasharray: none;
