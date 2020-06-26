@@ -1,9 +1,6 @@
 <template>
   <div id="graphframe" :class="cursorMode">
     <div id="graphnav">
-      <DevInterface>
-        {{ currentlyViewingWaypoint }}
-      </DevInterface>
       <CursorToolbar />
     </div>
     <MouseDialog mouseeventid="graphframe" />
