@@ -62,7 +62,7 @@ export default {
       return Object.keys(this.waypoints).length > 0;
     },
     isLoadedTrails() {
-      return this.trails.length > 0;
+      return Object.keys(this.trails).length > 0;
     },
     currentlyViewingWaypoint() {
       return this.$store.state.route.params.wpid;

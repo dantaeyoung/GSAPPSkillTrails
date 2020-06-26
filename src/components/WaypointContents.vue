@@ -1,73 +1,69 @@
 <template>
-  <div class="vwFrame" :class="{ isViewing: currentlyViewingWaypoint }">
-    <div class="vwContent">
-      <div v-if="waypointdata && waypointdata.fields">
-        <div class="title">
-          <img class="waypointicon" src="@/assets/waypoint-icon.svg" />
-          {{ waypointdata.fields.Name }}
-        </div>
-        <div class="author" v-if="waypointdata.fields['Author Name']">
-          By <span class="name"> {{ waypointdata.fields["Author Name"] }}</span>
-        </div>
-        <div class="description">{{ waypointdata.fields.Description }}</div>
+  <div class="waypointcontents" v-if="isLoadedWaypoints">
+    <div class="title">
+      <img class="waypointicon" src="@/assets/waypoint-icon.svg" />
+      {{ waypointdata.fields.Name }}
+    </div>
+    <div class="author" v-if="waypointdata.fields['Author Name']">
+      By <span class="name"> {{ waypointdata.fields["Author Name"] }}</span>
+    </div>
+    <div class="description">{{ waypointdata.fields.Description }}</div>
 
-        <div class="link">
-          <div class="linkto skew">Link:</div>
-          <a :href="waypointdata.fields.URL" target="_blank">{{
-            waypointdata.fields.URL
-          }}</a>
-        </div>
-        <!--  -->
-        <VideoEmbed :url="waypointdata.fields.URL" />
+    <div class="link">
+      <div class="linkto skew">Link:</div>
+      <a :href="waypointdata.fields.URL" target="_blank">{{
+        waypointdata.fields.URL
+      }}</a>
+    </div>
+    <!--  -->
+    <VideoEmbed :url="waypointdata.fields.URL" />
 
-        <div class="coverimage" v-if="coverImageThumbnail">
-          <img :src="coverImageThumbnail" />
-        </div>
+    <div class="coverimage" v-if="coverImageThumbnail">
+      <img :src="coverImageThumbnail" />
+    </div>
 
+    <div
+      class="trailsPartOf"
+      v-if="
+        'Trails' in waypointdata.fields &&
+          waypointdata.fields.Trails.length > 0
+      "
+    >
+      <div class="partof skew">
+        In trails:
+      </div>
+      <div class="trails" v-if="isLoadedTrails">
         <div
-          class="trailsPartOf"
-          v-if="
-            'Trails' in waypoints[thisid].fields &&
-              waypoints[thisid].fields.Trails.length > 0
-          "
+          class="trail"
+          v-for="tid in waypointdata.fields.Trails"
+          :key="tid"
         >
-          <div class="partof skew">
-            In trails:
-          </div>
-          <div class="trails" v-if="isLoadedTrails">
-            <div
-              class="trail"
-              v-for="tid in waypoints[thisid].fields.Trails"
-              :key="tid"
-            >
-              <img class="trailicon" src="@/assets/trail-icon.svg" />
-              {{  trails[tid].fields.Name   }}
-            </div>
-          </div>
+          <img class="trailicon" src="@/assets/trail-icon.svg" />
+          {{ trails[tid].fields.Name }}
         </div>
-        <!--     <iframe :src="waypointdata.fields.URL" />  -->
+      </div>
+    </div>
+    <!--     <iframe :src="waypointdata.fields.URL" />  -->
 
-        <div class="softwarestopics">
-          <div class="softwares" v-if="waypoints[thisid].fields.Softwares">
-            <div class="label skew">Softwares:</div>
-            <div
-              class="software"
-              v-for="s in waypoints[thisid].fields.Softwares"
-              :key="s"
-            >
-              {{ softwares[s].fields.Name }}
-            </div>
-          </div>
-          <div class="topics" v-if="waypoints[thisid].fields.Topics">
-            <div class="label skew">Topics:</div>
-            <div
-              class="topic"
-              v-for="t in waypoints[thisid].fields.Topics"
-              :key="t"
-            >
-              {{ topics[t].fields.Name }}
-            </div>
-          </div>
+    <div class="softwarestopics">
+      <div class="softwares" v-if="waypointdata.fields.Softwares">
+        <div class="label skew">Softwares:</div>
+        <div
+          class="software"
+          v-for="s in waypointdata.fields.Softwares"
+          :key="s"
+        >
+          {{ softwares[s].fields.Name }}
+        </div>
+      </div>
+      <div class="topics" v-if="waypointdata.fields.Topics">
+        <div class="label skew">Topics:</div>
+        <div
+          class="topic"
+          v-for="t in waypointdata.fields.Topics"
+          :key="t"
+        >
+          {{ topics[t].fields.Name }}
         </div>
       </div>
     </div>
@@ -80,26 +76,29 @@
 import VideoEmbed from "@/components/VideoEmbed.vue";
 
 import { mapState } from "vuex";
+import { slug } from "@/mixins/slug.js";
 
 export default {
-  name: "ViewWaypoint",
+  name: "WaypointContents",
   components: {
     VideoEmbed
   },
+  mixins: [slug],
+  props: ["waypointdata"],
   mounted() {
     var self = this;
   },
   computed: {
+    ...mapState(["waypoints", "trails", "softwares", "topics", "texts"]),
+    isLoadedWaypoints() {
+      return Object.keys(this.waypoints).length > 0;
+    },
     isLoadedTrails() {
-      return this.trails.length > 0
+      return Object.keys(this.trails).length > 0;
     },
     currentlyViewingWaypoint() {
       return this.$store.state.route.params.wpid;
     },
-    waypointdata() {
-      return this.$store.getters.waypoints[this.thisid];
-    },
-    ...mapState(["waypoints", "trails", "softwares", "topics", "texts"]),
     thisid() {
       return this.$route.params.wpid;
     },
@@ -241,7 +240,8 @@ iframe {
   font-size: 0.8em;
 }
 
-.softwares, .topics {
+.softwares,
+.topics {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -255,7 +255,7 @@ iframe {
 .topic {
   display: inline-block;
   font-weight: bold;
-    background-color: lighten(#fc0452, 30%);
+  background-color: lighten(#fc0452, 30%);
   padding: 0px 3px;
   border-radius: 2px;
   margin-right: 5px;

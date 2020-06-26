@@ -24,22 +24,6 @@ const routes = [
 /*    redirect: "/comingsoon", */
     redirect: "/map",
   },
-/*  {
-    path: "/map/:wpid?/:slug?",
-    name: "MapView",
-    components: {
-      view: SkillTreeGraph,
-      content: ViewWaypoint
-    }
-  },
-  {
-    path: "/map/:trid?/:slug?",
-    name: "MapViewTrail",
-    components: {
-      view: SkillTreeGraph,
-      content:  SidebarView
-    }
-  }, */
   {
     path: "/map/:wportrail?/:id?/:slug?",
     name: "MapViewBoth",
@@ -49,11 +33,11 @@ const routes = [
     }
   },
   {
-    path: "/list/:wpid?/:slug?",
+    path: "/list/:id?/:slug?",
     name: "ListView",
     components: {
       view: ListView,
-      content: ViewWaypoint
+      content: SidebarView
     }
   },
   {

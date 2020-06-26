@@ -14,7 +14,6 @@
 
 import TrailContents from "@/components/TrailContents.vue";
 import WaypointContents from "@/components/WaypointContents.vue";
-import ViewWaypoint from "@/components/ViewWaypoint.vue";
 
 import { mapState } from "vuex";
 
