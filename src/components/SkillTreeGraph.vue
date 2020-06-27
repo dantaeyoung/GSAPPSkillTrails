@@ -2,6 +2,7 @@
   <div id="graphframe" :class="cursorMode">
     <div id="graphnav">
       <CursorToolbar />
+      <DevInterface />
     </div>
     <MouseDialog mouseeventid="graphframe" />
     <div
@@ -152,9 +153,13 @@ export default {
     coordinateForCenterPanzoomXY(x, y) {
       let transforms = this.panzoom.getTransform();
       const gfelem = document.getElementById("graphframe");
-      const sfelem = document.getElementById("sidebarFrame");
+      var sfelemWidth = 0;
+      try {
+        sfelemWidth = document.getElementById("sidebarFrame").clientWidth;
+      } catch {
+      }
       let desiredX =
-        -x * transforms.scale + (gfelem.clientWidth - sfelem.clientWidth) / 2;
+        -x * transforms.scale + (gfelem.clientWidth - sfelemWidth) / 2;
       let desiredY = -y * transforms.scale + gfelem.clientHeight / 2;
       return { x: desiredX - transforms.x, y: desiredY - transforms.y };
     },

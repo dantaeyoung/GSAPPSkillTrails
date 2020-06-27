@@ -8,7 +8,7 @@
           icon="times-circle"
         />
         <div class="title">How to use the GSAPP Skill Trails</div>
-        <vue-markdown
+        <vue-markdown v-if="texts"
           :source="texts['howtotext'].fields.Markdown"
         ></vue-markdown>
       </div>

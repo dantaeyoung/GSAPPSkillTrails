@@ -104,10 +104,9 @@ export default {
     initMouseListener() {
       var self = this;
       var elem = document.getElementById(self.mouseeventid);
-      var rect = elem.getBoundingClientRect();
       elem.addEventListener("mousemove", function(e) {
-        self.posX = e.clientX - rect.left;
-        self.posY = e.clientY - rect.top;
+        self.posX = e.clientX
+        self.posY = e.clientY
       });
     }
   }
