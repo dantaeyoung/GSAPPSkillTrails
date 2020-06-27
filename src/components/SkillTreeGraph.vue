@@ -2,7 +2,6 @@
   <div id="graphframe" :class="cursorMode">
     <div id="graphnav">
       <CursorToolbar />
-      <DevInterface />
     </div>
     <MouseDialog mouseeventid="graphframe" />
     <div
