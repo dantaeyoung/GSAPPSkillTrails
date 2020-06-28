@@ -38,11 +38,10 @@
         :clip-path="'url(#polygonMask-' + waypointdata.id + ')'"
       >
         <div class="circle colorfilter">
-          <img :src="ThumbUrl" />
+          <!-- <img :src="ThumbUrl" /> -->
           <div class="text" v-if="!hidetext">
             {{ waypointdata.fields.Name }}
           </div>
-          <br />
         </div>
       </foreignObject>
       <foreignObject
@@ -299,7 +298,7 @@ img {
 }
 
 .colorfilter {
-  position: relative;
+  position: absolute;
 }
 
 /* .colorfilter:after { */
