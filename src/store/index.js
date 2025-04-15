@@ -1,20 +1,23 @@
 /* eslint-disable */
 
+import Airtable from 'airtable';
+
 const tableID = "app1nwPhnOPNvChPK";
-const apikey = "keyoQpvlH7D3w9kIB"; //normally this should NEVER be exposed. However, this api key is to an account that has read-only access to publicly viewable airtables.
+const AIRTABLE_PAT = process.env.VUE_APP_AIRTABLE_PAT; // We'll store this in environment variables
+const base = new Airtable({ apiKey: AIRTABLE_PAT }).base(tableID);
 const tableview = "Grid%20view";
-const waypointApiUrl = `https://api.airtable.com/v0/${tableID}/Waypoint?api_key=${apikey}&view=${tableview}`;
-const trailsApiUrl = `https://api.airtable.com/v0/${tableID}/Trails?api_key=${apikey}&view=${tableview}`;
-const textApiUrl = `https://api.airtable.com/v0/${tableID}/Texts?api_key=${apikey}&view=${tableview}`;
-const softwaresApiUrl = `https://api.airtable.com/v0/${tableID}/Softwares?api_key=${apikey}&view=${tableview}`;
-const topicsApiUrl = `https://api.airtable.com/v0/${tableID}/Topics?api_key=${apikey}&view=${tableview}`;
+const waypointApiUrl = `https://api.airtable.com/v0/${tableID}/Waypoint?api_key=${AIRTABLE_PAT}&view=${tableview}`;
+const trailsApiUrl = `https://api.airtable.com/v0/${tableID}/Trails?api_key=${AIRTABLE_PAT}&view=${tableview}`;
+const textApiUrl = `https://api.airtable.com/v0/${tableID}/Texts?api_key=${AIRTABLE_PAT}&view=${tableview}`;
+const softwaresApiUrl = `https://api.airtable.com/v0/${tableID}/Softwares?api_key=${AIRTABLE_PAT}&view=${tableview}`;
+const topicsApiUrl = `https://api.airtable.com/v0/${tableID}/Topics?api_key=${AIRTABLE_PAT}&view=${tableview}`;
 
 var airtableApiUrls = {
-	waypoint: `https://api.airtable.com/v0/${tableID}/Waypoint?api_key=${apikey}&view=${tableview}`,
-	trails: `https://api.airtable.com/v0/${tableID}/Trails?api_key=${apikey}&view=${tableview}`,
-	texts: `https://api.airtable.com/v0/${tableID}/Texts?api_key=${apikey}&view=${tableview}`,
-	softwares: `https://api.airtable.com/v0/${tableID}/Softwares?api_key=${apikey}&view=${tableview}`,
-	topics: `https://api.airtable.com/v0/${tableID}/Topics?api_key=${apikey}&view=${tableview}`
+	waypoint: `https://api.airtable.com/v0/${tableID}/Waypoint?api_key=${AIRTABLE_PAT}&view=${tableview}`,
+	trails: `https://api.airtable.com/v0/${tableID}/Trails?api_key=${AIRTABLE_PAT}&view=${tableview}`,
+	texts: `https://api.airtable.com/v0/${tableID}/Texts?api_key=${AIRTABLE_PAT}&view=${tableview}`,
+	softwares: `https://api.airtable.com/v0/${tableID}/Softwares?api_key=${AIRTABLE_PAT}&view=${tableview}`,
+	topics: `https://api.airtable.com/v0/${tableID}/Topics?api_key=${AIRTABLE_PAT}&view=${tableview}`
 };
 
 var proxyApiUrls = {
@@ -48,22 +51,15 @@ function coordinateTransform(val, sidelength) {
 }*/
 
 function getAirtableRecords(table, callback) {
-
-	var apiurl = airtableApiUrls[table]; 
-//	var apiurl = proxyApiUrls[table];  //uncomment to use proxy
-
-	var xhr1 = new XMLHttpRequest();
-	xhr1.overrideMimeType("application/json");
-	xhr1.open("GET", apiurl);
-	xhr1.onload = function() {
-		var res = JSON.parse(xhr1.responseText);
-		if('records' in res) {
-			callback(res.records)
-		} else {
-			callback(res)
-		}
-	};
-	xhr1.send();
+	base(table).select({
+		view: "Grid view"
+	}).all()
+	.then(records => {
+		callback(records);
+	})
+	.catch(err => {
+		console.error('Error fetching from Airtable:', err);
+	});
 }
 
 export default new Vuex.Store({
